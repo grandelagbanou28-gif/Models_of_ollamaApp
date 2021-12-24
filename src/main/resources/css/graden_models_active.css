@@ -1,0 +1,3681 @@
+/* ollama-custom.css */
+
+.root {
+    -fx-font-family: "Inter", "Helvetica Neue", "Segoe UI", "System", sans-serif;
+}
+
+/* Force Inter on every JavaFX control so theme defaults don't override it */
+.root, .label, .text, .button, .toggle-button, .text-field, .text-area,
+.menu, .menu-item, .menu-bar, .check-box, .radio-button, .choice-box,
+.combo-box, .tab, .tab-label, .table-view, .table-column, .table-cell,
+.list-view, .list-cell, .tree-view, .tree-cell, .titled-pane, .tooltip,
+.hyperlink, .toggle-switch, .spinner {
+    -fx-font-family: "Inter", "Helvetica Neue", "Segoe UI", "System", sans-serif;
+}
+
+/* --- Estilos para la Barra Lateral estilo macOS --- */
+.sidebar {
+    -fx-background-color: -color-bg-subtle;
+    -fx-padding: 15px 10px;
+    /* More top padding for traffic lights alignment */
+    -fx-alignment: top-center;
+    -fx-spacing: 4px;
+    /* Tighter spacing for cohesive feel */
+    -fx-border-width: 0 0 0 1px;
+    -fx-border-color: -color-border-subtle;
+    /* transition: border-color 0.3s ease; (JavaFX CSS doesn't support transition prop directly like this, but we'll use timeline in code or just instant switch) */
+}
+
+/* Sidebar Themes - Border Feedback */
+.chat-sidebar-right.theme-creative {
+    -fx-border-color: -color-success-fg;
+    /* Green/Vibrant */
+    -fx-border-width: 0 0 0 2px;
+}
+
+.chat-sidebar-right.theme-precise {
+    -fx-border-color: #4A90E2;
+    /* Blue */
+    -fx-border-width: 0 0 0 2px;
+}
+
+.chat-sidebar-right.theme-professional {
+    -fx-border-color: #9013fe;
+    /* Purple */
+    -fx-border-width: 0 0 0 2px;
+}
+
+.chat-sidebar-right.theme-academic {
+    -fx-border-color: #f5a623;
+    /* Orange/Gold */
+    -fx-border-width: 0 0 0 2px;
+}
+
+.chat-sidebar-right.theme-medical {
+    -fx-border-color: #d0021b;
+    /* Red */
+    -fx-border-width: 0 0 0 2px;
+}
+
+/* --- SIDEBAR LIST VIEW (Finder Style) --- */
+/* Target the ListView specifically within the Sidebar */
+.sidebar .list-view {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 10px;
+    /* More padding like Finder */
+    -fx-border-width: 0;
+}
+
+.sidebar .list-view .virtual-flow .clipped-container .sheet .cell {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.sidebar .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 20px;
+    /* Compact but comfortable */
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
+    /* macOS Finder base size */
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 6px;
+    -fx-border-width: 0;
+}
+
+.sidebar .list-cell:empty {
+    -fx-background-color: transparent;
+    -fx-mouse-transparent: true;
+}
+
+.sidebar .list-cell:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.04);
+    /* Subtle hover */
+}
+
+/* --- FINDER TOOLBAR & ADD BUTTON --- */
+.sidebar-toolbar {
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 1px 0 0 0;
+    /* Separator from Tree */
+    -fx-padding: 5px;
+}
+
+.button-icon-add {
+    -fx-background-color: transparent;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+}
+
+.button-icon-add:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.06);
+}
+
+.button-icon-add:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Hide the default MenuButton arrow for a clean look */
+.button-icon-add>.arrow-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.button-icon-add>.arrow-button>.arrow {
+    -fx-padding: 0;
+    -fx-shape: null;
+    -fx-background-color: transparent;
+}
+
+.icon-plus {
+    -fx-shape: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z";
+    -fx-background-color: -color-fg-muted;
+    -fx-min-width: 14px;
+    -fx-min-height: 14px;
+    -fx-max-width: 14px;
+    -fx-max-height: 14px;
+}
+
+/* ----------------------------------- */
+
+/* FINDER STYLE SELECTION: Light Grey Background, Blue Text */
+.sidebar .list-cell:selected {
+    -fx-background-color: rgba(0, 0, 0, 0.05) !important;
+    /* Visual Grey Selection */
+    -fx-text-fill: #007AFF !important;
+    /* Blue Text */
+    -fx-font-weight: normal;
+    /* WAS BOLD - NOW NORMAL */
+}
+
+/* Ensure Label inside inherits the Blue Text */
+.sidebar .list-cell:selected .label {
+    -fx-text-fill: #007AFF !important;
+    -fx-font-weight: normal;
+}
+
+/* ... content omitted ... */
+
+/* Sidebar Buttons (General) - No Bold */
+.sidebar .button {
+    -fx-font-weight: normal;
+    -fx-font-size: 13px;
+    /* macOS Finder base size */
+}
+
+.sidebar .app-title {
+    -fx-font-weight: normal;
+}
+
+/* Sidebar Section Headers (CHATS) */
+.sidebar-section-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -color-fg-muted;
+    -fx-opacity: 0.8;
+}
+
+/* --- SIDEBAR TREE VIEW ---
+   Complementa AtlantaFX sin sobreescribir su sistema de colores.
+   AtlantaFX define: tree-cell bg = -color-cell-bg, padding = 0.5em vertical,
+   disclosure-node padding = 0.35em 0.5em, indent = 1.2em
+   ----------------------------------------------------------------- */
+.chat-tree-view {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    /* Elimina el borde nativo del TreeView */
+}
+
+/* Celdas vacías: invisibles */
+.chat-tree-view .tree-cell:empty {
+    -fx-background-color: transparent;
+    -fx-mouse-transparent: true;
+}
+
+/* Celda base: solo ajustamos fuente y transparencia de fondo.
+   AtlantaFX maneja el padding, indent y colores de selección. */
+.chat-tree-view .tree-cell {
+    -fx-background-color: transparent;
+    /* Fondo transparente para que el sidebar sea uniforme */
+    -fx-font-size: 13px;
+    /* macOS Finder base — único ajuste necesario */
+    -fx-padding: 0.2em 0.5em;
+    /* Ligeramente más compacto que el default 0.5em de AtlantaFX */
+}
+
+/* Hover: sutil, respetando el sistema de colores */
+.chat-tree-view .tree-cell:filled:hover {
+    -fx-background-color: -color-base-8;
+    /* Variable nativa de AtlantaFX para hover */
+    -fx-background-radius: 6px;
+}
+
+/* Selección: usa colores nativos de AtlantaFX */
+.chat-tree-view .tree-cell:filled:selected {
+    -fx-background-color: -color-base-7;
+    /* Selección nativa AtlantaFX */
+    -fx-text-fill: -color-fg-default;
+    -fx-background-radius: 6px;
+    -fx-font-weight: normal;
+    /* Sin bold — más limpio */
+}
+
+/* Flecha de disclosure: usa el color nativo de AtlantaFX */
+.chat-tree-view .tree-cell .tree-disclosure-node {
+    -fx-background-color: transparent;
+    /* No tocar el padding — AtlantaFX lo maneja bien */
+}
+
+.chat-tree-view .tree-cell .tree-disclosure-node .arrow {
+    -fx-background-color: -color-fg-muted;
+    /* Color nativo de AtlantaFX para la flecha */
+}
+
+/* --- CONTEXT MENU ---
+   AtlantaFX ya define: background con borde simulado (insets 0,1),
+   padding 5px, border-radius 4px, dropshadow.
+   Solo ajustamos el font-size del menu-item.
+   NO sobreescribir background-color del context-menu (rompe el borde nativo).
+   ----------------------------------------------------------------- */
+.context-menu .menu-item {
+    -fx-font-size: 13px;
+    /* macOS native — único ajuste necesario */
+}
+
+/* Hover/focus: usa el color de acento nativo de AtlantaFX */
+.context-menu .menu-item:hover,
+.context-menu .menu-item:focused {
+    -fx-background-color: -color-accent-emphasis;
+}
+
+.context-menu .menu-item:hover>.label,
+.context-menu .menu-item:focused>.label {
+    -fx-text-fill: white;
+}
+
+/* Selection context menu (right-click on selected LLM response text).
+   Feather icons inherit muted foreground in normal state and flip to white
+   on hover/focus to match the .label color above. */
+.chat-selection-context-menu .menu-item .chat-selection-menu-icon {
+    -fx-icon-color: -color-fg-muted;
+}
+
+.chat-selection-context-menu .menu-item:hover .chat-selection-menu-icon,
+.chat-selection-context-menu .menu-item:focused .chat-selection-menu-icon {
+    -fx-icon-color: white;
+}
+
+/* --- FX DIALOG (Reemplaza TextInputDialog) ---
+   Diálogo modal minimalista alineado con CupertinoLight / AtlantaFX.
+   ----------------------------------------------------------------- */
+.fx-dialog-pane {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 12px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.18), 24, 0.3, 0, 6);
+}
+
+.fx-dialog-pane .dialog-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -color-fg-default;
+}
+
+.fx-dialog-pane .dialog-input {
+    -fx-font-size: 13px;
+    /* Usa el TextField nativo de AtlantaFX — solo ajustamos tamaño */
+}
+
+.fx-dialog-pane .dialog-body {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+/* Hide Scrollbar tracks */
+.sidebar .list-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.sidebar .list-view .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.sidebar .list-view .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(128, 128, 128, 0.3);
+}
+
+/* Fix MenuButton - Clean & Auto-hide */
+.sidebar .list-cell .menu-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-opacity: 0;
+    /* HIDDEN BY DEFAULT (Cleaner Look) */
+    -fx-cursor: hand;
+}
+
+/* Show Menu on Hover or Selection */
+.sidebar .list-cell:hover .menu-button,
+.sidebar .list-cell:selected .menu-button {
+    -fx-opacity: 1;
+}
+
+.sidebar .list-cell .menu-button .arrow-button {
+    -fx-padding: 0;
+}
+
+.sidebar .list-cell .menu-button .arrow {
+    -fx-padding: 0;
+    -fx-shape: null;
+    -fx-background-color: transparent;
+    -fx-mark-visible: false;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+
+/* Icon Colors */
+.sidebar .list-cell .menu-button .icon {
+    -fx-fill: -color-fg-subtle;
+    /* Subtle grey icon by default */
+}
+
+.sidebar .list-cell:hover .menu-button .icon {
+    -fx-fill: -color-fg-default;
+    /* Darker on hover */
+}
+
+/* When selected, Icon matches Text (Blue) */
+.sidebar .list-cell:selected .menu-button .icon {
+    -fx-fill: #007AFF !important;
+    -fx-stroke: #007AFF !important;
+}
+
+
+/* --- SIDEBAR BUTTONS (Navigation) --- */
+/* --- SIDEBAR BUTTONS (Navigation) --- */
+/* --- SIDEBAR BUTTONS (Navigation) --- */
+/* Native AtlantaFX buttons are used now. No custom overrides for .button */
+
+/* Separator styling */
+.sidebar-separator .line {
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* Chat Area Background - Subtly darker than sidebar or different */
+.chat-area {
+    -fx-background-color: transparent;
+    /* Let stackpane bg show */
+}
+
+/* Main Content Area (StackPane behind chat) */
+.stack-pane-content {
+    -fx-background-color: -color-bg-default;
+}
+
+/* Darker Sidebar/Chat differentiation */
+.root.light .sidebar {
+    -fx-background-color: #f2f2f7;
+    /* iOS System Gray 6 */
+}
+
+.root.light .stack-pane-content {
+    -fx-background-color: #f5f5f7;
+    /* Light grey chat bg */
+}
+
+.root.dark .sidebar {
+    -fx-background-color: #1c1c1e;
+    /* iOS Dark System Gray 6 */
+}
+
+.root.dark .stack-pane-content {
+    -fx-background-color: #1c1c1e;
+    /* Pure black/dark chat */
+}
+
+.root.dark .sidebar .list-cell:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.1) !important;
+    -fx-text-fill: #0A84FF !important;
+    /* Brighter iOS Blue for dark mode */
+}
+
+.root.dark .sidebar .list-cell:selected .label {
+    -fx-text-fill: #0A84FF !important;
+}
+
+/* TreeView overrides for dark mode */
+.root.dark .chat-tree-view .tree-cell:filled:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.1) !important;
+    -fx-text-fill: #0A84FF !important;
+}
+
+.root.dark .chat-tree-view .tree-cell:filled:selected .text,
+.root.dark .chat-tree-view .tree-cell:filled:selected .label {
+    -fx-fill: #0A84FF !important;
+    -fx-text-fill: #0A84FF !important;
+}
+
+.root.dark .chat-tree-view .tree-cell:filled:selected .ikonli-font-icon {
+    -fx-icon-color: #0A84FF !important;
+}
+
+.root.dark .chat-tree-view .tree-cell:filled:selected .tree-disclosure-node .arrow {
+    -fx-background-color: #0A84FF !important;
+}
+
+/* Unselected items in Dark Mode need to be light explicitly because we don't switch the userAgentStylesheet globally anymore */
+.root.dark .chat-tree-view .tree-cell,
+.root.dark .chat-tree-view .tree-cell .text,
+.root.dark .chat-tree-view .tree-cell .label {
+    -fx-text-fill: #EBEBF5 !important;
+    -fx-fill: #EBEBF5 !important;
+}
+
+.root.dark .chat-tree-view .tree-cell:filled:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.root.dark .chat-tree-view .tree-cell .ikonli-font-icon {
+    -fx-icon-color: #A1A1A6 !important;
+}
+
+.root.dark .chat-tree-view .tree-cell .tree-disclosure-node .arrow {
+    -fx-background-color: #A1A1A6 !important;
+}
+
+/* Typography Enhancements */
+.welcome-label {
+    -fx-font-size: 54px;
+    /* HUGE! */
+    -fx-font-weight: 400;
+    /* Bold */
+    -fx-text-fill: -color-fg-default;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 2, 0, 0, 1);
+    -fx-text-alignment: CENTER;
+    -fx-wrap-text: true;
+}
+
+/* Suggestion Chips */
+.suggestion-chip {
+    -fx-background-color: -color-bg-subtle;
+    -fx-text-fill: -color-fg-default;
+    -fx-background-radius: 20px;
+    -fx-padding: 8 16;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 20px;
+    -fx-border-width: 1px;
+}
+
+.suggestion-chip:hover {
+    -fx-background-color: -color-neutral-muted;
+}
+
+/* --- CHAT PREMIUM INPUT CARD --- */
+
+/* Contenedor Flotante Grande (Card) */
+.input-card {
+    -fx-background-color: #ffffff;
+    /* Blanco puro para contraste */
+    -fx-background-radius: 30px;
+    /* Bordes muy redondeados */
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 15, 0, 0, 4);
+    /* minHeight removed so the card is flexible when RAG chips are toggled */
+    -fx-alignment: TOP_LEFT;
+}
+
+/* Modo oscuro override (si aplica) */
+.root.dark .input-card {
+    -fx-background-color: #000000;
+    /* Match chat background in dark mode */
+}
+
+/* --- CHAT PREMIUM INPUT CAPSULE --- */
+
+/* Contenedor Flotante (Capsule) */
+.input-capsule {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 200px;
+    /* Pill shape */
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 200px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 15, 0, 0, 4);
+    /* Sombra suave */
+    -fx-min-height: 50px;
+    -fx-alignment: BOTTOM_CENTER;
+}
+
+/* Ajustes para modo oscuro (opcional, si el tema lo soporta nativamente) */
+/* .root.dark .input-capsule { ... } */
+
+/* Botón Mágico (Sparkle) */
+.magic-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-accent-emphasis;
+    /* Color primario vibrante */
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-background-radius: 50%;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-alignment: CENTER;
+}
+
+.magic-button:hover {
+    -fx-background-color: -color-bg-subtle;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+/* Botón de Adjuntar (Icono) */
+.attach-button-icon {
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-max-width: 36px;
+    -fx-max-height: 36px;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+    -fx-content-display: GRAPHIC_ONLY;
+}
+
+.attach-button-icon .font-icon {
+    -fx-icon-color: -color-fg-muted;
+}
+
+.attach-button-icon:pressed {
+    -fx-effect: none;
+    -fx-translate-y: 1px;
+}
+
+.attach-button-icon:hover .font-icon {
+    -fx-icon-color: -color-fg-default;
+}
+
+/* Colores para modo Light */
+.root.light .attach-button-icon {
+    -fx-background-color: #f2f2f7;
+}
+
+.root.light .attach-button-icon:hover {
+    -fx-background-color: #e5e5ea;
+}
+
+.root.light .attach-button-icon:pressed {
+    -fx-background-color: #d1d1d6;
+}
+
+/* Colores para modo Dark */
+.root.dark .attach-button-icon {
+    -fx-background-color: #2c2c2e;
+}
+
+.root.dark .attach-button-icon:hover {
+    -fx-background-color: #3a3a3c;
+}
+
+.root.dark .attach-button-icon:pressed {
+    -fx-background-color: #48484a;
+}
+
+/* Botón de Enviar (Icono) */
+.send-button-icon {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-text-fill: white;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-max-width: 36px;
+    -fx-max-height: 36px;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER;
+    -fx-content-display: GRAPHIC_ONLY;
+}
+
+.send-button-icon .font-icon {
+    -fx-icon-color: white;
+}
+
+.send-button-icon:hover {
+    -fx-background-color: #005bb5;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
+}
+
+/* TextArea Transparente */
+.transparent-area {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-font-size: 15px;
+    /* Texto de input, ligeramente mayor que body */
+    -fx-prompt-text-fill: #a0a0a0;
+    -fx-padding: 0;
+    /* Sin padding extra */
+}
+
+.transparent-area .content {
+    -fx-background-color: transparent;
+}
+
+.transparent-area:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+/* --- CREATIVITY PANEL --- */
+.creativity-panel {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 1px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 20, 0, 0, 5);
+    -fx-min-width: 300px;
+}
+
+.creativity-label {
+    -fx-font-weight: normal;
+    -fx-font-size: 13px;
+    -fx-text-fill: -color-fg-default;
+}
+
+.creativity-value-label {
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    /* O la fuente que uses */
+    -fx-font-weight: 400;
+    -fx-text-fill: -color-accent-emphasis;
+}
+
+.creativity-numeric-subtle {
+    -fx-font-size: 10px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.creativity-mark-label {
+    -fx-font-size: 10px;
+    -fx-text-fill: -color-fg-subtle;
+    -fx-font-weight: 400;
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 1px;
+}
+
+/* --- MIGRATED CHAT BUBBLES (From gnome.css) --- */
+.chat-bubble {
+    -fx-background-radius: 18px;
+    -fx-padding: 10px 15px;
+    -fx-font-size: 14px;
+    /* Texto de conversación: 14px es correcto */
+    -fx-max-width: 600px;
+    /* Fixed max width to prevent super wide bubbles */
+    -fx-effect: null;
+    /* Reset any shadow if necessary */
+}
+
+.chat-bubble-user {
+    -fx-background-color: -color-accent-emphasis;
+    /* Blue background */
+    -fx-text-fill: white;
+    /* Always white text on blue */
+    -fx-background-radius: 18px 18px 0 18px;
+}
+
+.chat-bubble-assistant {
+    -fx-background-color: -color-bg-subtle;
+    -fx-text-fill: -color-fg-default;
+    -fx-background-radius: 18px 18px 18px 0;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 18px 18px 18px 0;
+}
+
+/* --- MIGRATED ICONS (From gnome.css) --- */
+.icon-region {
+    -fx-background-color: -color-fg-muted;
+    -fx-min-width: 18px;
+    -fx-min-height: 18px;
+    -fx-max-width: 18px;
+    -fx-max-height: 18px;
+    -fx-scale-shape: true;
+}
+
+.icon-download {
+    -fx-shape: "M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z";
+}
+
+.icon-time {
+    -fx-shape: "M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z";
+}
+
+.icon-cube {
+    -fx-shape: "M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18-.21 0-.41-.06-.57-.18l-7.9-4.44A.991.991 0 0 1 3 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18.21 0 .41.06.57.18l7.9 4.44c.32.17.53.5.53.88v9zM12 4.15L6.04 7.5 12 10.85l5.96-3.35L12 4.15zM5 15.91l6 3.38v-6.71L5 9.21v6.7zM13 19.29l6-3.38v-6.7l-6 3.38v6.7z";
+}
+
+.icon-trash {
+    -fx-shape: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z";
+}
+
+.icon-copy {
+    -fx-shape: "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z";
+}
+
+.icon-home {
+    -fx-shape: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z";
+}
+
+.icon-settings {
+    -fx-shape: "M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z";
+}
+
+.icon-info {
+    -fx-shape: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z";
+}
+
+/* --- MIGRATED BADGES (From gnome.css) --- */
+.badge-chip {
+    -fx-background-color: #ddf4ff;
+    -fx-background-radius: 12px;
+    -fx-padding: 5px 14px;
+    -fx-text-fill: #0969da;
+    -fx-font-weight: normal;
+    -fx-font-size: 13px;
+    -fx-border-color: transparent;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+}
+
+.badge-blue {
+    -fx-background-color: #ddf4ff;
+    -fx-text-fill: #0969da;
+}
+
+.badge-purple {
+    -fx-background-color: #fbefff;
+    -fx-text-fill: #8250df;
+}
+
+.badge-green {
+    -fx-background-color: #dafbe1;
+    -fx-text-fill: #1a7f37;
+}
+
+.badge-orange {
+    -fx-background-color: #fff8c5;
+    -fx-text-fill: #9a6700;
+}
+
+.input-container-wrapper {
+    -fx-background-color: transparent;
+}
+
+
+
+/* --- NANO BANANA (LIGHT INTEGRATED) --- */
+.status-bar-nano {
+    -fx-background-color: transparent;
+    /* Seamless with sidebar */
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 1px 0 0 0;
+}
+
+.status-dot-nano {
+    -fx-fill: -color-border-subtle;
+    /* Default off/loading */
+}
+
+.status-dot-running {
+    -fx-fill: #34c759;
+    /* iOS Green (Screenshot match) */
+    -fx-effect: dropshadow(gaussian, rgba(52, 199, 89, 0.3), 8, 0, 0, 0);
+}
+
+.status-dot-stopped {
+    -fx-fill: #8e8e93;
+    /* IOS Grey (Inactive) or Red if error */
+    /* Screenshot shows green when running. Assuming grey/neutral when off or red if error.
+       Let's stick to neutral grey for "stopped" to be clean like macOS. */
+}
+
+.status-label-nano {
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-default;
+    /* Dark text */
+    -fx-font-weight: normal;
+}
+
+.status-latency-nano {
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-font-size: 10px;
+    -fx-text-fill: rgba(255, 255, 255, 0.5);
+}
+
+/* Toggle Switch Nano (Red/Green) */
+.toggle-switch-nano {
+    -fx-background-color: #ff3b30, white;
+    /* Red (Off) Track, White Knob */
+    -fx-background-insets: 0, 2 18 2 2;
+    /* Knob on Left (for Off state approx) - wait, width is 36. 
+                                           Knob size ~16. 
+                                           Insets: Top=2, Right=18, Bottom=2, Left=2. 
+                                           Right inset 18 means 36-18 = 18px from right. 
+                                           Knob width = 36 - 2 - 18 = 16. Correct. */
+    -fx-background-radius: 20, 20;
+    -fx-text-fill: transparent;
+    -fx-padding: 0;
+    /* Clear padding, use insets for graphic */
+    -fx-cursor: hand;
+    -fx-min-width: 36px;
+    -fx-max-width: 36px;
+    -fx-min-height: 20px;
+    -fx-max-height: 20px;
+}
+
+.toggle-switch-nano:selected {
+    -fx-background-color: #34c759, white;
+    /* Green (On) Track, White Knob */
+    -fx-background-insets: 0, 2 2 2 18;
+    /* Knob on Right.
+                                           Insets: Top=2, Right=2, Bottom=2, Left=18. */
+}
+
+.toggle-switch-nano:hover {
+    -fx-opacity: 0.9;
+}
+
+/* --- FULL WIDTH COLOR OLLAMA STATUS BAR --- */
+.status-bar-container {
+    -fx-padding: 12px 15px;
+    -fx-background-radius: 0;
+}
+
+/* Background Colors */
+.status-bar-stopped {
+    -fx-background-color: #d32f2f;
+    /* Muted Red (Material Red 700) - "Dry Red" */
+}
+
+.status-bar-running {
+    -fx-background-color: #388e3c;
+    /* Muted Green (Material Green 700) - "Dry Green" */
+}
+
+.status-label-white {
+    -fx-text-fill: white;
+    -fx-font-weight: normal;
+    -fx-font-size: 13px;
+}
+
+/* SWITCH BUTTON STYLING */
+.status-switch-button {
+    -fx-background-color: white;
+    -fx-text-fill: -color-fg-default;
+    -fx-background-radius: 15px;
+    /* Pill shape */
+    -fx-min-width: 50px;
+    -fx-padding: 3px 10px;
+    -fx-font-size: 11px;
+    -fx-font-weight: normal;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1);
+}
+
+.status-switch-button:selected {
+    -fx-background-color: white;
+    /* Keep white bg for the "knob" look if possible, or inverse */
+    -fx-text-fill: #388e3c;
+}
+
+
+/* Make it look more like a switch? 
+   Actually, standard ToggleButton with pills style is clean. 
+   User asked for "boton switch" shape.
+   Let's simulate a simpler toggle: White pill with text inside.
+*/
+
+/* --- REFINED OLLAMA STATUS BAR --- */
+.status-bar-refined {
+    -fx-padding: 10px 15px;
+    -fx-background-color: rgba(0, 0, 0, 0.03);
+    /* Subtle footer background */
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 1px 0 0 0;
+}
+
+.status-indicator-dot {
+    -fx-min-width: 8px;
+    -fx-min-height: 8px;
+    -fx-max-width: 8px;
+    -fx-max-height: 8px;
+    -fx-background-radius: 5px;
+}
+
+/* Re-use active/inactive classes but with updated colors if needed */
+.status-dot-active {
+    -fx-background-color: #34c759;
+    /* iOS Green */
+    -fx-effect: dropshadow(gaussian, rgba(52, 199, 89, 0.4), 6, 0, 0, 0);
+}
+
+.status-dot-inactive {
+    -fx-background-color: #ff3b30;
+    /* iOS Red */
+}
+
+.status-title-small {
+    -fx-font-size: 11px;
+    -fx-font-weight: normal;
+    -fx-text-fill: -color-fg-default;
+}
+
+.status-subtitle-small {
+    -fx-font-size: 10px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+/* POWER BUTTON */
+.icon-button-power {
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+    -fx-cursor: hand;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+}
+
+.icon-button-power:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+}
+
+.icon-button-power:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+.power-icon-shape {
+    -fx-fill: -color-fg-muted;
+    /* Default Grey */
+    -fx-min-width: 16px;
+    -fx-min-height: 16px;
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
+}
+
+.icon-button-power:hover .power-icon-shape {
+    -fx-fill: -color-fg-default;
+}
+
+/* --- MARKDOWN STYLES (RichTextFX) --- */
+/* --- MARKDOWN STYLES (RichTextFX / BBCode) --- */
+.markdown-area {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0 10;
+}
+
+.markdown-area .content {
+    -fx-background-color: transparent;
+}
+
+/* Base Text */
+.markdown-area text {
+    -fx-fill: -color-fg-default;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-font-size: 14px;
+    /* Alineado con chat-bubble para consistencia */
+    -fx-font-smoothing-type: lcd;
+    /* Better anti-aliasing */
+}
+
+/* Headers - Gemini Style (Larger, Bolder) */
+/* Note: These classes depend on how BBCodeParser assigns styles to [h1] tags. 
+   Usually it maps to .heading1 etc. or we rely on the specific implementation. 
+   Assuming AtlantaFX BBCodeParser maps [h1] -> styleClass "h1" or similar?
+   Wait, looking at MarkdownOutput, it uses BBCodeParser.createLayout.
+   If specific classes aren't generated, we might be styling blindly if we rely solely on these names.
+   However, as
+/* --- Right Sidebar (Inspector Panel) --- */
+.chat-sidebar-right {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 0 0 0 1px;
+    /* Border Left only */
+    -fx-effect: null;
+}
+
+.input-card {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 20px;
+    /* More rounded */
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 20px;
+    -fx-border-width: 1px;
+
+    /* Premium "Float" Shadow */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 20, 0.0, 0, 5);
+}
+
+.sidebar-card {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.02), 2, 0, 0, 1);
+}
+
+.sidebar-text-area {
+    -fx-background-color: -color-bg-default;
+    -fx-text-fill: -color-fg-default;
+    -fx-prompt-text-fill: -color-fg-muted;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 8px;
+    -fx-font-size: 13px;
+    /* Alineado con body */
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-highlight-fill: -color-accent-emphasis;
+    -fx-highlight-text-fill: white;
+}
+
+.sidebar-text-area:focused {
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-accent-emphasis;
+    -fx-effect: dropshadow(gaussian, rgba(0, 122, 255, 0.2), 5, 0, 0, 0);
+}
+
+.sidebar-text-area .content {
+    -fx-background-color: transparent;
+}
+
+/* Headers - Gemini Style (Larger, Bolder) */
+/* Aliasing widely used classes for headers */
+.markdown-h1,
+.h1,
+.header-1,
+.title-1 {
+    -fx-font-size: 32px;
+    /* Massive, bold */
+    -fx-font-weight: 400;
+    /* Extra Bold */
+    -fx-fill: -color-fg-default;
+    -fx-padding: 20px 0 10px 0;
+    -fx-font-smoothing-type: lcd;
+}
+
+.markdown-h2,
+.h2,
+.header-2,
+.title-2 {
+    -fx-font-size: 24px;
+    -fx-font-weight: normal;
+    -fx-fill: -color-fg-default;
+    -fx-padding: 15px 0 8px 0;
+    -fx-font-smoothing-type: lcd;
+}
+
+.markdown-h3,
+.h3,
+.header-3,
+.title-3 {
+    -fx-font-size: 20px;
+    -fx-font-weight: normal;
+    -fx-fill: -color-fg-default;
+    -fx-padding: 10px 0 5px 0;
+    -fx-font-smoothing-type: lcd;
+}
+
+.markdown-h4 {
+    -fx-font-size: 18px;
+    -fx-font-weight: normal;
+    -fx-fill: -color-fg-default;
+}
+
+.markdown-h5,
+.markdown-h6 {
+    -fx-font-size: 16px;
+    -fx-font-weight: normal;
+    -fx-fill: -color-fg-subtle;
+}
+
+/* Emphasis */
+.markdown-bold {
+    -fx-font-weight: normal;
+}
+
+.markdown-italic {
+    -fx-font-style: italic;
+}
+
+/* Code Blocks */
+/* Code Blocks (Paragraph Level) */
+.markdown-code-paragraph {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 4px;
+    -fx-border-width: 0;
+}
+
+.markdown-code-paragraph .text {
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-fill: -color-fg-default;
+}
+
+/* Inline Code (Span Level) */
+/* Syntax Highlighting */
+.keyword {
+    -fx-fill: #cc7832;
+    -fx-font-weight: normal;
+}
+
+.paren {
+    -fx-fill: #a9b7c6;
+}
+
+.brace {
+    -fx-fill: #a9b7c6;
+}
+
+.bracket {
+    -fx-fill: #a9b7c6;
+}
+
+.semicolon {
+    -fx-fill: #cc7832;
+}
+
+.string {
+
+    /* --- APPLE DIALOG REDESIGN --- */
+    .apple-dialog {
+        -fx-background-color: #ffffff;
+        /* Explicit White for Light Mode to float above grey */
+        -fx-background-radius: 20px;
+        -fx-border-radius: 20px;
+        -fx-border-color: rgba(0, 0, 0, 0.1);
+        /* Very subtle border */
+        -fx-border-width: 1px;
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 50, 0, 0, 15);
+        /* Deep, soft shadow */
+        -fx-padding: 30px;
+        -fx-alignment: CENTER;
+    }
+
+    /* Support both .root.dark nesting and direct .dark class on the dialog root */
+    .root.dark .apple-dialog,
+    .apple-dialog.dark {
+        -fx-background-color: #2c2c2e;
+        /* Secondary System Fill (Lighter than background) */
+        -fx-border-color: rgba(255, 255, 255, 0.15);
+        /* More visible border */
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 60, 0, 0, 20);
+        /* Stronger shadow for separation */
+    }
+
+    .apple-dialog-title {
+        -fx-font-size: 18px;
+        -fx-font-weight: normal;
+        -fx-text-fill: -color-fg-default;
+        -fx-font-family: "Inter", "Helvetica Neue", "System";
+    }
+
+    .apple-dialog-status-large {
+        -fx-font-size: 32px;
+        -fx-font-weight: 400;
+        /* Extra bold */
+        -fx-text-fill: -color-fg-default;
+        -fx-font-family: "Inter", "Helvetica Neue", "System";
+    }
+
+    .apple-dialog-status-subtle {
+        -fx-font-size: 14px;
+        -fx-text-fill: -color-fg-subtle;
+        -fx-font-family: "Inter", "Helvetica Neue", "System";
+    }
+
+    .apple-button-secondary {
+        -fx-background-color: rgba(128, 128, 128, 0.15);
+        /* Neutral grey pill */
+        -fx-text-fill: -color-fg-default;
+        -fx-background-radius: 20px;
+        -fx-padding: 8px 24px;
+        -fx-cursor: hand;
+        -fx-font-size: 13px;
+        -fx-font-weight: normal;
+        -fx-border-width: 0;
+    }
+
+    .apple-button-secondary:hover {
+        -fx-background-color: rgba(128, 128, 128, 0.25);
+    }
+
+    .apple-button-secondary:pressed {
+        -fx-background-color: rgba(128, 128, 128, 0.35);
+    }
+
+
+    /* --- APPLE DESIGN REDESIGN (Premium Model Detail) --- */
+
+    /* 1. Typography */
+    .apple-title-large {
+        -fx-font-family: "Inter", "Helvetica Neue", "System";
+        -fx-font-size: 38px;
+        -fx-font-weight: 400;
+        /* Extra Bold */
+        -fx-text-fill: -color-fg-default;
+        -fx-letter-spacing: -0.5px;
+        /* Tight tracking like Apple */
+    }
+
+    .apple-text-body {
+        -fx-font-family: "Inter", "Helvetica Neue", "System";
+        -fx-font-size: 15px;
+        -fx-text-fill: -color-fg-default;
+        -fx-line-spacing: 4px;
+        -fx-opacity: 0.9;
+    }
+
+    .apple-text-subtle {
+        -fx-font-size: 13px;
+        -fx-text-fill: -color-fg-muted;
+        -fx-font-weight: normal;
+    }
+
+    /* 2. Cards (Inset Grouped Style) */
+    .apple-card-row {
+        -fx-background-color: -color-bg-default;
+        /* White on light, Dark on dark */
+        -fx-background-radius: 12px;
+        -fx-border-radius: 12px;
+        -fx-border-color: rgba(0, 0, 0, 0.06);
+        /* Very subtle border */
+        -fx-border-width: 1px;
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 10, 0, 0, 2);
+        /* Soft ambient shadow */
+        -fx-padding: 18px 20px;
+        -fx-cursor: hand;
+        -fx-alignment: CENTER_LEFT;
+    }
+
+    /* Hover Effect for Card */
+    .apple-card-row:hover {
+        -fx-background-color: -color-bg-subtle;
+        /* Slightly darker/lighter depending on theme */
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 15, 0, 0, 4);
+        /* Lift up */
+        -fx-translate-y: -1px;
+        /* Micro-interaction */
+    }
+
+    /* Dark Mode Adjustments */
+    .root.dark .apple-card-row {
+        -fx-background-color: #1c1c1e;
+        /* Secondary System Fill */
+        -fx-border-color: rgba(255, 255, 255, 0.1);
+        -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 2);
+    }
+
+    .root.dark .apple-card-row:hover {
+        -fx-background-color: #2c2c2e;
+        /* Tertiary System Fill */
+    }
+
+
+    /* 3. Action Button (Get / Open) */
+    .apple-button-action {
+        -fx-background-color: #007AFF;
+        /* System Blue */
+        -fx-text-fill: white;
+        -fx-background-radius: 20px;
+        /* Pill shape */
+        -fx-font-weight: normal;
+        -fx-font-size: 13px;
+        -fx-padding: 6px 20px;
+        -fx-cursor: hand;
+        -fx-min-width: 70px;
+        -fx-alignment: CENTER;
+    }
+
+    .apple-button-action:hover {
+        -fx-background-color: #0062cc;
+        /* Darker Blue */
+        -fx-effect: dropshadow(gaussian, rgba(0, 122, 255, 0.4), 8, 0, 0, 2);
+    }
+
+    .apple-button-destructive {
+        -fx-background-color: transparent;
+        -fx-text-fill: #ff3b30;
+        /* System Red */
+        -fx-background-radius: 20px;
+        -fx-border-color: rgba(255, 59, 48, 0.3);
+        -fx-border-radius: 20px;
+        -fx-padding: 5px 15px;
+        -fx-cursor: hand;
+        -fx-font-size: 13px;
+        -fx-font-weight: normal;
+    }
+
+    .apple-button-destructive:hover {
+        -fx-background-color: rgba(255, 59, 48, 0.1);
+        -fx-border-color: #ff3b30;
+    }
+
+    /* 4. Badges (Refined) */
+    .apple-badge-pill {
+        -fx-background-radius: 6px;
+        -fx-padding: 4px 10px;
+        -fx-font-size: 12px;
+        -fx-font-weight: normal;
+        -fx-font-family: "Inter", "Helvetica Neue", "System";
+        /* For tech specs */
+    }
+
+    .apple-stat-box {
+        -fx-alignment: CENTER_LEFT;
+        -fx-spacing: 5px;
+    }
+
+    .apple-stat-icon {
+        -fx-fill: -color-fg-muted;
+        -fx-min-width: 14px;
+        -fx-min-height: 14px;
+    }
+
+    /* 5. Separators */
+    .apple-separator {
+        -fx-background-color: -color-border-subtle;
+        -fx-min-height: 1px;
+        -fx-max-height: 1px;
+        -fx-opacity: 0.5;
+    }
+
+    -fx-fill: #808080;
+    -fx-font-style: italic;
+}
+
+.number {
+    -fx-fill: #6897bb;
+}
+
+.chat-sidebar-right .sidebar-section-label {
+    -fx-font-size: 13px;
+    -fx-font-family: "Inter", "System";
+    -fx-font-weight: normal;
+    -fx-text-fill: -color-fg-muted;
+    -fx-padding: 0 0 5 0;
+    -fx-alignment: center-left;
+    -fx-opacity: 0.9;
+}
+
+.sidebar-value-label {
+    -fx-font-size: 13px;
+    -fx-font-family: "Inter", "System";
+    -fx-font-weight: 700;
+    -fx-text-fill: -color-fg-default;
+    -fx-alignment: center-right;
+}
+
+.sidebar-description-label {
+    -fx-font-size: 11px;
+    -fx-font-family: "Inter", "System";
+    -fx-text-fill: -color-fg-muted;
+    -fx-opacity: 0.8;
+    -fx-padding: 2 0 4 0;
+}
+
+.sidebar-slider .track {
+    -fx-background-color: -color-border-default;
+    -fx-background-radius: 4px;
+    -fx-pref-height: 4px;
+}
+
+.sidebar-slider:hover .track {
+    -fx-background-color: -color-border-active;
+}
+
+.sidebar-slider .thumb {
+    -fx-background-color: -fx-accent;
+    /* Controlled by Java */
+    -fx-background-radius: 50%;
+    -fx-pref-width: 18px;
+    -fx-pref-height: 18px;
+    /* Colored glow effect using the accent color */
+    -fx-effect: dropshadow(three-pass-box, -fx-accent, 8, 0.4, 0, 0);
+    -fx-cursor: hand;
+}
+
+.sidebar-slider:pressed .thumb {
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
+    -fx-effect: dropshadow(three-pass-box, -fx-accent, 5, 0.6, 0, 0);
+}
+
+.chat-sidebar-right .sidebar-card {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+    -fx-effect: none;
+    /* Cleaner look */
+}
+
+.chat-sidebar-right .sidebar-text-area {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 10px;
+    -fx-text-fill: -color-fg-default;
+    -fx-prompt-text-fill: -color-fg-muted;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    /* Native feel */
+}
+
+.chat-sidebar-right .sidebar-checkbox {
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-cursor: hand;
+    -fx-graphic-text-gap: 8px;
+}
+
+/* The box must contrast against the subtle sidebar background, otherwise
+   it's invisible (previously used -color-bg-subtle == sidebar bg). */
+.chat-sidebar-right .sidebar-checkbox .box {
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-border-default;
+    -fx-border-width: 1.2px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 3px;
+    -fx-min-width: 16px;
+    -fx-min-height: 16px;
+    -fx-pref-width: 16px;
+    -fx-pref-height: 16px;
+}
+
+.chat-sidebar-right .sidebar-checkbox:hover .box {
+    -fx-border-color: -color-accent-emphasis;
+}
+
+.chat-sidebar-right .sidebar-checkbox:selected .box {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-border-color: -color-accent-emphasis;
+}
+
+.chat-sidebar-right .sidebar-checkbox:selected .mark {
+    -fx-background-color: white;
+    -fx-mark-color: white;
+}
+
+.chat-sidebar-right .sidebar-checkbox:disabled {
+    -fx-opacity: 0.4;
+}
+
+/* Right settings panel scroll container — transparent, no chrome. */
+.sidebar-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.sidebar-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.sidebar-scroll > .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+}
+
+/* Floating Action Button - Glass/Utility Style */
+.floating-settings-button {
+    -fx-background-color: -color-bg-default;
+    /* Match theme background */
+    -fx-text-fill: -color-fg-default;
+    -fx-background-radius: 50%;
+    -fx-min-width: 48px;
+    -fx-min-height: 48px;
+    -fx-max-width: 48px;
+    -fx-max-height: 48px;
+    -fx-font-size: 24px;
+    -fx-padding: 0;
+
+    /* Subtle border for definition */
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 50%;
+    -fx-border-width: 1px;
+
+    /* Soft, diffuse shadow */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 4);
+
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+
+.floating-settings-button:hover {
+    -fx-background-color: -color-bg-subtle;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 12, 0, 0, 6);
+}
+
+.floating-settings-button:pressed {
+    -fx-background-color: -color-bg-subtle;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 5, 0, 0, 2);
+}
+
+/* Code Block Card */
+.code-block-card {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 5, 0, 0, 2);
+}
+
+.code-block-header {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 8px 8px 0 0;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 0 0 1px 0;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.code-block-language {
+    -fx-font-weight: normal;
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.code-block-copy-btn {
+    -fx-font-size: 10px;
+    -fx-padding: 4px 8px;
+    -fx-cursor: hand;
+}
+
+.code-block-content {
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-font-size: 13px;
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-fg-default;
+}
+
+.code-block-content .content {
+    -fx-background-color: transparent;
+}
+
+/* --- Chat Message Toolbar (minimalist flat) --- */
+.chat-message-toolbar {
+    -fx-padding: 6px 0 0 0;
+    -fx-spacing: 10px;
+}
+
+.chat-message-toolbar .button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 4px;
+    -fx-padding: 4px 6px;
+    -fx-cursor: hand;
+}
+
+.chat-message-toolbar .button .ikonli-font-icon {
+    -fx-icon-color: -color-fg-muted;
+    -fx-icon-size: 16px;
+}
+
+.chat-message-toolbar .button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+}
+
+.chat-message-toolbar .button:hover .ikonli-font-icon {
+    -fx-icon-color: -color-fg-default;
+}
+
+.chat-message-toolbar .button:armed {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+}
+
+.chat-message-toolbar .button:armed .ikonli-font-icon {
+    -fx-icon-color: -color-fg-default;
+}
+
+/* Light mode overrides for chat toolbar hover */
+.root.light .chat-message-toolbar .button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+}
+
+.root.light .chat-message-toolbar .button:armed {
+    -fx-background-color: rgba(0, 0, 0, 0.10);
+}
+
+/* --- Chat Generation Metrics (subtle inline stats) --- */
+.chat-metrics {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 11px;
+    -fx-padding: 0 0 4px 0;
+    -fx-font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+/* --- Tool Call Card --- */
+.tool-call-card {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 8px 12px;
+    -fx-spacing: 4px;
+    -fx-max-width: 100%;
+}
+
+.tool-call-card:hover {
+    -fx-border-color: -color-accent-emphasis;
+}
+
+.tool-call-header {
+    -fx-spacing: 8px;
+}
+
+.tool-call-icon {
+    -fx-icon-color: -color-accent-emphasis;
+    -fx-icon-size: 14px;
+}
+
+.tool-call-name {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -color-fg-default;
+    -fx-font-family: "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+.tool-call-status {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.tool-call-status-pending {
+    -fx-text-fill: -color-warning-fg;
+    -fx-font-size: 14px;
+}
+
+.tool-call-status-success {
+    -fx-text-fill: -color-success-fg;
+}
+
+.tool-call-status-error {
+    -fx-text-fill: -color-danger-fg;
+}
+
+.tool-call-copy-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 2px 4px;
+    -fx-cursor: hand;
+}
+
+.tool-call-copy-btn .ikonli-font-icon {
+    -fx-icon-color: -color-fg-muted;
+    -fx-icon-size: 12px;
+}
+
+.tool-call-copy-btn:hover .ikonli-font-icon {
+    -fx-icon-color: -color-fg-default;
+}
+
+.tool-call-details {
+    -fx-padding: 8px 0 4px 0;
+    -fx-spacing: 2px;
+}
+
+.tool-call-detail-label {
+    -fx-font-size: 10px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-padding: 6px 0 2px 0;
+}
+
+.tool-call-detail-value {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-default;
+    -fx-font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    -fx-padding: 0 0 0 8px;
+}
+
+/* --- System Prompt Text Area --- */
+.capsule-text-area {
+    -fx-background-color: -color-bg-subtle;
+    -fx-text-fill: -color-fg-default;
+    -fx-prompt-text-fill: -color-fg-muted;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 8px;
+    -fx-font-size: 13px;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+}
+
+.capsule-text-area:focused {
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-accent-emphasis;
+    -fx-effect: dropshadow(gaussian, rgba(0, 122, 255, 0.2), 5, 0, 0, 0);
+}
+
+.capsule-text-area .content {
+    -fx-background-color: transparent;
+}
+
+/* --- Model Card Enhancements --- */
+.model-card {
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 1px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.05), 8, 0, 0, 4);
+    -fx-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.model-card:hover {
+    -fx-border-color: -color-accent-emphasis;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 122, 255, 0.15), 15, 0, 0, 8);
+    -fx-translate-y: -4px;
+    -fx-cursor: hand;
+}
+
+.model-card-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: normal;
+    -fx-text-fill: -color-fg-default;
+}
+
+.model-card-desc {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-line-spacing: 2px;
+}
+
+.model-card-stats {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.model-icon-container {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 10px;
+    -fx-min-width: 48px;
+    -fx-min-height: 48px;
+    -fx-max-width: 48px;
+    -fx-max-height: 48px;
+}
+
+.model-icon-text {
+    -fx-font-size: 20px;
+    -fx-text-fill: -color-accent-emphasis;
+}
+
+/* --- MODEL EXPLORER (Available Models) - Simplified --- */
+
+.model-toolbar {
+    -fx-padding: 12 16;
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 0 0 1 0;
+}
+
+.filter-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.filter-toggle {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6px;
+    -fx-padding: 6 12;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+}
+
+.filter-toggle:hover {
+    -fx-background-color: -color-bg-subtle;
+}
+
+.filter-toggle:selected {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+
+.results-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.search-field {
+    -fx-background-radius: 25px;
+    -fx-border-radius: 25px;
+    -fx-padding: 10 16;
+    -fx-font-size: 14px;
+}
+
+/* Model List styling */
+.model-list {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.model-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.model-list .list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+/* Model Card (List Cell Content) */
+.model-card {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+    -fx-padding: 12 14;
+    -fx-cursor: hand;
+}
+
+.model-card:hover {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default;
+}
+
+.model-list .list-cell:selected .model-card {
+    -fx-background-color: -color-accent-subtle;
+    -fx-border-color: -color-accent-emphasis;
+}
+
+.model-card-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-fill: -color-fg-default;
+}
+
+.model-card-size {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-family: "SF Mono", "Menlo", monospace;
+}
+
+.model-card-badges {
+    -fx-spacing: 4;
+}
+
+.capability-badge {
+    -fx-font-size: 10px;
+    -fx-padding: 2 6;
+    -fx-background-radius: 4px;
+    -fx-background-color: rgba(0, 122, 255, 0.1);
+    -fx-text-fill: #007AFF;
+}
+
+/* Compatibility Indicator */
+.compat-dot {
+    -fx-min-width: 6px;
+    -fx-min-height: 6px;
+    -fx-max-width: 6px;
+    -fx-max-height: 6px;
+    -fx-background-radius: 50%;
+}
+
+.compat-recommended {
+    -fx-background-color: #34c759;
+}
+
+.compat-standard {
+    -fx-background-color: #ff9500;
+}
+
+.compat-notrecommended {
+    -fx-background-color: #ff3b30;
+}
+
+/* Detail Panel */
+.detail-panel {
+    -fx-background-color: -color-bg-subtle;
+    -fx-padding: 20;
+}
+
+/* --- SMART COLLECTIONS TREE VIEW (Refined for AtlantaFX) --- */
+
+.chat-tree-view {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 5px;
+}
+
+.chat-tree-view .tree-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 6px 8px;
+    /* Comfortable padding */
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
+    -fx-graphic-text-gap: 8px;
+    /* Space between icon and text */
+}
+
+/* Hover State */
+.chat-tree-view .tree-cell:filled:hover {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 4px;
+}
+
+/* Selected State */
+.chat-tree-view .tree-cell:filled:selected {
+    -fx-background-color: -color-accent-subtle;
+    -fx-text-fill: -color-accent-fg;
+    -fx-background-radius: 4px;
+}
+
+.chat-tree-view .tree-cell:filled:selected .text {
+    -fx-fill: -color-accent-fg;
+}
+
+/* Drag Over Feedback */
+.tree-cell.drag-over {
+    -fx-background-color: -color-accent-subtle;
+    /* Highlight background */
+    -fx-border-color: -color-accent-emphasis;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-border-style: dashed;
+}
+
+/* Icon Colors (Ikonli FontIcon) */
+.ikonli-font-icon {
+    -fx-icon-color: -color-fg-muted;
+    -fx-icon-size: 16px;
+}
+
+.tree-cell:filled:selected .ikonli-font-icon {
+    -fx-icon-color: -color-accent-fg;
+}
+
+/* Disclosure Node (Arrow) */
+.tree-cell .tree-disclosure-node .arrow {
+    -fx-background-color: -color-fg-muted;
+    -fx-padding: 0.2em;
+    /* Smaller arrow */
+}
+
+.tree-cell:filled:selected .tree-disclosure-node .arrow {
+    -fx-background-color: -color-accent-fg;
+}
+
+/* --- Chat Icon Style --- */
+/* --- Chat Icon Style --- */
+.chat-icon {
+    -fx-fill: -color-fg-muted;
+}
+
+/* --- NEW SIDEBAR HEADER (Apple Notes Style) --- */
+.sidebar-header {
+    -fx-padding: 10px 15px 5px 15px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.sidebar-section-label {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-opacity: 0.8;
+}
+
+/* Generic Small Icon Button */
+.button-icon-small {
+    -fx-background-color: transparent;
+    -fx-min-width: 28px;
+    -fx-min-height: 28px;
+    -fx-max-width: 28px;
+    -fx-max-height: 28px;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+
+.button-icon-small:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-background-radius: 4px;
+}
+
+.button-icon-small:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Icon: New Folder & New Chat (FontIcon Style) */
+.button-icon-small .font-icon {
+    -fx-icon-color: -color-fg-muted;
+    -fx-icon-size: 18px;
+    /* Slightly larger for better visibility */
+}
+
+.button-icon-small:hover .font-icon {
+    -fx-icon-color: -color-fg-default;
+}
+
+
+/* --- Thinking Indicator (Ring Spinner) --- */
+.thinking-ring {
+    -fx-min-width: 18px;
+    -fx-min-height: 18px;
+    -fx-max-width: 18px;
+    -fx-max-height: 18px;
+}
+
+/* --- MULTIMODAL: Image Preview Strip --- */
+.image-preview-strip {
+    -fx-padding: 6px 0 2px 0;
+    -fx-spacing: 8px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.image-thumbnail {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.10), 4, 0, 0, 1);
+}
+
+.image-remove-btn {
+    -fx-background-color: rgba(0, 0, 0, 0.55);
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-min-width: 18px;
+    -fx-min-height: 18px;
+    -fx-max-width: 18px;
+    -fx-max-height: 18px;
+    -fx-background-radius: 50%;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.image-remove-btn:hover {
+    -fx-background-color: rgba(220, 38, 38, 0.85);
+}
+
+.image-count-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-weight: normal;
+}
+
+.vision-warning-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #b45309;
+    -fx-font-weight: normal;
+    -fx-padding: 2px 0;
+}
+
+.root.dark .vision-warning-label {
+    -fx-text-fill: #fbbf24;
+}
+
+/* Drag overlay hint */
+.drag-overlay {
+    -fx-background-color: rgba(0, 122, 255, 0.08);
+    -fx-border-color: #007AFF;
+    -fx-border-width: 2px;
+    -fx-border-style: dashed;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+}
+
+/* Inline image thumbnail in user chat bubble */
+.chat-bubble-image {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 3, 0, 0, 1);
+}
+
+/* --- CHAT HEADER --- */
+.chat-header {
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.chat-header-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-default;
+}
+
+.chat-header-icon {
+    -fx-icon-color: -color-accent-fg;
+}
+
+.button-icon-header {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-padding: 8px;
+}
+
+.button-icon-header:hover {
+    -fx-background-color: -color-bg-subtle;
+}
+
+/* ===== RAG / Knowledge Base ===== */
+
+/* RAG Library Panel */
+.rag-panel {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 12px;
+}
+
+.rag-panel .header-row {
+    -fx-padding: 16px 20px;
+}
+
+.rag-panel .header-row .label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-default;
+}
+
+/* Drop zone */
+.rag-drop-zone {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-border-muted;
+    -fx-border-style: dashed;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-padding: 40px;
+    -fx-alignment: center;
+}
+
+.rag-drop-zone:hover {
+    -fx-border-color: -color-accent-fg;
+    -fx-background-color: derive(-color-accent-fg, 90%);
+}
+
+.rag-drop-zone .label {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 14px;
+}
+
+/* Document list cells */
+.rag-doc-cell {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 14px;
+    -fx-border-color: derive(-color-border-muted, 20%);
+    -fx-border-radius: 8px;
+    -fx-border-width: 0.5px;
+}
+
+.rag-doc-cell:hover {
+    -fx-background-color: derive(-color-bg-subtle, -5%);
+}
+
+.rag-doc-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-default;
+}
+
+.rag-doc-status {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.rag-doc-status-ready {
+    -fx-text-fill: -color-success-fg;
+}
+
+.rag-doc-status-error {
+    -fx-text-fill: -color-danger-fg;
+}
+
+.rag-doc-status-indexing {
+    -fx-text-fill: -color-warning-fg;
+}
+
+/* Warning banner */
+.rag-warning-banner {
+    -fx-background-color: derive(-color-warning-fg, 80%);
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 16px;
+    -fx-border-color: -color-warning-fg;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+.rag-warning-banner .label {
+    -fx-text-fill: -color-warning-fg;
+    -fx-font-size: 12px;
+}
+
+/* RAG toggle button active state */
+.attach-button-icon:selected {
+    -fx-background-color: derive(-color-accent-fg, 80%);
+    -fx-border-color: -color-accent-fg;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.attach-button-icon:selected .font-icon {
+    -fx-icon-color: -color-accent-fg;
+}
+
+/* Source citation pills */
+.rag-source-pill {
+    -fx-background-color: derive(-color-accent-fg, 80%);
+    -fx-background-radius: 12px;
+    -fx-padding: 3px 10px;
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-accent-fg;
+    -fx-cursor: hand;
+    -fx-border-color: derive(-color-accent-fg, 50%);
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+}
+
+.rag-source-pill:hover {
+    -fx-background-color: derive(-color-accent-fg, 60%);
+}
+
+.rag-source-pill-icon {
+    -fx-icon-color: -color-accent-fg;
+}
+
+.rag-source-pill-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-accent-fg;
+}
+
+.rag-source-pill-count {
+    -fx-background-color: -color-accent-fg;
+    -fx-text-fill: white;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 1px 5px;
+}
+
+/* RAG source preview modal — verifiable citations */
+.rag-source-preview {
+    -fx-background-color: -color-bg-default;
+}
+.rag-source-preview-icon { -fx-icon-color: -color-fg-muted; }
+.rag-source-preview-intro {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+}
+.rag-source-preview-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+.rag-fragment-card {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+.rag-fragment-num {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-muted;
+}
+.rag-fragment-page {
+    -fx-font-size: 10.5px;
+    -fx-text-fill: -color-fg-muted;
+}
+.rag-fragment-score {
+    -fx-font-size: 10.5px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-accent-fg;
+    -fx-background-color: derive(-color-accent-fg, 80%);
+    -fx-background-radius: 8px;
+    -fx-padding: 1px 7px;
+}
+.rag-fragment-text {
+    -fx-font-size: 12px;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+}
+
+/* ===================== First-run onboarding wizard ===================== */
+.onboarding-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+}
+
+.onboarding-card {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 16px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 16px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.28), 32, 0.0, 0, 10);
+}
+
+.onboarding-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-default;
+}
+
+.onboarding-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.onboarding-hero-icon {
+    -fx-icon-color: -color-accent-emphasis;
+}
+
+.onboarding-ok-icon {
+    -fx-icon-color: -color-success-fg;
+}
+
+/* Step indicator dots */
+.onboarding-step-dot {
+    -fx-min-width: 8px;
+    -fx-min-height: 8px;
+    -fx-pref-width: 8px;
+    -fx-pref-height: 8px;
+    -fx-background-radius: 4px;
+    -fx-background-color: -color-border-default;
+}
+
+.onboarding-step-dot-active {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-min-width: 22px;
+    -fx-pref-width: 22px;
+}
+
+/* Starter-model cards */
+.onboarding-model-card {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+}
+
+.onboarding-model-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-default;
+}
+
+.onboarding-model-size {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.onboarding-model-badge {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-text-fill: white;
+    -fx-font-size: 9.5px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 2px 8px;
+}
+
+/* Stats footer */
+.rag-stats-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-padding: 8px 16px;
+}
+
+/* ===== RAG Collections ===== */
+
+/* Collections sidebar */
+.rag-collections-sidebar {
+    -fx-background-color: derive(-color-bg-default, -3%);
+    -fx-border-color: -color-border-muted;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.rag-collections-header {
+    -fx-border-color: -color-border-muted;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.rag-collections-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-muted;
+    -fx-text-transform: uppercase;
+}
+
+.rag-collection-list {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 4px 0;
+}
+
+.rag-collection-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 1px 0;
+}
+
+.rag-collection-list .list-cell:selected .rag-collection-cell {
+    -fx-background-color: derive(-color-accent-fg, 85%);
+}
+
+.rag-collection-list .list-cell:selected .rag-collection-name {
+    -fx-text-fill: -color-accent-fg;
+    -fx-font-weight: bold;
+}
+
+.rag-collection-cell {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.rag-collection-cell:hover {
+    -fx-background-color: -color-bg-subtle;
+}
+
+.rag-collection-name {
+    -fx-font-size: 13px;
+    -fx-text-fill: -color-fg-default;
+}
+
+.rag-collection-count {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-padding: 1px 6px;
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 10px;
+}
+
+/* Document panel header */
+.rag-doc-panel-header {
+    -fx-border-color: -color-border-muted;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.rag-collection-name-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-default;
+}
+
+/* RAG collection selector popup in chat */
+.rag-collection-popup {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 10px;
+    -fx-border-color: -color-border-muted;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 12, 0, 0, 4);
+    -fx-min-width: 180px;
+}
+
+.rag-collection-popup-header {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-muted;
+    -fx-padding: 0 0 6px 0;
+    -fx-border-color: -color-border-muted;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.rag-collection-check {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-default;
+    -fx-padding: 4px 0;
+}
+
+.rag-collection-check .box {
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+
+/* Documents panel */
+.rag-documents-panel {
+    -fx-background-color: -color-bg-default;
+}
+
+.rag-doc-list {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 8px 12px;
+}
+
+.rag-doc-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 3px 4px;
+}
+
+.rag-doc-list .list-cell:empty {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+    -fx-max-height: 0;
+}
+
+/* Attached document pills rendered inside user message bubbles. */
+.attached-docs-row {
+    -fx-padding: 0 0 4 0;
+}
+
+.attached-doc-pill {
+    -fx-background-color: #ede9fe;
+    -fx-background-radius: 14px;
+    -fx-border-color: #c4b5fd;
+    -fx-border-radius: 14px;
+    -fx-border-width: 0.5px;
+    -fx-padding: 4 10 4 8;
+}
+
+.attached-doc-pill-icon {
+    -fx-icon-color: #6d28d9;
+}
+
+.attached-doc-pill-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #4c1d95;
+}
+
+.attached-doc-pill:hover {
+    -fx-background-color: #ddd6fe;
+}
+
+.attached-doc-pill-badge-ok { -fx-icon-color: #16a34a; }      /* indexed: green check */
+.attached-doc-pill-badge-partial { -fx-icon-color: #f59e0b; } /* inline-only: amber bolt */
+.attached-doc-pill-badge-fail { -fx-icon-color: #dc2626; }    /* failed: red x */
+.attached-doc-pill-badge-warn { -fx-icon-color: #d97706; }    /* low quality: amber alert */
+
+/* Document chip in the preview strip with low-quality extraction. */
+.document-chip-warning {
+    -fx-border-color: #f59e0b;
+}
+.document-chip-warn-icon { -fx-icon-color: #d97706; }
+
+/* Context-usage ring lives in the input toolbar — styling is shape-based
+   (see ui/ContextRing.java); no extra CSS needed. */
+
+/* Preview modal (opened by clicking a pill). */
+.attached-doc-preview {
+    -fx-background-color: -color-bg-default;
+}
+.attached-doc-preview-icon { -fx-icon-color: -color-fg-muted; }
+.attached-doc-preview-stats {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 12px;
+}
+.attached-doc-preview-rag {
+    -fx-font-size: 11px;
+    -fx-padding: 3 8 3 8;
+    -fx-background-radius: 10;
+}
+.attached-doc-preview-rag.rag-status-ok {
+    -fx-background-color: #dcfce7;
+    -fx-text-fill: #166534;
+}
+.attached-doc-preview-rag.rag-status-partial {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #92400e;
+}
+.attached-doc-preview-rag.rag-status-failed {
+    -fx-background-color: #fee2e2;
+    -fx-text-fill: #991b1b;
+}
+.attached-doc-preview-rag.rag-status-pending {
+    -fx-background-color: -color-bg-subtle;
+    -fx-text-fill: -color-fg-muted;
+}
+.attached-doc-preview-warning {
+    -fx-text-fill: #92400e;
+    -fx-background-color: #fef3c7;
+    -fx-padding: 8;
+    -fx-background-radius: 6;
+}
+.attached-doc-preview-text {
+    -fx-font-family: "JetBrains Mono", "Menlo", monospace;
+    -fx-font-size: 12px;
+}
+
+/* Document attachment chips (queued PDFs/TXT/MD before send) */
+.document-preview-strip {
+    -fx-padding: 4 0 4 0;
+}
+
+.document-chip {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 12px;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 12px;
+    -fx-border-width: 0.5px;
+    -fx-padding: 4 8 4 8;
+}
+
+.document-chip-icon {
+    -fx-icon-color: -color-fg-muted;
+}
+
+.document-chip-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-default;
+}
+
+.document-chip-remove {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 2;
+    -fx-cursor: hand;
+}
+
+.document-chip-remove:hover .ikonli-font-icon {
+    -fx-icon-color: -color-danger-fg;
+}
+
+/* Attach button popup menu (Imágenes / Documentos) */
+.attach-menu .menu-item .ikonli-font-icon {
+    -fx-icon-color: -color-fg-muted;
+}
+
+.attach-menu .menu-item:focused .ikonli-font-icon,
+.attach-menu .menu-item:hover .ikonli-font-icon {
+    -fx-icon-color: white;
+}
+
+/* RAG Floating Chips (between chat and input card) */
+.rag-chips-floating {
+    -fx-padding: 0 4px 4px 4px;
+    -fx-spacing: 6;
+    -fx-alignment: center;
+}
+
+.rag-chip-inline {
+    -fx-background-color: #f3e8ff;
+    -fx-background-radius: 12px;
+    -fx-padding: 2px 8px;
+    -fx-border-color: #d8b4fe;
+    -fx-border-radius: 12px;
+    -fx-border-width: 0.5px;
+    -fx-cursor: hand;
+}
+
+.rag-chip-inline:hover {
+    -fx-background-color: #e9d5ff;
+}
+
+.rag-chip-label {
+    -fx-font-size: 10.5px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b21a8;
+}
+
+.rag-chip-remove {
+    -fx-padding: 0 0 0 2px;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-min-width: 12px;
+    -fx-min-height: 12px;
+}
+
+.rag-chip-remove .font-icon {
+    -fx-icon-color: -color-fg-muted;
+    -fx-icon-size: 9;
+}
+
+.rag-chip-remove:hover .font-icon {
+    -fx-icon-color: -color-danger-fg;
+}
+
+.rag-chip-add {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12px;
+    -fx-padding: 2px 6px;
+    -fx-border-color: #d8b4fe;
+    -fx-border-radius: 12px;
+    -fx-border-width: 0.5px;
+    -fx-border-style: dashed;
+    -fx-cursor: hand;
+}
+
+.rag-chip-add .font-icon {
+    -fx-icon-color: #7c3aed;
+    -fx-icon-size: 11;
+}
+
+.rag-chip-add:hover {
+    -fx-background-color: #f3e8ff;
+}
+
+.rag-chip-prefix {
+    -fx-icon-color: #7c3aed;
+    -fx-icon-size: 12;
+}
+
+/* File-type icon colors */
+.rag-icon-pdf {
+    -fx-icon-color: #E53935;
+}
+
+.rag-icon-text {
+    -fx-icon-color: #1E88E5;
+}
+
+.rag-icon-code {
+    -fx-icon-color: #8E24AA;
+}
+
+.rag-icon-data {
+    -fx-icon-color: #FB8C00;
+}
+
+/* Drop zone active (drag over) */
+.rag-drop-zone-active {
+    -fx-border-color: -color-accent-fg;
+    -fx-background-color: derive(-color-accent-fg, 90%);
+}
+
+/* Drop zone clickable sublabel */
+.rag-drop-sublabel {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+/* =====================================================
+   NATIVE MARKDOWN RENDERER (flexmark → JavaFX nodes)
+   Style classes: .md-* for content, .code-* for code blocks.
+   All colors reference AtlantaFX variables so theme switching works.
+   ===================================================== */
+
+.markdown-area {
+    -fx-background-color: transparent;
+    -fx-padding: 4 12 4 12;
+}
+
+.markdown-area .md-text {
+    -fx-fill: -color-fg-default;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-font-size: 14.5px;
+    -fx-font-smoothing-type: lcd;
+}
+
+.md-paragraph {
+    -fx-line-spacing: 4px;
+    -fx-padding: 2 0 2 0;
+}
+
+/* Inline emphasis applied via additive style classes (set by InlineRenderer) */
+.md-text.md-bold   { -fx-font-weight: bold; }
+.md-text.md-italic { -fx-font-style: italic; }
+.md-text.md-strike { -fx-strikethrough: true; }
+.md-text.md-link   { -fx-cursor: hand; }
+
+/* Headings — jerarquía estilo ChatGPT/Claude */
+.md-heading-block {
+    -fx-padding: 6 0 2 0;
+}
+
+.md-heading .md-text {
+    -fx-font-weight: bold;
+    -fx-fill: -color-fg-default;
+}
+
+.md-h1 .md-text { -fx-font-size: 30px; -fx-font-weight: bold; }
+.md-h2 .md-text { -fx-font-size: 24px; -fx-font-weight: bold; }
+.md-h3 .md-text { -fx-font-size: 20px; -fx-font-weight: bold; }
+.md-h4 .md-text { -fx-font-size: 17px; -fx-font-weight: bold; }
+.md-h5 .md-text { -fx-font-size: 15px; -fx-font-weight: bold; }
+.md-h6 .md-text { -fx-font-size: 14px; -fx-font-weight: bold; -fx-fill: -color-fg-muted; }
+
+.md-h1 { -fx-padding: 14 0 6 0; -fx-border-color: transparent transparent -color-border-subtle transparent; -fx-border-width: 0 0 1 0; }
+.md-h2 { -fx-padding: 10 0 4 0; }
+.md-h3 { -fx-padding: 8 0 4 0; }
+
+/* Links */
+.md-link.md-text {
+    -fx-fill: -color-accent-fg;
+    -fx-underline: true;
+}
+.md-link.md-text:hover {
+    -fx-fill: -color-accent-emphasis;
+}
+
+/* Inline code */
+.md-inline-code {
+    -fx-fill: -color-danger-fg;
+    -fx-font-family: "JetBrains Mono", "Menlo", "Consolas", "Monospaced";
+    -fx-font-size: 13px;
+}
+
+/* Lists */
+.md-bullet-list, .md-ordered-list {
+    -fx-padding: 2 0 2 10;
+}
+.md-list-item {
+    -fx-padding: 1 0 1 0;
+}
+.md-list-marker {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 14px;
+    -fx-min-width: 18px;
+    -fx-alignment: top-left;
+    -fx-padding: 0 0 0 2;
+}
+
+.md-task-checkbox {
+    -fx-padding: 2 0 0 0;
+    -fx-opacity: 1.0;
+}
+.md-task-checkbox:disabled {
+    -fx-opacity: 1.0;
+}
+
+/* Blockquote — barra lateral estilo ChatGPT */
+.md-blockquote {
+    -fx-padding: 4 0 4 0;
+}
+.md-blockquote-bar {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-background-radius: 2;
+}
+.md-blockquote-content .md-text {
+    -fx-fill: -color-fg-muted;
+    -fx-font-style: italic;
+}
+
+/* Horizontal rule */
+.md-hr {
+    -fx-padding: 6 0 6 0;
+    -fx-background-color: transparent;
+}
+.md-hr .line {
+    -fx-border-color: -color-border-subtle transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* Tables — estilo limpio con bordes sutiles */
+.md-table-wrapper {
+    -fx-padding: 6 0 6 0;
+}
+.md-table {
+    -fx-background-color: -color-bg-default;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-hgap: 0;
+    -fx-vgap: 0;
+}
+.md-table-header {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: transparent transparent -color-border-subtle transparent;
+    -fx-border-width: 0 0 1 0;
+}
+.md-table-header-cell {
+    -fx-font-weight: bold;
+}
+.md-table-header-cell .md-text {
+    -fx-font-weight: bold;
+    -fx-fill: -color-fg-default;
+}
+.md-table-body-cell {
+    -fx-border-color: -color-border-subtle transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+.md-table-cell .md-text, .md-table-header-cell .md-text {
+    -fx-fill: -color-fg-default;
+}
+
+/* =====================================================
+   CODE BLOCK CARD (RichTextFX CodeArea + syntax highlight)
+   ===================================================== */
+
+.code-block-card {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-subtle;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 0;
+}
+
+.code-block-header {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: transparent transparent -color-border-subtle transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.code-block-language {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-font-weight: bold;
+}
+
+.code-block-copy-btn {
+    -fx-background-color: transparent;
+    -fx-padding: 4 8 4 8;
+    -fx-cursor: hand;
+    -fx-background-radius: 4px;
+}
+.code-block-copy-btn:hover {
+    -fx-background-color: -color-bg-subtle;
+}
+.code-block-copy-icon {
+    -fx-fill: -color-fg-muted;
+    -fx-scale-x: 0.7;
+    -fx-scale-y: 0.7;
+}
+.code-block-copy-icon-success {
+    -fx-fill: -color-success-fg;
+}
+
+.code-block-scroll {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0 0 8 8;
+}
+
+/* RichTextFX CodeArea base */
+.code-block-content {
+    -fx-background-color: -color-bg-subtle;
+    -fx-font-family: "JetBrains Mono", "Menlo", "Consolas", "Monospaced";
+    -fx-font-size: 13px;
+    -fx-padding: 10 14 10 14;
+    -fx-background-radius: 0 0 8 8;
+}
+.code-block-content .text {
+    -fx-fill: -color-fg-default;
+}
+.code-block-content .caret {
+    -fx-stroke: transparent;
+}
+
+/* Syntax highlight token colors — claras y oscuras vía variables */
+.code-block-content .code-keyword {
+    -fx-fill: -color-accent-fg;
+    -fx-font-weight: bold;
+}
+.code-block-content .code-string {
+    -fx-fill: -color-success-fg;
+}
+.code-block-content .code-comment {
+    -fx-fill: -color-fg-muted;
+    -fx-font-style: italic;
+}
+.code-block-content .code-number {
+    -fx-fill: -color-warning-fg;
+}
+.code-block-content .code-annotation {
+    -fx-fill: -color-danger-fg;
+    -fx-font-weight: bold;
+}
+
+/* =========================================================
+   Scrape error dialog (Splash fail-loud)
+   ========================================================= */
+.scrape-error-dialog > .dialog-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.scrape-error-header {
+    -fx-padding: 0 0 8 0;
+}
+.scrape-error-icon-halo {
+    -fx-background-color: -color-danger-subtle;
+    -fx-background-radius: 24;
+    -fx-min-width: 48;
+    -fx-min-height: 48;
+    -fx-pref-width: 48;
+    -fx-pref-height: 48;
+    -fx-alignment: CENTER;
+}
+.scrape-error-icon {
+    -fx-icon-color: -color-danger-fg;
+}
+.scrape-error-body {
+    -fx-padding: 4 0 12 0;
+}
+.scrape-error-reason {
+    -fx-font-size: 14px;
+    -fx-text-fill: -color-fg-default;
+    -fx-line-spacing: 3px;
+}
+.scrape-error-meta {
+    -fx-padding: 6 0 0 0;
+}
+.scrape-error-meta-icon {
+    -fx-icon-color: -color-fg-muted;
+}
+.scrape-error-meta-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+}
+.scrape-error-code-chip {
+    -fx-background-color: -color-neutral-subtle;
+    -fx-background-radius: 6;
+    -fx-padding: 3 8 3 8;
+    -fx-border-color: -color-border-muted;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+}
+.scrape-error-code-text {
+    -fx-font-size: 11px;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-text-fill: -color-fg-muted;
+}
+.scrape-error-actions {
+    -fx-padding: 12 0 0 0;
+}
+
+/* =========================================================
+   Settings — Refresh Library row & state machine
+   ========================================================= */
+.library-refresh-btn {
+    -fx-background-radius: 8;
+    -fx-padding: 6 14 6 12;
+    -fx-graphic-text-gap: 8;
+    -fx-cursor: hand;
+}
+.library-refresh-btn .ikonli-font-icon,
+.library-refresh-btn-icon {
+    -fx-icon-color: -color-fg-default;
+    -fx-icon-size: 14;
+}
+.library-refresh-btn:disabled {
+    -fx-opacity: 0.55;
+    -fx-cursor: default;
+}
+.library-refresh-btn.success .ikonli-font-icon {
+    -fx-icon-color: -color-success-fg;
+}
+.library-refresh-btn.danger .ikonli-font-icon {
+    -fx-icon-color: -color-danger-fg;
+}
+.library-refresh-spinner {
+    -fx-pref-width: 16;
+    -fx-pref-height: 16;
+    -fx-max-width: 16;
+    -fx-max-height: 16;
+    -fx-progress-color: -color-accent-emphasis;
+}
+.library-refresh-status {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+}
+.library-refresh-status.success {
+    -fx-text-fill: -color-success-fg;
+}
+.library-refresh-status.danger {
+    -fx-text-fill: -color-danger-fg;
+}
+
+/* =========================================================
+   Settings — Refresh summary (inline toast)
+   ========================================================= */
+.library-refresh-summary {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12 8 12;
+    -fx-border-color: -color-border-muted;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+.library-refresh-summary.success {
+    -fx-background-color: -color-success-subtle;
+    -fx-border-color: -color-success-muted;
+}
+.library-refresh-summary.danger {
+    -fx-background-color: -color-danger-subtle;
+    -fx-border-color: -color-danger-muted;
+}
+.library-refresh-summary-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-default;
+}
+.library-diagnostics-toggle {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-accent-fg;
+    -fx-border-color: transparent;
+    -fx-underline: false;
+    -fx-padding: 0 0 0 4;
+}
+.library-diagnostics-toggle:hover {
+    -fx-underline: true;
+}
+
+/* =========================================================
+   Settings — Diagnostics panel
+   ========================================================= */
+.library-diagnostics-panel {
+    -fx-background-color: -color-bg-default;
+    -fx-background-radius: 8;
+    -fx-padding: 12 14 12 14;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+.library-diag-icon {
+    -fx-icon-color: -color-fg-muted;
+}
+.library-diag-icon-warn {
+    -fx-icon-color: -color-warning-fg;
+}
+.library-diag-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-default;
+}
+.library-diag-titled {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 12px;
+}
+.library-diag-list {
+    -fx-background-color: transparent;
+    -fx-pref-height: 140;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+    -fx-font-size: 11px;
+}
+
+/* =========================================================
+   Available Models — Size Filters & Active-Indicator
+   ========================================================= */
+
+/* Filter row wrappers */
+.filter-row {
+    -fx-padding: 0;
+}
+
+.filter-row-size {
+    -fx-padding: 4 0 0 0;
+}
+
+/* Filter group label */
+.filter-group-label {
+    -fx-padding: 0 4 0 0;
+}
+
+.filter-group-label .filter-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-weight: 500;
+}
+
+.font-icon-muted {
+    -fx-icon-color: -color-fg-muted;
+}
+
+/* Size pills */
+.size-pill {
+    -fx-font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    -fx-font-size: 12px;
+    -fx-padding: 6 10;
+    -fx-min-width: 56px;
+    -fx-alignment: CENTER;
+}
+
+/* Active filters indicator */
+.active-filters-indicator {
+    -fx-padding: 0 8 0 0;
+}
+
+.active-filters-count {
+    -fx-font-size: 11px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-background-color: -color-neutral-subtle;
+    -fx-background-radius: 10px;
+    -fx-padding: 2 10;
+}
+
+.clear-filters-link {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-accent-fg;
+    -fx-underline: false;
+    -fx-padding: 2 4;
+    -fx-cursor: hand;
+    -fx-graphic-text-gap: 4;
+    -fx-content-display: LEFT;
+}
+
+.clear-filters-link:hover {
+    -fx-underline: true;
+    -fx-text-fill: -color-accent-emphasis;
+}
+
+.clear-filters-link:focused {
+    -fx-border-color: -color-accent-emphasis;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+}
+
+/* Empty state */
+.empty-state {
+    -fx-padding: 32 24;
+    -fx-alignment: CENTER;
+}
+
+.empty-state-icon {
+    -fx-icon-color: -color-fg-subtle;
+    -fx-opacity: 0.7;
+}
+
+.empty-state-message {
+    -fx-font-size: 13px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-text-alignment: CENTER;
+    -fx-wrap-text: true;
+    -fx-max-width: 260px;
+}
+
+.empty-state-action {
+    -fx-background-color: transparent;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6 14;
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-default;
+    -fx-cursor: hand;
+    -fx-graphic-text-gap: 6;
+}
+
+.empty-state-action:hover {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-accent-emphasis;
+}
+
+.empty-state-action:focused {
+    -fx-border-color: -color-accent-emphasis;
+    -fx-border-width: 1.5px;
+}
+
+/* === MODEL DETAIL — Ollama Library style === */
+
+.detail-root {
+    -fx-background-color: -color-bg-default;
+}
+
+.detail-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -color-fg-default;
+    -fx-letter-spacing: -0.3px;
+}
+
+.detail-meta-inline {
+    -fx-padding: -2 0 0 0;
+}
+
+.detail-meta-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.detail-meta-dot {
+    -fx-font-size: 13px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-opacity: 0.55;
+}
+
+.detail-meta-icon {
+    -fx-background-color: -color-fg-muted;
+    -fx-min-width: 13px;
+    -fx-min-height: 13px;
+    -fx-max-width: 13px;
+    -fx-max-height: 13px;
+    -fx-opacity: 0.75;
+}
+
+.detail-meta-item:hover .detail-meta-icon {
+    -fx-opacity: 1.0;
+}
+
+.detail-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: -color-fg-default;
+    -fx-line-spacing: 3px;
+    -fx-opacity: 0.92;
+    -fx-wrap-text: true;
+}
+
+.detail-pill-row {
+    -fx-padding: 2 0 0 0;
+}
+
+/* Capability pills (flat, minimal) */
+.capability-pill {
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default;
+    -fx-border-width: 1px;
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 11px;
+    -fx-font-weight: normal;
+    -fx-padding: 2 10 2 10;
+}
+
+.capability-pill.pill-vision {
+    -fx-background-color: -color-accent-subtle;
+    -fx-border-color: -color-accent-muted;
+    -fx-text-fill: -color-accent-fg;
+}
+
+.capability-pill.pill-tools {
+    -fx-background-color: -color-success-subtle;
+    -fx-border-color: -color-success-muted;
+    -fx-text-fill: -color-success-fg;
+}
+
+.capability-pill.pill-thinking {
+    -fx-background-color: -color-warning-subtle;
+    -fx-border-color: -color-warning-muted;
+    -fx-text-fill: -color-warning-fg;
+}
+
+.capability-pill.pill-embedding {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-muted;
+    -fx-text-fill: -color-fg-default;
+}
+
+.capability-pill.pill-code {
+    -fx-background-color: -color-success-subtle;
+    -fx-border-color: -color-success-muted;
+    -fx-text-fill: -color-success-fg;
+}
+
+.capability-pill.pill-size {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+}
+
+.capability-pill.pill-neutral {
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default;
+    -fx-text-fill: -color-fg-muted;
+}
+
+/* Variants section header */
+.variants-header {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -color-fg-muted;
+    -fx-padding: 4 0 2 0;
+}
+
+/* Variants table — minimal, no vertical lines */
+.variants-table,
+.variants-table .virtual-flow,
+.variants-table .viewport,
+.variants-table .clipped-container {
+    -fx-background-color: transparent;
+}
+
+.variants-table {
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-fixed-cell-size: 44px;
+}
+
+.variants-table .column-header-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent -color-border-muted transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.variants-table .column-header,
+.variants-table .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6 12 6 12;
+}
+
+.variants-table .column-header .label {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 11px;
+    -fx-font-weight: 500;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.variants-table .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.variants-table .table-row-cell:filled {
+    -fx-border-color: transparent transparent -color-border-subtle transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.variants-table .table-row-cell:empty {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.variants-table .table-row-cell:filled:hover {
+    -fx-background-color: -color-bg-subtle;
+}
+
+.variants-table .table-row-cell:filled:selected {
+    -fx-background-color: -color-accent-subtle;
+}
+
+.variants-table .table-cell {
+    -fx-border-color: transparent;
+    -fx-padding: 8 12 8 12;
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.variants-table .table-cell.cell-muted {
+    -fx-text-fill: -color-fg-muted;
+    -fx-opacity: 0.7;
+}
+
+.variants-table .col-name {
+    -fx-font-family: "Inter", "Helvetica Neue", "System";
+}
+
+.variants-table .col-action {
+    -fx-alignment: CENTER;
+}
+
+/* Action button inside the variants table */
+.variant-action-btn {
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-padding: 4 14 4 14;
+    -fx-cursor: hand;
+}
+
+.variant-action-btn.installed {
+    -fx-background-color: transparent;
+    -fx-border-color: -color-border-default;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.variant-action-btn.installed:hover {
+    -fx-background-color: -color-danger-subtle;
+    -fx-border-color: -color-danger-muted;
+    -fx-text-fill: -color-danger-fg;
+}
+
+/* === AVAILABLE MODELS VIEW — visual differentiation === */
+
+.available-content {
+    -fx-background-color: -color-bg-default;
+}
+
+/* Left column: distinct from sidebar (darker grey) AND from detail (white).
+   Sits BETWEEN them with hairlines on both sides. */
+.available-list-column {
+    -fx-background-color: #fbfbfd;
+    -fx-padding: 14 10 14 14;
+    -fx-border-color: -color-border-subtle -color-border-default -color-border-subtle -color-border-default;
+    -fx-border-width: 0 1 0 1;
+}
+
+.root.dark .available-list-column {
+    -fx-background-color: #262629;
+    -fx-border-color: -color-border-subtle -color-border-muted -color-border-subtle -color-border-muted;
+    -fx-border-width: 0 1 0 1;
+}
+
+.results-label {
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-size: 12px;
+    -fx-padding: 0 0 4 4;
+}
+
+/* Model list cells — clean rows with clear hover/selected */
+.available-list,
+.available-list .virtual-flow,
+.available-list .viewport,
+.available-list .clipped-container {
+    -fx-background-color: transparent;
+}
+
+.available-list {
+    -fx-padding: 0;
+    -fx-fixed-cell-size: 38px;
+}
+
+.available-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-fg-default;
+    -fx-font-size: 13px;
+    -fx-padding: 0 12 0 12;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+}
+
+.available-list .list-cell:filled:hover {
+    -fx-background-color: rgba(0,0,0,0.04);
+}
+
+.available-list .list-cell:filled:selected,
+.available-list .list-cell:filled:selected:hover,
+.available-list .list-cell:filled:selected:focused {
+    -fx-background-color: -color-accent-emphasis;
+    -fx-text-fill: white;
+    -fx-font-weight: 500;
+    -fx-effect: null;
+}
+
+.available-list .list-cell:filled:selected .label,
+.available-list .list-cell:filled:selected .text {
+    -fx-text-fill: white;
+}
+
+.root.dark .available-list .list-cell:filled:hover {
+    -fx-background-color: rgba(255,255,255,0.05);
+}
+
+/* Right detail container */
+.available-detail-scroll {
+    -fx-background-color: -color-bg-default;
+    -fx-background: -color-bg-default;
+    -fx-border-color: transparent;
+}
+
+.available-detail-scroll > .viewport {
+    -fx-background-color: -color-bg-default;
+}
+
+.available-detail-pane {
+    -fx-background-color: -color-bg-default;
+}
+
+/* === DETAIL TYPOGRAPHY REFINEMENTS === */
+
+.detail-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: -0.4px;
+}
+
+.detail-meta-inline {
+    -fx-padding: -4 0 0 0;
+}
+
+.detail-description {
+    -fx-padding: 4 0 2 0;
+}
+
+.detail-pill-row {
+    -fx-padding: 6 0 4 0;
+}
+
+/* Variants header — small caps style */
+.variants-header {
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -color-fg-muted;
+    -fx-padding: 6 0 4 0;
+}
+
+/* Tighter, slightly more breathing variants table */
+.variants-table {
+    -fx-fixed-cell-size: 46px;
+}
+
+.variants-table .column-header,
+.variants-table .filler {
+    -fx-padding: 4 14 4 14;
+}
+
+.variants-table .column-header .label {
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.variants-table .table-cell {
+    -fx-padding: 10 14 10 14;
+}
+
+.variant-action-btn {
+    -fx-padding: 5 16 5 16;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+/* Command box — small visual lift to feel like a chip */
+.command-box {
+    -fx-background-color: -color-bg-subtle;
+    -fx-background-radius: 8px;
+    -fx-border-color: -color-border-default;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+}
+
+.command-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-default;
+}
+
+/* === Capability legend (under variants table) === */
+.capability-legend {
+    -fx-padding: 18 0 0 0;
+}
+
+.capability-legend-grid {
+    -fx-padding: 4 0 0 0;
+}
+
+.capability-legend-pill-cell {
+    -fx-padding: 2 0 0 0;
+}
+
+.capability-legend-desc {
+    -fx-font-size: 13px;
+    -fx-text-fill: -color-fg-default;
+    -fx-opacity: 0.88;
+    -fx-line-spacing: 3px;
+}
+
+/* === Chat message text selection (Word-style) === */
+.selectable-textflow {
+    -fx-cursor: text;
+    -fx-highlight-fill: -color-accent-emphasis;
+    -fx-highlight-text-fill: white;
+}
+
+/* Some AtlantaFX builds resolve -fx-highlight-fill only on text inputs;
+   set it on the inner Text nodes too for reliability. */
+.selectable-textflow .text {
+    -fx-highlight-fill: -color-accent-emphasis;
+    -fx-highlight-text-fill: white;
+}
+
+.textflow-selection-shape {
+    -fx-fill: -color-accent-emphasis;
+    -fx-opacity: 0.35;
+}

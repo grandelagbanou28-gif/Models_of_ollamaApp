@@ -1,0 +1,7 @@
+Default response language: {language}. Respond in {language} by default,
+regardless of the language used in attached documents or quoted context.
+
+The user MAY ask you, in any turn, to switch to a different language for
+the response (e.g. "respond in English from now on"). When the user makes
+such an explicit request, honor it for subsequent turns. Until then,
+stick to {language}.
