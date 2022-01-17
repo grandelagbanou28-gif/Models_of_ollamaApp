@@ -71,28 +71,6 @@
                     <Label styleClass="card-body-text" text="%about.mission.text" wrapText="true" />
                 </VBox>
 
-                <!-- Tarjeta 3: Apoyo / Donaciones -->
-                <VBox styleClass="about-card" spacing="14">
-                    <padding>
-                        <Insets bottom="20" left="20" right="20" top="20" />
-                    </padding>
-                    <Label styleClass="card-section-title" text="%about.support.title" />
-                    <Label styleClass="card-body-text" text="%about.support.text" wrapText="true" />
-                    
-                    <HBox spacing="14" alignment="CENTER_LEFT">
-                        <Button fx:id="paypalButton" onAction="#openPayPal" styleClass="donate-btn-paypal" HBox.hgrow="ALWAYS" maxWidth="Infinity" text="%about.button.paypal" graphicTextGap="8">
-                            <graphic>
-                                <FontIcon iconLiteral="fth-credit-card" iconSize="16" styleClass="paypal-icon" />
-                            </graphic>
-                        </Button>
-                        <Button fx:id="coffeeButton" onAction="#openBuyMeCoffee" styleClass="donate-btn-coffee" HBox.hgrow="ALWAYS" maxWidth="Infinity" text="%about.button.coffee" graphicTextGap="8">
-                            <graphic>
-                                <FontIcon iconLiteral="fth-coffee" iconSize="16" styleClass="coffee-icon" />
-                            </graphic>
-                        </Button>
-                    </HBox>
-                </VBox>
-
                 <!-- Tarjeta 5: Únete / GitHub -->
                 <VBox styleClass="about-card, github-card" spacing="12" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
                     <padding>

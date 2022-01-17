@@ -271,22 +271,6 @@ public class HomeController implements Initializable {
     }
 
     @FXML
-    public void openPayPal() {
-        String url = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=grandelagbanou28@gmail.com&item_name=GrandelGradenNexus+Support&amount=10.00&currency_code=USD";
-        if (App.getAppHostServices() != null) {
-            App.getAppHostServices().showDocument(url);
-        }
-    }
-
-    @FXML
-    public void openBuyMeACoffee() {
-        String url = "https://www.buymeacoffee.com/grandelagbanou";
-        if (App.getAppHostServices() != null) {
-            App.getAppHostServices().showDocument(url);
-        }
-    }
-
-    @FXML
     private HBox recentChatsContainer;
 
     private void updateRecentChats() {

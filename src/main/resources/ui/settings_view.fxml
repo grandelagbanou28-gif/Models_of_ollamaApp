@@ -156,6 +156,18 @@
                 </VBox>
             </VBox>
             
+            <Separator />
+
+            <!-- Account / Logout Section -->
+            <VBox spacing="10.0">
+                <Label styleClass="title-4" text="Account" />
+                <VBox spacing="5.0" style="-fx-background-color: -color-bg-subtle; -fx-padding: 10; -fx-background-radius: 5;">
+                    <Label text="Signed in as:" textFill="#888888" />
+                    <Label fx:id="userEmailLabel" style="-fx-font-weight: bold;" />
+                    <Button onAction="#handleLogout" styleClass="button-outlined, logout-button" text="Logout" />
+                </VBox>
+            </VBox>
+
             <Label fx:id="statusLabel" text="" textFill="green" />
         </VBox>
     </content>

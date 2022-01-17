@@ -1,6 +1,7 @@
 package com.graden.models.controller;
 
 import com.graden.models.App;
+import com.graden.models.manager.AuthManager;
 import com.graden.models.manager.ConfigManager;
 import com.graden.models.manager.HardwareManager;
 import com.graden.models.manager.LibraryCacheManager;
@@ -76,6 +77,9 @@ public class SettingsController {
     @FXML private Label ragMinScoreValueLabel;
     @FXML private Spinner<Integer> ragTopKSpinner;
 
+    // Account
+    @FXML private Label userEmailLabel;
+
     private final ConfigManager configManager = ConfigManager.getInstance();
     private final LibraryCacheManager cacheManager = LibraryCacheManager.getInstance();
     private ResourceBundle bundle;
@@ -91,6 +95,10 @@ public class SettingsController {
         if (vramLabel != null) vramLabel.setText(HardwareManager.getVramDetails());
         cpuLabel.setText(HardwareManager.getCpuDetails());
         osLabel.setText(HardwareManager.getOsDetails());
+
+        // Account section
+        String email = AuthManager.getInstance().getCurrentUserEmail();
+        userEmailLabel.setText(email != null ? email : "Not signed in");
 
         populateCacheInfo();
         populateDiagnostics();
@@ -409,5 +417,10 @@ public class SettingsController {
             }
             ConfigManager.getInstance().setTheme("dark");
         }
+    }
+
+    @FXML
+    private void handleLogout() {
+        App.logout();
     }
 }

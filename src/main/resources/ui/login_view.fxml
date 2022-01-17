@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<StackPane style="-fx-background-color: -color-bg-default;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.graden.models.controller.LoginController">
+   <children>
+      <VBox alignment="CENTER" maxWidth="420" spacing="20">
+         <padding>
+            <Insets bottom="40" left="40" right="40" top="40" />
+         </padding>
+         <children>
+            <!-- Logo -->
+            <ImageView fitHeight="80" fitWidth="80" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/icon.png" />
+               </image>
+            </ImageView>
+
+            <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: -color-fg-default;" text="Grandel Graden Nexus" />
+
+            <!-- Login/Signup Tabs -->
+            <TabPane fx:id="tabPane" maxWidth="Infinity" tabClosingPolicy="UNAVAILABLE">
+               <tabs>
+                  <Tab fx:id="loginTab" text="Sign In">
+                     <content>
+                        <VBox spacing="14" style="-fx-padding: 20px 0 0 0;">
+                           <TextField fx:id="loginEmailField" promptText="Email" styleClass="auth-field" />
+                           <PasswordField fx:id="loginPasswordField" promptText="Password" styleClass="auth-field" />
+                           <Label fx:id="loginErrorLabel" style="-fx-text-fill: -color-danger-fg; -fx-font-size: 12px;" wrapText="true" managed="false" />
+                           <Button maxWidth="Infinity" onAction="#handleLogin" style="-fx-background-color: -color-accent-fg; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px; -fx-background-radius: 8;" text="Sign In" />
+                        </VBox>
+                     </content>
+                  </Tab>
+                  <Tab fx:id="signupTab" text="Sign Up">
+                     <content>
+                        <VBox spacing="14" style="-fx-padding: 20px 0 0 0;">
+                           <TextField fx:id="signupEmailField" promptText="Email" styleClass="auth-field" />
+                           <PasswordField fx:id="signupPasswordField" promptText="Password" styleClass="auth-field" />
+                           <PasswordField fx:id="signupConfirmField" promptText="Confirm password" styleClass="auth-field" />
+                           <Label fx:id="signupErrorLabel" style="-fx-text-fill: -color-danger-fg; -fx-font-size: 12px;" wrapText="true" managed="false" />
+                           <Button maxWidth="Infinity" onAction="#handleSignup" style="-fx-background-color: -color-accent-fg; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px; -fx-background-radius: 8;" text="Create Account" />
+                        </VBox>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+
+            <!-- Divider -->
+            <HBox alignment="CENTER" spacing="10" maxWidth="Infinity">
+               <Region style="-fx-background-color: -color-border-muted; -fx-min-height: 1px;" HBox.hgrow="ALWAYS" />
+               <Label style="-fx-text-fill: -color-fg-muted; -fx-font-size: 11px;" text="or" />
+               <Region style="-fx-background-color: -color-border-muted; -fx-min-height: 1px;" HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <!-- Google Sign-In -->
+            <Button maxWidth="Infinity" onAction="#handleGoogleLogin" style="-fx-background-color: white; -fx-text-fill: #333; -fx-font-weight: bold; -fx-padding: 10px; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-cursor: hand;">
+               <graphic>
+                  <FontIcon iconLiteral="fab-google" iconSize="18" style="-fx-icon-color: #4285F4;" />
+               </graphic>
+               <graphicTextGap>10</graphicTextGap>
+            </Button>
+         </children>
+      </VBox>
+   </children>
+</StackPane>

@@ -1,7 +1,9 @@
 // src/main/java/com/org/GrandelGradenNexus/App.java
 package com.graden.models;
 
+import com.graden.models.controller.LoginController;
 import com.graden.models.controller.MainController;
+import com.graden.models.manager.AuthManager;
 import com.graden.models.manager.ChatManager;
 import com.graden.models.manager.ConfigManager;
 import com.graden.models.manager.ModelLibraryManager;
@@ -80,8 +82,6 @@ public class App extends Application {
 
         loadInterFonts();
 
-        ChatManager.getInstance().loadChats();
-
         // Apply saved theme
         String savedTheme = ConfigManager.getInstance().getTheme();
         if ("dark".equals(savedTheme)) {
@@ -92,19 +92,6 @@ public class App extends Application {
 
         modelManager = ModelManager.getInstance();
 
-        // === DECISION: Splash Screen OR Main UI? ===
-        ModelLibraryManager.UpdateStatus cacheStatus = ModelLibraryManager.getInstance().getUpdateStatus();
-
-        boolean needsSplash = (cacheStatus == ModelLibraryManager.UpdateStatus.OUTDATED_HARD);
-
-        if (needsSplash) {
-            // Cache is missing or expired (> 10 days) -> Show Splash Screen
-            loadSplashScreen();
-        } else {
-            // Cache is valid -> Go directly to Main UI
-            loadMainUI();
-        }
-
         // Icon
         try {
             stage.getIcons().add(new Image(App.class.getResourceAsStream("/icons/icon.png")));
@@ -112,7 +99,49 @@ public class App extends Application {
             // Ignore
         }
 
-        stage.show();
+        // Show login screen first
+        loadLoginUI();
+    }
+
+    private void loadLoginUI() throws IOException {
+        ResourceBundle.clearCache();
+
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("/ui/login_view.fxml"));
+        loader.setResources(getBundle());
+        Parent root = loader.load();
+
+        String savedTheme = ConfigManager.getInstance().getTheme();
+        root.getStyleClass().add(savedTheme);
+
+        StackPane sceneRoot = new StackPane(root);
+        sceneRoot.getStyleClass().add(savedTheme);
+
+        Scene scene = new Scene(sceneRoot);
+        scene.getStylesheets().add(App.class.getResource("/css/graden_models_active.css").toExternalForm());
+
+        LoginController controller = loader.getController();
+        controller.setOnLoginSuccess(() -> {
+            Platform.runLater(() -> {
+                try {
+                    ChatManager.getInstance().loadChats();
+                    ModelLibraryManager.UpdateStatus cacheStatus = ModelLibraryManager.getInstance().getUpdateStatus();
+                    boolean needsSplash = (cacheStatus == ModelLibraryManager.UpdateStatus.OUTDATED_HARD);
+                    if (needsSplash) {
+                        loadSplashScreen();
+                    } else {
+                        loadMainUI();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        });
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle(getBundle().getString("app.title"));
+        primaryStage.setMaximized(false);
+        primaryStage.setResizable(false);
+        primaryStage.show();
     }
 
     private void loadInterFonts() {
@@ -131,7 +160,7 @@ public class App extends Application {
         }
     }
 
-    private void loadSplashScreen() throws IOException {
+    private static void loadSplashScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("/ui/splash_view.fxml"));
         Parent root = loader.load();
 
@@ -142,7 +171,7 @@ public class App extends Application {
         primaryStage.setTitle(getBundle().getString("app.title"));
     }
 
-    private void loadMainUI() throws IOException {
+    private static void loadMainUI() throws IOException {
         ResourceBundle.clearCache();
 
         FXMLLoader loader = new FXMLLoader(App.class.getResource("/ui/main_view.fxml"));
@@ -244,6 +273,53 @@ public class App extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void logout() {
+        AuthManager.getInstance().logout();
+        Platform.runLater(() -> {
+            try {
+                ResourceBundle.clearCache();
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/ui/login_view.fxml"));
+                loader.setResources(getBundle());
+                Parent root = loader.load();
+
+                String savedTheme = ConfigManager.getInstance().getTheme();
+                root.getStyleClass().add(savedTheme);
+
+                StackPane sceneRoot = new StackPane(root);
+                sceneRoot.getStyleClass().add(savedTheme);
+
+                Scene scene = new Scene(sceneRoot);
+                scene.getStylesheets().add(App.class.getResource("/css/graden_models_active.css").toExternalForm());
+
+                LoginController controller = loader.getController();
+                controller.setOnLoginSuccess(() -> {
+                    Platform.runLater(() -> {
+                        try {
+                            ChatManager.getInstance().loadChats();
+                            ModelLibraryManager.UpdateStatus cacheStatus = ModelLibraryManager.getInstance().getUpdateStatus();
+                            boolean needsSplash = (cacheStatus == ModelLibraryManager.UpdateStatus.OUTDATED_HARD);
+                            if (needsSplash) {
+                                loadSplashScreen();
+                            } else {
+                                reloadUI();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                });
+
+                primaryStage.setScene(scene);
+                primaryStage.setTitle(getBundle().getString("app.title"));
+                primaryStage.setMaximized(false);
+                primaryStage.setResizable(false);
+                primaryStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override

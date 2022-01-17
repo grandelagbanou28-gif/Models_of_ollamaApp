@@ -33,11 +33,6 @@ public class AboutController implements Initializable {
     @FXML
     private VBox changelogTimeline;
 
-    // Buttons with icons set programmatically
-    @FXML
-    private Button paypalButton;
-    @FXML
-    private Button coffeeButton;
     @FXML
     private Button githubButton;
 
@@ -94,16 +89,6 @@ public class AboutController implements Initializable {
     @FXML
     private void openGitHub() {
         openLink("https://github.com/grandelagbanou28-gif/Models_of_ollamaApp");
-    }
-
-    @FXML
-    private void openPayPal() {
-        openLink("https://www.paypal.com/donate/?business=grandelagbanou28@gmail.com");
-    }
-
-    @FXML
-    private void openBuyMeCoffee() {
-        openLink("https://buymeacoffee.com/grandelagbanou");
     }
 
     @FXML

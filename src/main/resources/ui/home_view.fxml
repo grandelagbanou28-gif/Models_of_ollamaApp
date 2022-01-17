@@ -71,39 +71,7 @@
                                        </children>
                                     </HBox>
                                     
-                                    <VBox alignment="BOTTOM_RIGHT" pickOnBounds="false" spacing="8.0" VBox.vgrow="ALWAYS">
-                                       <children>
-                                          <HBox alignment="CENTER_RIGHT" pickOnBounds="false" spacing="10.0">
-                                             <children>
-                                                <Button mnemonicParsing="false" onAction="#openPayPal" styleClass="button, accent, hero-button" style="-fx-padding: 6px 16px; -fx-font-size: 13px;" text="PayPal">
-                                                   <graphic>
-                                                      <FontIcon iconLiteral="fab-paypal" iconSize="15" styleClass="font-icon" style="-fx-font-family: 'Font Awesome 5 Brands Regular'; -fx-icon-color: white;" />
-                                                   </graphic>
-                                                   <tooltip>
-                                                      <javafx.scene.control.Tooltip text="%home.support.tooltip" />
-                                                   </tooltip>
-                                                </Button>
-                                                <Button mnemonicParsing="false" onAction="#openBuyMeACoffee" styleClass="button, hero-button" style="-fx-padding: 6px 16px; -fx-font-size: 13px; -fx-background-color: #FFDD00; -fx-text-fill: black;" text="Buy Me a Coffee">
-                                                   <graphic>
-                                                      <FontIcon iconLiteral="fas-coffee" iconSize="15" styleClass="font-icon" style="-fx-font-family: 'Font Awesome 5 Free Solid'; -fx-icon-color: black;" />
-                                                   </graphic>
-                                                   <tooltip>
-                                                      <javafx.scene.control.Tooltip text="%home.support.tooltip" />
-                                                   </tooltip>
-                                                </Button>
-                                             </children>
-                                          </HBox>
-                                          <HBox alignment="CENTER_RIGHT" pickOnBounds="false" spacing="6.0">
-                                             <children>
-                                                <Label styleClass="text-muted, font-small" text="%home.support.message" textAlignment="RIGHT" lineSpacing="2" />
-                                                <FontIcon iconLiteral="fas-heart" iconSize="14" styleClass="font-icon" style="-fx-font-family: 'Font Awesome 5 Free Solid'; -fx-icon-color: #ff3b30;" />
-                                             </children>
-                                             <VBox.margin>
-                                                <javafx.geometry.Insets right="2.0" top="2.0" />
-                                             </VBox.margin>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
+                                    <VBox alignment="BOTTOM_RIGHT" pickOnBounds="false" VBox.vgrow="ALWAYS" />
                                  </children>
                               </VBox>
                            </right>
