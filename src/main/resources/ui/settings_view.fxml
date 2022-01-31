@@ -158,6 +158,24 @@
             
             <Separator />
 
+            <!-- Google OAuth Section -->
+            <VBox spacing="10.0">
+                <Label styleClass="title-4" text="Google OAuth" />
+                <VBox spacing="5.0" style="-fx-background-color: -color-bg-subtle; -fx-padding: 10; -fx-background-radius: 5;">
+                    <Label text="Client ID" textFill="#888888" />
+                    <TextField fx:id="googleClientIdField" promptText="Paste your Google OAuth Client ID" />
+                    <Label text="Client Secret" textFill="#888888" />
+                    <TextField fx:id="googleClientSecretField" promptText="Paste your Google OAuth Client Secret" />
+                    <Label fx:id="googleStatusLabel" text="Not configured" textFill="#888888" style="-fx-font-size: 11px;" />
+                    <HBox spacing="10">
+                        <Button onAction="#saveGoogleOAuth" styleClass="accent" text="Save" />
+                        <Button onAction="#testGoogleOAuth" styleClass="button-outlined" text="Test Login" />
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <Separator />
+
             <!-- Account / Logout Section -->
             <VBox spacing="10.0">
                 <Label styleClass="title-4" text="Account" />

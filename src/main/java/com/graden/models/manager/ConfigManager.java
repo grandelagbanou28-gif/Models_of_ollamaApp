@@ -66,6 +66,26 @@ public class ConfigManager {
         }
     }
 
+    // ─────────────────────────── Google OAuth ──────────────────────────────
+    private static final String KEY_GOOGLE_CLIENT_ID = "google_client_id";
+    private static final String KEY_GOOGLE_CLIENT_SECRET = "google_client_secret";
+
+    public String getGoogleClientId() {
+        return prefs.get(KEY_GOOGLE_CLIENT_ID, "");
+    }
+
+    public void setGoogleClientId(String id) {
+        prefs.put(KEY_GOOGLE_CLIENT_ID, id);
+    }
+
+    public String getGoogleClientSecret() {
+        return prefs.get(KEY_GOOGLE_CLIENT_SECRET, "");
+    }
+
+    public void setGoogleClientSecret(String secret) {
+        prefs.put(KEY_GOOGLE_CLIENT_SECRET, secret);
+    }
+
     // ─────────────────────────── First-run onboarding ──────────────────────
     private static final String KEY_FIRST_RUN_COMPLETED = "first_run_completed";
 

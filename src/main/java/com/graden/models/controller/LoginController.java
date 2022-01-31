@@ -2,9 +2,12 @@ package com.graden.models.controller;
 
 import com.graden.models.App;
 import com.graden.models.manager.AuthManager;
+import com.graden.models.manager.GoogleAuthService;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
@@ -76,18 +79,43 @@ public class LoginController implements Initializable {
 
     @FXML
     private void handleGoogleLogin() {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("Google Sign-In");
-        alert.setHeaderText(null);
-        alert.setContentText("Google OAuth is not yet configured.\n\n" +
-                "To enable Google Sign-In, you need to:\n" +
-                "1. Create a Google Cloud Project\n" +
-                "2. Enable the Google+ API\n" +
-                "3. Configure OAuth consent screen\n" +
-                "4. Register this app's redirect URI\n\n" +
-                "For now, please use email and password to create an account.\n" +
-                "This feature will be available in a future update.");
-        alert.showAndWait();
+        if (!GoogleAuthService.getInstance().isConfigured()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Google Sign-In");
+            alert.setHeaderText(null);
+            alert.setContentText("Google OAuth is not configured.\n\n" +
+                    "Go to Settings → Google OAuth to add your Client ID and Secret.\n\n" +
+                    "To get credentials:\n" +
+                    "1. Go to https://console.cloud.google.com/\n" +
+                    "2. Create a project → APIs & Services → Credentials\n" +
+                    "3. Create OAuth 2.0 Client ID (Desktop app type)\n" +
+                    "4. Add http://localhost as a redirect URI\n" +
+                    "5. Copy the Client ID and Client Secret");
+            alert.showAndWait();
+            return;
+        }
+
+        showLoginError("Opening browser for Google authentication...");
+
+        GoogleAuthService.getInstance().authenticate()
+                .thenAccept(email -> {
+                    Platform.runLater(() -> {
+                        String localError = AuthManager.getInstance().loginWithGoogle(email);
+                        if (localError != null) {
+                            AuthManager.getInstance().registerWithGoogle(email);
+                            AuthManager.getInstance().loginWithGoogle(email);
+                        }
+                        if (onLoginSuccess != null) {
+                            onLoginSuccess.run();
+                        }
+                    });
+                })
+                .exceptionally(ex -> {
+                    Platform.runLater(() -> {
+                        showLoginError("Google auth failed: " + ex.getMessage());
+                    });
+                    return null;
+                });
     }
 
     private void showLoginError(String msg) {

@@ -3,6 +3,7 @@ package com.graden.models.controller;
 import com.graden.models.App;
 import com.graden.models.manager.AuthManager;
 import com.graden.models.manager.ConfigManager;
+import com.graden.models.manager.GoogleAuthService;
 import com.graden.models.manager.HardwareManager;
 import com.graden.models.manager.LibraryCacheManager;
 import com.graden.models.manager.ModelDetailsCacheManager;
@@ -78,6 +79,11 @@ public class SettingsController {
     @FXML private Spinner<Integer> ragTopKSpinner;
 
     // Account
+    // Google OAuth
+    @FXML private TextField googleClientIdField;
+    @FXML private TextField googleClientSecretField;
+    @FXML private Label googleStatusLabel;
+
     @FXML private Label userEmailLabel;
 
     private final ConfigManager configManager = ConfigManager.getInstance();
@@ -99,6 +105,13 @@ public class SettingsController {
         // Account section
         String email = AuthManager.getInstance().getCurrentUserEmail();
         userEmailLabel.setText(email != null ? email : "Not signed in");
+
+        // Google OAuth section
+        if (googleClientIdField != null) {
+            googleClientIdField.setText(configManager.getGoogleClientId());
+            googleClientSecretField.setText(configManager.getGoogleClientSecret());
+            updateGoogleStatus();
+        }
 
         populateCacheInfo();
         populateDiagnostics();
@@ -422,5 +435,43 @@ public class SettingsController {
     @FXML
     private void handleLogout() {
         App.logout();
+    }
+
+    @FXML
+    private void saveGoogleOAuth() {
+        configManager.setGoogleClientId(googleClientIdField.getText().trim());
+        configManager.setGoogleClientSecret(googleClientSecretField.getText().trim());
+        updateGoogleStatus();
+        showStatus("Google OAuth settings saved.", "success");
+    }
+
+    @FXML
+    private void testGoogleOAuth() {
+        if (!GoogleAuthService.getInstance().isConfigured()) {
+            showStatus("Save Google OAuth credentials first.", "error");
+            return;
+        }
+        showStatus("Testing...", "info");
+        GoogleAuthService.getInstance().authenticate()
+                .thenAccept(email -> {
+                    javafx.application.Platform.runLater(() -> {
+                        showStatus("Google auth successful: " + email, "success");
+                    });
+                })
+                .exceptionally(ex -> {
+                    javafx.application.Platform.runLater(() -> {
+                        showStatus("Google auth failed: " + ex.getMessage(), "error");
+                    });
+                    return null;
+                });
+    }
+
+    private void updateGoogleStatus() {
+        if (googleStatusLabel == null) return;
+        boolean configured = GoogleAuthService.getInstance().isConfigured();
+        googleStatusLabel.setText(configured ? "Configured" : "Not configured");
+        googleStatusLabel.setStyle(configured
+                ? "-fx-text-fill: -color-success-fg;"
+                : "-fx-text-fill: -color-fg-muted;");
     }
 }

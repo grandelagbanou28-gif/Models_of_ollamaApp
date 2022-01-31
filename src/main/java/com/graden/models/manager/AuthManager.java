@@ -84,6 +84,7 @@ public class AuthManager {
         String key = email.toLowerCase().trim();
         UserAccount account = users.get(key);
         if (account == null) return "No account found with this email";
+        if (account.isGoogleAccount) return "This account uses Google Sign-In. Use the Google button instead.";
 
         byte[] salt = Base64.getDecoder().decode(account.salt);
         String hash = hashPassword(password, salt);
@@ -91,6 +92,29 @@ public class AuthManager {
 
         currentUser = account;
         loggedIn = true;
+        return null;
+    }
+
+    public String loginWithGoogle(String email) {
+        String key = email.toLowerCase().trim();
+        UserAccount account = users.get(key);
+        if (account == null) return "No account found. Register first.";
+        if (!account.isGoogleAccount) return "This email uses password login. Sign in with your password.";
+
+        currentUser = account;
+        loggedIn = true;
+        return null;
+    }
+
+    public String registerWithGoogle(String email) {
+        String key = email.toLowerCase().trim();
+        if (key.isEmpty()) return "Email is required";
+        if (users.containsKey(key)) return "An account with this email already exists";
+
+        UserAccount account = new UserAccount(email.trim(), "", "");
+        account.isGoogleAccount = true;
+        users.put(key, account);
+        saveUsers();
         return null;
     }
 
@@ -126,6 +150,7 @@ public class AuthManager {
         public String email;
         public String passwordHash;
         public String salt;
+        public boolean isGoogleAccount;
 
         public UserAccount() {}
 
@@ -133,6 +158,7 @@ public class AuthManager {
             this.email = email;
             this.passwordHash = passwordHash;
             this.salt = salt;
+            this.isGoogleAccount = false;
         }
     }
 }
