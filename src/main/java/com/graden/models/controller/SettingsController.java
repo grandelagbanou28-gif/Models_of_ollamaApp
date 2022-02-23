@@ -118,12 +118,17 @@ public class SettingsController {
 
         initRagControls();
 
-        languageComboBox.getItems().addAll("English", "Español");
+        languageComboBox.getItems().addAll("English", "Español", "Français");
         String currentLang = configManager.getLanguage();
-        languageComboBox.getSelectionModel().select("es".equals(currentLang) ? "Español" : "English");
+        if ("fr".equals(currentLang)) languageComboBox.getSelectionModel().select("Français");
+        else if ("es".equals(currentLang)) languageComboBox.getSelectionModel().select("Español");
+        else languageComboBox.getSelectionModel().select("English");
         languageComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                configManager.setLanguage(newVal.equals("Español") ? "es" : "en");
+                String langCode = "en";
+                if ("Español".equals(newVal)) langCode = "es";
+                else if ("Français".equals(newVal)) langCode = "fr";
+                configManager.setLanguage(langCode);
                 App.reloadUI();
             }
         });
