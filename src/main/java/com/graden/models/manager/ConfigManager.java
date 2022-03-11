@@ -51,7 +51,7 @@ public class ConfigManager {
     }
 
     private static final String KEY_LANGUAGE = "app_language";
-    private static final String DEFAULT_LANGUAGE = "es"; // Default to Spanish as requested
+    private static final String DEFAULT_LANGUAGE = "fr"; // Default to French
 
     public String getLanguage() {
         return prefs.get(KEY_LANGUAGE, DEFAULT_LANGUAGE);
@@ -64,6 +64,26 @@ public class ConfigManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // ─────────────────────────── Supabase ──────────────────────────────
+    private static final String KEY_SUPABASE_URL = "supabase_url";
+    private static final String KEY_SUPABASE_ANON_KEY = "supabase_anon_key";
+
+    public String getSupabaseUrl() {
+        return prefs.get(KEY_SUPABASE_URL, "");
+    }
+
+    public void setSupabaseUrl(String url) {
+        prefs.put(KEY_SUPABASE_URL, url);
+    }
+
+    public String getSupabaseAnonKey() {
+        return prefs.get(KEY_SUPABASE_ANON_KEY, "");
+    }
+
+    public void setSupabaseAnonKey(String key) {
+        prefs.put(KEY_SUPABASE_ANON_KEY, key);
     }
 
     // ─────────────────────────── Google OAuth ──────────────────────────────

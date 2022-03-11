@@ -158,6 +158,24 @@
             
             <Separator />
 
+            <!-- Supabase Section -->
+            <VBox spacing="10.0">
+                <Label styleClass="title-4" text="Supabase" />
+                <VBox spacing="5.0" style="-fx-background-color: -color-bg-subtle; -fx-padding: 10; -fx-background-radius: 5;">
+                    <Label text="Project URL" textFill="#888888" />
+                    <TextField fx:id="supabaseUrlField" promptText="https://xyz.supabase.co" />
+                    <Label text="Anon Key (public)" textFill="#888888" />
+                    <TextField fx:id="supabaseAnonKeyField" promptText="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
+                    <Label fx:id="supabaseStatusLabel" text="Not configured" textFill="#888888" style="-fx-font-size: 11px;" />
+                    <HBox spacing="10">
+                        <Button onAction="#saveSupabase" styleClass="accent" text="Save" />
+                        <Button onAction="#testSupabase" styleClass="button-outlined" text="Test Connection" />
+                    </HBox>
+                </VBox>
+            </VBox>
+
+            <Separator />
+
             <!-- Google OAuth Section -->
             <VBox spacing="10.0">
                 <Label styleClass="title-4" text="Google OAuth" />

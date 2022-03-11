@@ -28,8 +28,8 @@
                </image>
             </ImageView>
 
-            <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: -color-fg-default; -fx-padding: 4 0 0 0;" text="Grandel Graden Nexus" />
-            <Label style="-fx-font-size: 11px; -fx-text-fill: -color-fg-muted; -fx-padding: 0 0 4 0;" text="%login.subtitle" />
+            <Label style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: -color-fg-default; -fx-padding: 6 0 0 0;" text="Grandel Graden Nexus" />
+            <Label style="-fx-font-size: 11px; -fx-text-fill: -color-fg-muted; -fx-padding: 0 0 2 0;" text="%login.subtitle" />
 
             <TabPane fx:id="tabPane" maxWidth="Infinity" tabClosingPolicy="UNAVAILABLE" style="-fx-tab-min-width: 120;">
                <tabs>
@@ -46,7 +46,9 @@
                            </HBox>
                            <Label fx:id="loginErrorLabel" style="-fx-text-fill: -color-danger-fg; -fx-font-size: 11px;" wrapText="true" managed="false" />
                            <Button maxWidth="Infinity" onAction="#handleLogin" style="-fx-background-color: -color-accent-fg; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-background-radius: 6; -fx-cursor: hand;" text="%login.button.signin">
-                              <graphic><FontIcon iconLiteral="fth-log-in" iconSize="16" style="-fx-icon-color: white;" /></graphic>
+                              <graphic>
+                                 <FontIcon iconLiteral="fth-log-in" iconSize="16" style="-fx-icon-color: white;" />
+                              </graphic>
                               <graphicTextGap>8</graphicTextGap>
                            </Button>
                         </VBox>
@@ -69,7 +71,9 @@
                            </HBox>
                            <Label fx:id="signupErrorLabel" style="-fx-text-fill: -color-danger-fg; -fx-font-size: 11px;" wrapText="true" managed="false" />
                            <Button maxWidth="Infinity" onAction="#handleSignup" style="-fx-background-color: -color-accent-fg; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-background-radius: 6; -fx-cursor: hand;" text="%login.button.create">
-                              <graphic><FontIcon iconLiteral="fth-user-plus" iconSize="16" style="-fx-icon-color: white;" /></graphic>
+                              <graphic>
+                                 <FontIcon iconLiteral="fth-user-plus" iconSize="16" style="-fx-icon-color: white;" />
+                              </graphic>
                               <graphicTextGap>8</graphicTextGap>
                            </Button>
                         </VBox>
@@ -84,11 +88,14 @@
                <Region style="-fx-background-color: -color-border-muted; -fx-min-height: 1px;" HBox.hgrow="ALWAYS" />
             </HBox>
 
-            <Button maxWidth="Infinity" onAction="#handleGoogleLogin" text="%login.google" style="-fx-background-color: white; -fx-text-fill: #444; -fx-font-weight: bold; -fx-padding: 10; -fx-background-radius: 6; -fx-border-color: -color-border-muted; -fx-border-radius: 6; -fx-cursor: hand;">
+            <!-- Google Sign-In Button (modern official style) -->
+            <Button fx:id="googleButton" maxWidth="Infinity" onAction="#handleGoogleLogin" text="%login.google" style="-fx-background-color: #ffffff; -fx-text-fill: #1f1f1f; -fx-font-weight: 600; -fx-font-size: 14px; -fx-padding: 10 16; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-border-width: 1; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 1, 0, 0, 1);">
                <graphic>
-                  <FontIcon iconLiteral="fab-google" iconSize="18" style="-fx-icon-color: #4285F4;" />
+                  <StackPane style="-fx-background-color: #ffffff; -fx-padding: 0;">
+                     <FontIcon iconLiteral="fab-google" iconSize="20" style="-fx-icon-color: #4285F4;" />
+                  </StackPane>
                </graphic>
-               <graphicTextGap>10</graphicTextGap>
+               <graphicTextGap>12</graphicTextGap>
             </Button>
          </children>
       </VBox>

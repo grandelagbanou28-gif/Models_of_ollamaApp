@@ -4,6 +4,7 @@ import com.graden.models.App;
 import com.graden.models.manager.AuthManager;
 import com.graden.models.manager.ConfigManager;
 import com.graden.models.manager.GoogleAuthService;
+import com.graden.models.manager.SupabaseManager;
 import com.graden.models.manager.HardwareManager;
 import com.graden.models.manager.LibraryCacheManager;
 import com.graden.models.manager.ModelDetailsCacheManager;
@@ -78,6 +79,11 @@ public class SettingsController {
     @FXML private Label ragMinScoreValueLabel;
     @FXML private Spinner<Integer> ragTopKSpinner;
 
+    // Supabase
+    @FXML private TextField supabaseUrlField;
+    @FXML private TextField supabaseAnonKeyField;
+    @FXML private Label supabaseStatusLabel;
+
     // Account
     // Google OAuth
     @FXML private TextField googleClientIdField;
@@ -105,6 +111,13 @@ public class SettingsController {
         // Account section
         String email = AuthManager.getInstance().getCurrentUserEmail();
         userEmailLabel.setText(email != null ? email : "Not signed in");
+
+        // Supabase section
+        if (supabaseUrlField != null) {
+            supabaseUrlField.setText(configManager.getSupabaseUrl());
+            supabaseAnonKeyField.setText(configManager.getSupabaseAnonKey());
+            updateSupabaseStatus();
+        }
 
         // Google OAuth section
         if (googleClientIdField != null) {
@@ -476,6 +489,43 @@ public class SettingsController {
         boolean configured = GoogleAuthService.getInstance().isConfigured();
         googleStatusLabel.setText(configured ? "Configured" : "Not configured");
         googleStatusLabel.setStyle(configured
+                ? "-fx-text-fill: -color-success-fg;"
+                : "-fx-text-fill: -color-fg-muted;");
+    }
+
+    @FXML
+    private void saveSupabase() {
+        configManager.setSupabaseUrl(supabaseUrlField.getText().trim());
+        configManager.setSupabaseAnonKey(supabaseAnonKeyField.getText().trim());
+        updateSupabaseStatus();
+        showStatus("Supabase settings saved.", "success");
+    }
+
+    @FXML
+    private void testSupabase() {
+        if (!SupabaseManager.getInstance().isConfigured()) {
+            showStatus("Save Supabase credentials first.", "error");
+            return;
+        }
+        showStatus("Testing...", "info");
+        SupabaseManager.getInstance().signIn("test@test.com", "test")
+            .thenAccept(err -> javafx.application.Platform.runLater(() -> {
+                if (err != null && err.contains("Invalid login credentials")) {
+                    showStatus("Supabase connected! (auth working)", "success");
+                } else if (err != null) {
+                    showStatus("Supabase error: " + err, "error");
+                } else {
+                    showStatus("Supabase connected!", "success");
+                    SupabaseManager.getInstance().logout();
+                }
+            }));
+    }
+
+    private void updateSupabaseStatus() {
+        if (supabaseStatusLabel == null) return;
+        boolean configured = SupabaseManager.getInstance().isConfigured();
+        supabaseStatusLabel.setText(configured ? "Configured" : "Not configured");
+        supabaseStatusLabel.setStyle(configured
                 ? "-fx-text-fill: -color-success-fg;"
                 : "-fx-text-fill: -color-fg-muted;");
     }
