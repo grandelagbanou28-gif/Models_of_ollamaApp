@@ -88,11 +88,13 @@
                <Region style="-fx-background-color: -color-border-muted; -fx-min-height: 1px;" HBox.hgrow="ALWAYS" />
             </HBox>
 
-            <!-- Google Sign-In Button (modern official style) -->
+            <!-- Google Sign-In Button (official style with Google logo) -->
             <Button fx:id="googleButton" maxWidth="Infinity" onAction="#handleGoogleLogin" text="%login.google" style="-fx-background-color: #ffffff; -fx-text-fill: #1f1f1f; -fx-font-weight: 600; -fx-font-size: 14px; -fx-padding: 10 16; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-border-width: 1; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 1, 0, 0, 1);">
                <graphic>
                   <StackPane style="-fx-background-color: #ffffff; -fx-padding: 0;">
-                     <FontIcon iconLiteral="fab-google" iconSize="20" style="-fx-icon-color: #4285F4;" />
+                     <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                        <Image url="@../icons/google_logo.png" />
+                     </ImageView>
                   </StackPane>
                </graphic>
                <graphicTextGap>12</graphicTextGap>
