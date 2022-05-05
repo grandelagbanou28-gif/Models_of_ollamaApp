@@ -171,6 +171,17 @@ public class LoginController implements Initializable {
             });
     }
 
+    @FXML
+    private void handleGitHubLink() {
+        try {
+            java.awt.Desktop.getDesktop().browse(
+                new java.net.URI("https://github.com/grandelagbanou28-gif/Models_of_ollamaApp.git")
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to open GitHub link: " + e.getMessage());
+        }
+    }
+
     private void showLoginError(String msg) {
         loginErrorLabel.setText(msg);
         loginErrorLabel.setManaged(true);
