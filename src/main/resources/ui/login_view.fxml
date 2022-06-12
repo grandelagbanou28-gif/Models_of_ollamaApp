@@ -67,6 +67,19 @@
                         </VBox>
                      </content>
                   </Tab>
+                  <Tab fx:id="signupTab" text="%login.tab.signup">
+                     <content>
+                        <VBox spacing="14" style="-fx-padding: 22px 0 0 0;">
+                           <TextField fx:id="signupEmailField" promptText="%login.email" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
+                           <PasswordField fx:id="signupPasswordField" promptText="%login.password" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
+                           <PasswordField fx:id="signupConfirmField" promptText="%login.confirm" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
+                           <Label fx:id="signupErrorLabel" style="-fx-text-fill: #d93025; -fx-font-size: 11px;" wrapText="true" managed="false" />
+                           <Button maxWidth="Infinity" onAction="#handleSignup" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" text="%login.button.create">
+                              <graphicTextGap>8</graphicTextGap>
+                           </Button>
+                        </VBox>
+                     </content>
+                  </Tab>
                </tabs>
             </TabPane>
 
