@@ -22,14 +22,9 @@ public class LoginController implements Initializable {
 
     @FXML private TabPane tabPane;
     @FXML private Tab loginTab;
-    @FXML private Tab signupTab;
     @FXML private TextField loginEmailField;
     @FXML private PasswordField loginPasswordField;
     @FXML private Label loginErrorLabel;
-    @FXML private TextField signupEmailField;
-    @FXML private PasswordField signupPasswordField;
-    @FXML private PasswordField signupConfirmField;
-    @FXML private Label signupErrorLabel;
     @FXML private Button googleButton;
 
     private Runnable onLoginSuccess;
@@ -37,7 +32,6 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loginErrorLabel.setManaged(false);
-        signupErrorLabel.setManaged(false);
         updateGoogleButton();
     }
 
@@ -72,7 +66,6 @@ public class LoginController implements Initializable {
             SupabaseManager.getInstance().signIn(email, password)
                 .thenAccept(error -> Platform.runLater(() -> {
                     if (error != null) {
-                        // Fallback to local
                         String localErr = AuthManager.getInstance().login(email, password);
                         if (localErr != null) showLoginError(error + " | " + localErr);
                         else if (onLoginSuccess != null) onLoginSuccess.run();
@@ -85,44 +78,6 @@ public class LoginController implements Initializable {
             String error = AuthManager.getInstance().login(email, password);
             if (error != null) showLoginError(error);
             else if (onLoginSuccess != null) onLoginSuccess.run();
-        }
-    }
-
-    @FXML
-    private void handleSignup() {
-        String email = signupEmailField.getText();
-        String password = signupPasswordField.getText();
-        String confirm = signupConfirmField.getText();
-
-        if (!password.equals(confirm)) {
-            showSignupError("Passwords do not match");
-            return;
-        }
-
-        if (useSupabase()) {
-            SupabaseManager.getInstance().signUp(email, password)
-                .thenAccept(error -> Platform.runLater(() -> {
-                    if (error != null) {
-                        // Fallback to local
-                        String localErr = AuthManager.getInstance().register(email, password);
-                        if (localErr != null) showSignupError(error + " | " + localErr);
-                        else {
-                            AuthManager.getInstance().login(email, password);
-                            if (onLoginSuccess != null) onLoginSuccess.run();
-                        }
-                    } else {
-                        SupabaseManager.getInstance().signIn(email, password);
-                        syncSupabaseUser();
-                        if (onLoginSuccess != null) onLoginSuccess.run();
-                    }
-                }));
-        } else {
-            String error = AuthManager.getInstance().register(email, password);
-            if (error != null) showSignupError(error);
-            else {
-                AuthManager.getInstance().login(email, password);
-                if (onLoginSuccess != null) onLoginSuccess.run();
-            }
         }
     }
 
@@ -185,10 +140,5 @@ public class LoginController implements Initializable {
     private void showLoginError(String msg) {
         loginErrorLabel.setText(msg);
         loginErrorLabel.setManaged(true);
-    }
-
-    private void showSignupError(String msg) {
-        signupErrorLabel.setText(msg);
-        signupErrorLabel.setManaged(true);
     }
 }

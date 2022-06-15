@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <HBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.graden.models.controller.LoginController">
    <children>
@@ -23,9 +22,7 @@
             <Region VBox.vgrow="ALWAYS" />
 
             <ImageView fitHeight="88" fitWidth="88" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../icons/icon.png" />
-               </image>
+               <Image url="@../icons/icon.png" />
             </ImageView>
 
             <Label style="-fx-font-size: 34px; -fx-font-weight: 800; -fx-text-fill: white; -fx-text-alignment: center;" text="Bienvenue" />
@@ -37,70 +34,34 @@
             <Region VBox.vgrow="ALWAYS" />
 
             <HBox alignment="CENTER" spacing="10" style="-fx-cursor: hand;" onMouseClicked="#handleGitHubLink">
-               <FontIcon iconLiteral="fab-github" iconSize="22" style="-fx-icon-color: white;" />
+               <StackPane>
+                  <ImageView fitHeight="28" fitWidth="28" preserveRatio="true">
+                     <Image url="@../icons/github_logo.png" />
+                  </ImageView>
+               </StackPane>
                <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: rgba(255,255,255,0.9); -fx-underline: true;" text="Contribuer sur GitHub" />
             </HBox>
 
-            <Region prefHeight="10" />
+            <Region prefHeight="12" />
          </children>
       </VBox>
 
       <!-- RIGHT PANEL - White form -->
-      <VBox alignment="CENTER" spacing="16" HBox.hgrow="ALWAYS" maxWidth="480" style="-fx-background-color: #ffffff; -fx-padding: 48 48;">
+      <VBox alignment="CENTER" spacing="16" HBox.hgrow="ALWAYS" maxWidth="440" style="-fx-background-color: #ffffff; -fx-padding: 48 44;">
          <children>
             <Region VBox.vgrow="ALWAYS" />
 
-            <ImageView fitHeight="56" fitWidth="56" pickOnBounds="true" preserveRatio="true" style="-fx-opacity: 0.15;">
-               <image>
-                  <Image url="@../icons/icon.png" />
-               </image>
-            </ImageView>
+            <Label style="-fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: #1f1f1f; -fx-padding: 0 0 4 0;" text="%login.subtitle" />
 
-            <Label style="-fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: #1f1f1f; -fx-padding: 4 0 0 0;" text="%login.subtitle" />
-
-            <TabPane fx:id="tabPane" maxWidth="Infinity" tabClosingPolicy="UNAVAILABLE" style="-fx-tab-min-width: 120;">
+            <TabPane fx:id="tabPane" maxWidth="Infinity" tabClosingPolicy="UNAVAILABLE" style="-fx-tab-min-width: 50%; -fx-tab-max-width: 50%;">
                <tabs>
                   <Tab fx:id="loginTab" text="%login.tab.signin">
                      <content>
                         <VBox spacing="14" style="-fx-padding: 22px 0 0 0;">
-                           <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: #f8f9fa;">
-                              <FontIcon iconLiteral="fth-mail" iconSize="16" style="-fx-icon-color: #5f6368; -fx-padding: 0 0 0 12;" />
-                              <TextField fx:id="loginEmailField" promptText="%login.email" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-padding: 12 12 12 4;" HBox.hgrow="ALWAYS" />
-                           </HBox>
-                           <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: #f8f9fa;">
-                              <FontIcon iconLiteral="fth-lock" iconSize="16" style="-fx-icon-color: #5f6368; -fx-padding: 0 0 0 12;" />
-                              <PasswordField fx:id="loginPasswordField" promptText="%login.password" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-padding: 12 12 12 4;" HBox.hgrow="ALWAYS" />
-                           </HBox>
+                           <TextField fx:id="loginEmailField" promptText="%login.email" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
+                           <PasswordField fx:id="loginPasswordField" promptText="%login.password" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
                            <Label fx:id="loginErrorLabel" style="-fx-text-fill: #d93025; -fx-font-size: 11px;" wrapText="true" managed="false" />
                            <Button maxWidth="Infinity" onAction="#handleLogin" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" text="%login.button.signin">
-                              <graphic>
-                                 <FontIcon iconLiteral="fth-log-in" iconSize="16" style="-fx-icon-color: white;" />
-                              </graphic>
-                              <graphicTextGap>8</graphicTextGap>
-                           </Button>
-                        </VBox>
-                     </content>
-                  </Tab>
-                  <Tab fx:id="signupTab" text="%login.tab.signup">
-                     <content>
-                        <VBox spacing="14" style="-fx-padding: 22px 0 0 0;">
-                           <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: #f8f9fa;">
-                              <FontIcon iconLiteral="fth-mail" iconSize="16" style="-fx-icon-color: #5f6368; -fx-padding: 0 0 0 12;" />
-                              <TextField fx:id="signupEmailField" promptText="%login.email" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-padding: 12 12 12 4;" HBox.hgrow="ALWAYS" />
-                           </HBox>
-                           <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: #f8f9fa;">
-                              <FontIcon iconLiteral="fth-lock" iconSize="16" style="-fx-icon-color: #5f6368; -fx-padding: 0 0 0 12;" />
-                              <PasswordField fx:id="signupPasswordField" promptText="%login.password" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-padding: 12 12 12 4;" HBox.hgrow="ALWAYS" />
-                           </HBox>
-                           <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-background-color: #f8f9fa;">
-                              <FontIcon iconLiteral="fth-shield" iconSize="16" style="-fx-icon-color: #5f6368; -fx-padding: 0 0 0 12;" />
-                              <PasswordField fx:id="signupConfirmField" promptText="%login.confirm" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-padding: 12 12 12 4;" HBox.hgrow="ALWAYS" />
-                           </HBox>
-                           <Label fx:id="signupErrorLabel" style="-fx-text-fill: #d93025; -fx-font-size: 11px;" wrapText="true" managed="false" />
-                           <Button maxWidth="Infinity" onAction="#handleSignup" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" text="%login.button.create">
-                              <graphic>
-                                 <FontIcon iconLiteral="fth-user-plus" iconSize="16" style="-fx-icon-color: white;" />
-                              </graphic>
                               <graphicTextGap>8</graphicTextGap>
                            </Button>
                         </VBox>
@@ -109,11 +70,7 @@
                </tabs>
             </TabPane>
 
-            <HBox alignment="CENTER" spacing="10" maxWidth="Infinity">
-               <Region style="-fx-background-color: #e0e0e0; -fx-min-height: 1px;" HBox.hgrow="ALWAYS" />
-               <Label style="-fx-text-fill: #5f6368; -fx-font-size: 11px;" text="%login.or" />
-               <Region style="-fx-background-color: #e0e0e0; -fx-min-height: 1px;" HBox.hgrow="ALWAYS" />
-            </HBox>
+            <Region maxWidth="Infinity" style="-fx-min-height: 1px; -fx-background-color: #e0e0e0;" />
 
             <Button fx:id="googleButton" maxWidth="Infinity" onAction="#handleGoogleLogin" text="%login.google" style="-fx-background-color: #ffffff; -fx-text-fill: #1f1f1f; -fx-font-weight: 600; -fx-font-size: 14px; -fx-padding: 11 16; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-border-width: 1; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 1, 0, 0, 1);">
                <graphic>
