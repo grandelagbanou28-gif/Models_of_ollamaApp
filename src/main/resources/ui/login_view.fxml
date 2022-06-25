@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -53,37 +51,29 @@
 
             <Label style="-fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: #1f1f1f; -fx-padding: 0 0 4 0;" text="%login.subtitle" />
 
-            <TabPane fx:id="tabPane" maxWidth="Infinity" tabClosingPolicy="UNAVAILABLE" style="-fx-tab-min-width: 50%; -fx-tab-max-width: 50%;">
-               <tabs>
-                  <Tab fx:id="loginTab" text="%login.tab.signin">
-                     <content>
-                        <VBox spacing="14" style="-fx-padding: 22px 0 0 0;">
-                           <TextField fx:id="loginEmailField" promptText="%login.email" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
-                           <PasswordField fx:id="loginPasswordField" promptText="%login.password" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
-                           <Label fx:id="loginErrorLabel" style="-fx-text-fill: #d93025; -fx-font-size: 11px;" wrapText="true" managed="false" />
-                           <Button maxWidth="Infinity" onAction="#handleLogin" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" text="%login.button.signin">
-                              <graphicTextGap>8</graphicTextGap>
-                           </Button>
-                        </VBox>
-                     </content>
-                  </Tab>
-                  <Tab fx:id="signupTab" text="%login.tab.signup">
-                     <content>
-                        <VBox spacing="14" style="-fx-padding: 22px 0 0 0;">
-                           <TextField fx:id="signupEmailField" promptText="%login.email" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
-                           <PasswordField fx:id="signupPasswordField" promptText="%login.password" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
-                           <PasswordField fx:id="signupConfirmField" promptText="%login.confirm" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
-                           <Label fx:id="signupErrorLabel" style="-fx-text-fill: #d93025; -fx-font-size: 11px;" wrapText="true" managed="false" />
-                           <Button maxWidth="Infinity" onAction="#handleSignup" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" text="%login.button.create">
-                              <graphicTextGap>8</graphicTextGap>
-                           </Button>
-                        </VBox>
-                     </content>
-                  </Tab>
-               </tabs>
-            </TabPane>
+            <HBox spacing="0" maxWidth="Infinity">
+               <ToggleButton fx:id="loginToggle" maxWidth="Infinity" HBox.hgrow="ALWAYS" text="%login.tab.signin" />
+               <ToggleButton fx:id="signupToggle" maxWidth="Infinity" HBox.hgrow="ALWAYS" text="%login.tab.signup" />
+            </HBox>
 
-            <Region maxWidth="Infinity" style="-fx-min-height: 1px; -fx-background-color: #e0e0e0;" />
+            <VBox fx:id="loginForm" spacing="14" managed="true" visible="true">
+               <TextField fx:id="loginEmailField" promptText="%login.email" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
+               <PasswordField fx:id="loginPasswordField" promptText="%login.password" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
+               <Label fx:id="loginErrorLabel" style="-fx-text-fill: #d93025; -fx-font-size: 11px;" wrapText="true" managed="false" />
+               <Button maxWidth="Infinity" onAction="#handleLogin" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" text="%login.button.signin">
+                  <graphicTextGap>8</graphicTextGap>
+               </Button>
+            </VBox>
+
+            <VBox fx:id="signupForm" spacing="14" managed="false" visible="false">
+               <TextField fx:id="signupEmailField" promptText="%login.email" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
+               <PasswordField fx:id="signupPasswordField" promptText="%login.password" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
+               <PasswordField fx:id="signupConfirmField" promptText="%login.confirm" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px;" />
+               <Label fx:id="signupErrorLabel" style="-fx-text-fill: #d93025; -fx-font-size: 11px;" wrapText="true" managed="false" />
+               <Button maxWidth="Infinity" onAction="#handleSignup" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" text="%login.button.create">
+                  <graphicTextGap>8</graphicTextGap>
+               </Button>
+            </VBox>
 
             <Button fx:id="googleButton" maxWidth="Infinity" onAction="#handleGoogleLogin" text="%login.google" style="-fx-background-color: #ffffff; -fx-text-fill: #1f1f1f; -fx-font-weight: 600; -fx-font-size: 14px; -fx-padding: 11 16; -fx-background-radius: 8; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-border-width: 1; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 1, 0, 0, 1);">
                <graphic>

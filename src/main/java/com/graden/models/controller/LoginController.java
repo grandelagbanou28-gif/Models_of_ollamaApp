@@ -11,18 +11,21 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
 
-    @FXML private TabPane tabPane;
-    @FXML private Tab loginTab;
-    @FXML private Tab signupTab;
+    @FXML private ToggleButton loginToggle;
+    @FXML private ToggleButton signupToggle;
+    @FXML private VBox loginForm;
+    @FXML private VBox signupForm;
     @FXML private TextField loginEmailField;
     @FXML private PasswordField loginPasswordField;
     @FXML private Label loginErrorLabel;
@@ -38,7 +41,40 @@ public class LoginController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         loginErrorLabel.setManaged(false);
         signupErrorLabel.setManaged(false);
+
+        ToggleGroup group = new ToggleGroup();
+        loginToggle.setToggleGroup(group);
+        signupToggle.setToggleGroup(group);
+        loginToggle.setSelected(true);
+
+        applyToggleStyle(loginToggle, true);
+        applyToggleStyle(signupToggle, false);
+
+        group.selectedToggleProperty().addListener((obs, old, sel) -> {
+            boolean isLogin = sel == loginToggle;
+            loginForm.setManaged(isLogin);
+            loginForm.setVisible(isLogin);
+            signupForm.setManaged(!isLogin);
+            signupForm.setVisible(!isLogin);
+            applyToggleStyle(loginToggle, isLogin);
+            applyToggleStyle(signupToggle, !isLogin);
+        });
+
         updateGoogleButton();
+    }
+
+    private void applyToggleStyle(ToggleButton btn, boolean selected) {
+        if (selected) {
+            btn.setStyle("-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 10; -fx-cursor: hand; -fx-background-radius: 0; -fx-border-color: #1a73e8; -fx-border-width: 2; -fx-border-radius: 0;");
+        } else {
+            btn.setStyle("-fx-background-color: white; -fx-text-fill: #1a73e8; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 10; -fx-cursor: hand; -fx-background-radius: 0; -fx-border-color: #1a73e8; -fx-border-width: 2; -fx-border-radius: 0;");
+        }
+        // First button: round left corners
+        if (btn == loginToggle) {
+            btn.setStyle(btn.getStyle() + "-fx-background-radius: 8 0 0 8; -fx-border-radius: 8 0 0 8;");
+        } else {
+            btn.setStyle(btn.getStyle() + "-fx-background-radius: 0 8 8 0; -fx-border-radius: 0 8 8 0;");
+        }
     }
 
     public void setOnLoginSuccess(Runnable callback) {
