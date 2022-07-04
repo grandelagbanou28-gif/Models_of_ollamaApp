@@ -27,7 +27,7 @@
 
             <Label style="-fx-font-size: 34px; -fx-font-weight: 800; -fx-text-fill: white; -fx-text-alignment: center;" text="Bienvenue" />
 
-            <Label style="-fx-font-size: 16px; -fx-font-weight: 400; -fx-text-fill: rgba(255,255,255,0.85); -fx-text-alignment: center; -fx-wrap-text: true; -fx-padding: 0 20;" text="Grandel Graden Nexus" />
+            <Label style="-fx-font-size: 16px; -fx-font-weight: 400; -fx-text-fill: rgba(255,255,255,0.85); -fx-text-alignment: center; -fx-wrap-text: true; -fx-padding: 0 20;" text="Graden Models" />
 
             <Label style="-fx-font-size: 13px; -fx-font-weight: 300; -fx-text-fill: rgba(255,255,255,0.65); -fx-text-alignment: center; -fx-wrap-text: true; -fx-padding: 0 20;" text="Interface intelligente pour vos modèles d'IA" />
 
