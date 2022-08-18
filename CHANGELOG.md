@@ -1,1 +1,2 @@
 - Auto-commit 1/16 - amélioration continue
+- Auto-commit 2/16 - amélioration continue
