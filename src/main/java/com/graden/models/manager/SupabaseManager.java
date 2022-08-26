@@ -4,13 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import com.sun.net.httpserver.HttpServer;
 
 public class SupabaseManager {
 
@@ -107,47 +115,130 @@ public class SupabaseManager {
     }
 
     public CompletableFuture<Void> signInWithGoogle() {
-        return CompletableFuture.runAsync(() -> {
-            try {
-                String url = getApiUrl() + "/auth/v1/authorize?provider=google&redirect_to=http://localhost:PORT";
-                java.awt.Desktop.getDesktop().browse(new URI(url));
-                // For full flow we'd need local server like GoogleAuthService
-                // For now this opens the browser; user completes auth there
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to open Google auth URL", e);
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        try {
+            String verifier = generateCodeVerifier();
+            String challenge = generateCodeChallenge(verifier);
+
+            HttpServer server = HttpServer.create(new InetSocketAddress(0), 0);
+            int port = server.getAddress().getPort();
+            String redirectUri = "http://localhost:" + port + "/callback";
+
+            CountDownLatch latch = new CountDownLatch(1);
+            final String[] capturedCode = {null};
+
+            server.createContext("/callback", exchange -> {
+                String query = exchange.getRequestURI().getQuery();
+                String html = "<html><body><p>Authentification terminée ! Vous pouvez fermer cette fenêtre.</p></body></html>";
+
+                if (query != null && query.contains("code=")) {
+                    for (String param : query.split("&")) {
+                        String[] kv = param.split("=", 2);
+                        if (kv.length == 2 && "code".equals(kv[0])) {
+                            capturedCode[0] = kv[1];
+                            break;
+                        }
+                    }
+                }
+
+                byte[] bytes = html.getBytes(StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().add("Content-Type", "text/html; charset=UTF-8");
+                exchange.sendResponseHeaders(200, bytes.length);
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(bytes);
+                }
+                latch.countDown();
+            });
+
+            server.setExecutor(null);
+            server.start();
+
+            String authUrl = getApiUrl() + "/auth/v1/authorize?provider=google"
+                + "&redirect_to=" + URLEncoder.encode(redirectUri, StandardCharsets.UTF_8)
+                + "&response_type=code"
+                + "&code_challenge=" + challenge
+                + "&code_challenge_method=S256";
+
+            java.awt.Desktop.getDesktop().browse(new URI(authUrl));
+
+            CompletableFuture<Boolean> timeout = CompletableFuture.supplyAsync(() -> {
+                try { return latch.await(180, TimeUnit.SECONDS); }
+                catch (InterruptedException e) { return false; }
+            });
+
+            timeout.thenAcceptAsync(ok -> {
+                server.stop(0);
+                if (!ok || capturedCode[0] == null) {
+                    future.completeExceptionally(new RuntimeException("Google auth timed out or was cancelled."));
+                    return;
+                }
+                try {
+                    String error = exchangeGoogleCode(capturedCode[0], redirectUri, verifier);
+                    if (error != null) {
+                        future.completeExceptionally(new RuntimeException(error));
+                    } else {
+                        future.complete(null);
+                    }
+                } catch (Exception e) {
+                    future.completeExceptionally(e);
+                }
+            });
+
+        } catch (Exception e) {
+            future.completeExceptionally(e);
+        }
+        return future;
+    }
+
+    private String exchangeGoogleCode(String code, String redirectUri, String codeVerifier) {
+        try {
+            Map<String, Object> body = Map.of(
+                "code", code,
+                "redirect_uri", redirectUri,
+                "code_verifier", codeVerifier
+            );
+            HttpURLConnection conn = post("/auth/v1/token?grant_type=authorization_code", mapper.writeValueAsString(body));
+            int httpCode = conn.getResponseCode();
+            if (httpCode == 200) {
+                Map<String, Object> resp = mapper.readValue(conn.getInputStream(), Map.class);
+                accessToken = (String) resp.get("access_token");
+                Map<String, Object> user = (Map<String, Object>) resp.get("user");
+                if (user != null) userEmail = (String) user.get("email");
+                if (accessToken != null) {
+                    loggedIn = true;
+                    return null;
+                }
+                return "No access token";
             }
-        });
+            String err = conn.getErrorStream() != null
+                ? new String(conn.getErrorStream().readAllBytes(), StandardCharsets.UTF_8)
+                : "HTTP " + httpCode;
+            return "Google code exchange failed: " + err;
+        } catch (Exception e) {
+            return "Google exchange error: " + e.getMessage();
+        }
     }
 
     @SuppressWarnings("unchecked")
     public CompletableFuture<String> exchangeGoogleCode(String code, String redirectUri) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                Map<String, Object> body = Map.of(
-                    "code", code,
-                    "redirect_uri", redirectUri
-                );
-                HttpURLConnection conn = post("/auth/v1/token?grant_type=authorization_code", mapper.writeValueAsString(body));
-                int httpCode = conn.getResponseCode();
-                if (httpCode == 200) {
-                    Map<String, Object> resp = mapper.readValue(conn.getInputStream(), Map.class);
-                    accessToken = (String) resp.get("access_token");
-                    Map<String, Object> user = (Map<String, Object>) resp.get("user");
-                    if (user != null) userEmail = (String) user.get("email");
-                    if (accessToken != null) {
-                        loggedIn = true;
-                        return null;
-                    }
-                    return "No access token";
-                }
-                String err = conn.getErrorStream() != null
-                    ? new String(conn.getErrorStream().readAllBytes(), StandardCharsets.UTF_8)
-                    : "HTTP " + httpCode;
-                return "Google code exchange failed: " + err;
-            } catch (Exception e) {
-                return "Google exchange error: " + e.getMessage();
-            }
-        });
+        return CompletableFuture.supplyAsync(() -> exchangeGoogleCode(code, redirectUri, ""));
+    }
+
+    private String generateCodeVerifier() {
+        SecureRandom sr = new SecureRandom();
+        byte[] code = new byte[32];
+        sr.nextBytes(code);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(code);
+    }
+
+    private String generateCodeChallenge(String verifier) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest(verifier.getBytes(StandardCharsets.US_ASCII));
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to generate code challenge", e);
+        }
     }
 
     private HttpURLConnection post(String path, String jsonBody) throws Exception {
