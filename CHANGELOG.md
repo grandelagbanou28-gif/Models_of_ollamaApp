@@ -2,3 +2,4 @@
 - Auto-commit 2/16 - amélioration continue
 - Auto-commit 3/16 - amélioration continue
 - Auto-commit 4/16 - amélioration continue
+- Auto-commit 5/16 - amélioration continue
