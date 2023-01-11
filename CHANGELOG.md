@@ -6,3 +6,4 @@
 - Auto-commit 6/16 - amélioration continue
 - Auto-commit 7/16 - amélioration continue
 - Auto-commit 8/16 - amélioration continue
+- Auto-commit 9/16 - amélioration continue
