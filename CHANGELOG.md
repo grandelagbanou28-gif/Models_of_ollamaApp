@@ -13,3 +13,4 @@
 - Auto-commit 13/16 - amélioration continue
 - Auto-commit 14/16 - amélioration continue
 - Auto-commit 15/16 - amélioration continue
+- Auto-commit 16/16 - amélioration continue
