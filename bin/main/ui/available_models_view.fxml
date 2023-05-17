@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Filters redesign Phase 2 + Size filters -->
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.graden.models.controller.AvailableModelsController"
+      spacing="0" style="-fx-background-color: -color-bg-default;">
+    
+    <!-- TOP TOOLBAR: Search + Filters — fixed height, never scrolls, never overlaps. -->
+    <VBox spacing="8" styleClass="model-toolbar" VBox.vgrow="NEVER">
+
+            <!-- Row 1: Search + Capability filters + Sort -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="filter-row">
+                
+                <!-- Search Field -->
+                <TextField fx:id="searchField" promptText="%available.search" 
+                    prefWidth="420" styleClass="search-field" />
+                
+                <Region HBox.hgrow="ALWAYS" />
+                
+                <!-- Filters grouped in a segmented layout - Multi Selection -->
+                <HBox styleClass="segmented-button">
+                    <ToggleButton fx:id="filterRecommended" text="%available.filter.recommended" styleClass="left-pill">
+                        <graphic>
+                            <FontIcon iconLiteral="fth-star" iconSize="14" styleClass="font-icon" />
+                        </graphic>
+                    </ToggleButton>
+                    <ToggleButton fx:id="filterVision" text="%available.filter.vision" styleClass="center-pill">
+                        <graphic>
+                            <FontIcon iconLiteral="fth-eye" iconSize="14" styleClass="font-icon" />
+                        </graphic>
+                    </ToggleButton>
+                    <ToggleButton fx:id="filterTools" text="%available.filter.tools" styleClass="center-pill">
+                        <graphic>
+                            <FontIcon iconLiteral="fth-tool" iconSize="14" styleClass="font-icon" />
+                        </graphic>
+                    </ToggleButton>
+                    <ToggleButton fx:id="filterCode" text="%available.filter.code" styleClass="right-pill">
+                        <graphic>
+                            <FontIcon iconLiteral="fth-code" iconSize="14" styleClass="font-icon" />
+                        </graphic>
+                    </ToggleButton>
+                </HBox>
+                
+                <Region HBox.hgrow="ALWAYS" />
+                
+                <!-- Sort Menu - Far Right -->
+                <MenuButton text="%available.sort" styleClass="flat" mnemonicParsing="false">
+                    <items>
+                        <MenuItem text="%available.sort.az" onAction="#sortByNameAsc" />
+                        <MenuItem text="%available.sort.za" onAction="#sortByNameDesc" />
+                    </items>
+                </MenuButton>
+            </HBox>
+            
+            <!-- Row 2: Size filters + active-filters indicator -->
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="filter-row filter-row-size">
+                
+                <!-- Size group label -->
+                <HBox styleClass="filter-group-label" alignment="CENTER_LEFT" spacing="6">
+                    <FontIcon iconLiteral="fth-cpu" iconSize="14" styleClass="font-icon font-icon-muted" />
+                    <Label text="%available.filter.size.group" styleClass="filter-label" />
+                </HBox>
+                
+                <!-- Size pills segmented-button -->
+                <HBox styleClass="segmented-button size-group">
+                    <ToggleButton fx:id="filterSizeLt2b" text="%available.filter.size.lt2b" styleClass="left-pill" />
+                    <ToggleButton fx:id="filterSize2to7b" text="%available.filter.size.2to7b" styleClass="center-pill" />
+                    <ToggleButton fx:id="filterSize7to13b" text="%available.filter.size.7to13b" styleClass="center-pill" />
+                    <ToggleButton fx:id="filterSize13to30b" text="%available.filter.size.13to30b" styleClass="center-pill" />
+                    <ToggleButton fx:id="filterSize30bPlus" text="%available.filter.size.30bplus" styleClass="right-pill" />
+                </HBox>
+                
+                <Region HBox.hgrow="ALWAYS" />
+                
+                <!-- Active filters indicator (hidden when no filters active) -->
+                <HBox fx:id="activeFiltersIndicator" styleClass="active-filters-indicator" alignment="CENTER_RIGHT" spacing="8">
+                    <Label fx:id="activeFiltersCountLabel" styleClass="active-filters-count" />
+                    <Hyperlink fx:id="clearFiltersLink" text="%available.filter.clear" styleClass="clear-filters-link">
+                        <graphic>
+                            <FontIcon iconLiteral="fth-x" iconSize="12" styleClass="font-icon font-icon-muted" />
+                        </graphic>
+                    </Hyperlink>
+                </HBox>
+            </HBox>
+
+    </VBox>
+
+    <!-- CONTENT: List + Detail Panel -->
+    <HBox VBox.vgrow="ALWAYS" styleClass="available-content">
+        <!-- Left: Model List — FIXED width to avoid layout jitter -->
+        <VBox spacing="10" HBox.hgrow="NEVER" minWidth="320" prefWidth="320" maxWidth="320"
+              styleClass="available-list-column">
+            <Label fx:id="resultsLabel" text="Cargando..." styleClass="results-label" />
+            <ListView fx:id="modelListView" VBox.vgrow="ALWAYS" maxWidth="Infinity"
+                      styleClass="edge-to-edge, available-list" />
+        </VBox>
+
+        <!-- Right: Detail Panel -->
+        <ScrollPane fx:id="detailScrollPane" HBox.hgrow="ALWAYS" fitToWidth="true" hbarPolicy="NEVER"
+                    styleClass="available-detail-scroll">
+            <StackPane fx:id="detailViewContainer" styleClass="available-detail-pane" />
+        </ScrollPane>
+    </HBox>
+</VBox>
