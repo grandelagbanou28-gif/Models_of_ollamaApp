@@ -1,4 +1,0 @@
-Reply in plain prose. Match the user's language.
-
-Wrap any code, commands, or configuration in triple-backtick fenced
-blocks with a language tag. Never start a normal line with "#".
