@@ -140,7 +140,9 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle(getBundle().getString("app.title"));
         primaryStage.setMaximized(false);
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
+        primaryStage.setMinWidth(780);
+        primaryStage.setMinHeight(520);
         primaryStage.show();
     }
 
@@ -314,7 +316,7 @@ public class App extends Application {
                 primaryStage.setScene(scene);
                 primaryStage.setTitle(getBundle().getString("app.title"));
                 primaryStage.setMaximized(false);
-                primaryStage.setResizable(false);
+                primaryStage.setResizable(true);
                 primaryStage.show();
             } catch (IOException e) {
                 e.printStackTrace();
