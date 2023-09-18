@@ -3,104 +3,179 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Graden Models – Interface IA locale puissante</title>
-    <meta name="description" content="Graden Models : interface native pour vos modèles d'IA en local. Privé, rapide, gratuit." />
+    <title>Graden Models – Interface IA locale</title>
+    <meta name="description" content="Graden Models : interface native pour vos modèles d'IA en local. Privé, rapide, gratuit. Compatible Ollama." />
     <link rel="icon" href="assets/icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
+
+        :root {
+            --blue: #1a73e8;
+            --blue-hover: #1557b0;
+            --dark: #0a0a0f;
+            --card: #12121a;
+            --border: rgba(255,255,255,.06);
+            --muted: #a1a1aa;
+            --text: #e4e4e7;
+            --radius: 16px;
+        }
+
         body {
             font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-            background: #0a0a0f; color: #e4e4e7; line-height: 1.6;
+            background: var(--dark); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased;
         }
         .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
         /* ── Header ── */
         header {
-            padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,.06);
-            background: rgba(10,10,15,.8); backdrop-filter: blur(12px);
-            position: sticky; top: 0; z-index: 100;
+            padding: 16px 0; border-bottom: 1px solid var(--border);
+            background: rgba(10,10,15,.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
         }
         header .container { display: flex; align-items: center; gap: 12px; }
-        header img { width: 36px; height: 36px; border-radius: 8px; }
-        header h1 { font-size: 1.2rem; font-weight: 700; color: #fff; flex: 1; }
+        header .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        header img { width: 32px; height: 32px; border-radius: 7px; }
+        header .logo span { font-size: 1.1rem; font-weight: 700; color: #fff; }
+        header nav { margin-left: auto; display: flex; gap: 4px; }
         header nav a {
-            color: #a1a1aa; text-decoration: none; font-size: .9rem; font-weight: 500;
-            padding: 8px 16px; border-radius: 8px; transition: .2s;
+            color: var(--muted); text-decoration: none; font-size: .875rem; font-weight: 500;
+            padding: 8px 14px; border-radius: 8px; transition: .2s;
         }
         header nav a:hover { color: #fff; background: rgba(255,255,255,.06); }
+        .header-cta {
+            background: var(--blue); color: #fff !important; padding: 8px 18px !important;
+            margin-left: 8px;
+        }
+        .header-cta:hover { background: var(--blue-hover) !important; }
 
         /* ── Hero ── */
         .hero {
-            text-align: center; padding: 100px 0 80px;
-            background: radial-gradient(ellipse at 50% 0%, rgba(26,115,232,.15) 0%, transparent 70%);
+            padding: 140px 0 100px; text-align: center;
+            background: radial-gradient(ellipse at 50% 0%, rgba(26,115,232,.12) 0%, transparent 65%),
+                        radial-gradient(ellipse at 80% 40%, rgba(26,115,232,.05) 0%, transparent 50%);
+            position: relative; overflow: hidden;
         }
-        .hero img { width: 96px; height: 96px; border-radius: 20px; margin-bottom: 24px; }
-        .hero h2 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; color: #fff; margin-bottom: 12px; }
-        .hero p { font-size: 1.1rem; color: #a1a1aa; max-width: 560px; margin: 0 auto 36px; }
-        .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(26,115,232,.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(26,115,232,.12); color: #60a5fa;
+            padding: 6px 14px; border-radius: 20px; font-size: .8rem; font-weight: 600;
+            margin-bottom: 20px; border: 1px solid rgba(26,115,232,.2);
+        }
+        .hero img { width: 88px; height: 88px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 0 0 1px rgba(255,255,255,.06); }
+        .hero h1 {
+            font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 800; color: #fff;
+            line-height: 1.1; margin-bottom: 16px; letter-spacing: -.02em;
+        }
+        .hero h1 span { background: linear-gradient(135deg, #60a5fa, #1a73e8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p {
+            font-size: 1.1rem; color: var(--muted); max-width: 540px;
+            margin: 0 auto 36px; line-height: 1.7;
+        }
+        .hero-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
         .btn {
             display: inline-flex; align-items: center; gap: 10px;
-            padding: 14px 32px; border-radius: 12px; font-weight: 600; font-size: 1rem;
-            text-decoration: none; transition: .25s; cursor: pointer; border: none;
+            padding: 14px 30px; border-radius: 12px; font-weight: 600; font-size: .95rem;
+            text-decoration: none; transition: all .25s; cursor: pointer; border: none;
         }
-        .btn-primary { background: #1a73e8; color: #fff; }
-        .btn-primary:hover { background: #1557b0; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(26,115,232,.3); }
-        .btn-secondary { background: rgba(255,255,255,.06); color: #e4e4e7; border: 1px solid rgba(255,255,255,.1); }
+        .btn-primary { background: var(--blue); color: #fff; }
+        .btn-primary:hover { background: var(--blue-hover); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(26,115,232,.25); }
+        .btn-secondary { background: rgba(255,255,255,.05); color: var(--text); border: 1px solid rgba(255,255,255,.1); }
         .btn-secondary:hover { background: rgba(255,255,255,.1); transform: translateY(-2px); }
-        .btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+        .btn-outline { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.15); }
+        .btn-outline:hover { border-color: var(--blue); color: #60a5fa; transform: translateY(-2px); }
+
+        /* ── Section ── */
+        section { padding: 90px 0; }
+        .section-label {
+            display: inline-block; color: #60a5fa; font-size: .8rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px;
+        }
+        .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: #fff; margin-bottom: 48px; }
+        .section-title-center { text-align: center; }
 
         /* ── Features ── */
-        .features { padding: 80px 0; }
-        .features h3 { text-align: center; font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 48px; }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .feature-card {
-            background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06);
-            border-radius: 16px; padding: 32px 24px; transition: .25s;
+            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 32px 24px; transition: all .3s; position: relative; overflow: hidden;
         }
-        .feature-card:hover { background: rgba(255,255,255,.06); transform: translateY(-4px); border-color: rgba(26,115,232,.3); }
-        .feature-card .icon { font-size: 2rem; margin-bottom: 16px; }
-        .feature-card h4 { font-size: 1.1rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
-        .feature-card p { font-size: .9rem; color: #a1a1aa; }
+        .feature-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            opacity: 0; transition: opacity .3s;
+        }
+        .feature-card:hover { transform: translateY(-4px); border-color: rgba(26,115,232,.25); }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-card .icon { font-size: 1.8rem; margin-bottom: 14px; }
+        .feature-card h3 { font-size: 1.05rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
+        .feature-card p { font-size: .88rem; color: var(--muted); line-height: 1.7; }
 
         /* ── Download ── */
-        .download {
-            padding: 80px 0; text-align: center;
-            background: radial-gradient(ellipse at 50% 100%, rgba(26,115,232,.1) 0%, transparent 70%);
+        .download-bg {
+            background: radial-gradient(ellipse at 50% 0%, rgba(26,115,232,.08) 0%, transparent 60%);
         }
-        .download h3 { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
-        .download p { color: #a1a1aa; margin-bottom: 36px; }
-        .download-options { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+        .download-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; max-width: 800px; margin: 0 auto; }
         .download-card {
-            background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06);
-            border-radius: 16px; padding: 28px; min-width: 200px; transition: .25s;
-            text-decoration: none; color: inherit;
+            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 28px 20px; text-align: center; transition: all .3s;
+            text-decoration: none; color: inherit; display: block;
         }
-        .download-card:hover { background: rgba(255,255,255,.06); transform: translateY(-4px); border-color: rgba(26,115,232,.3); }
-        .download-card .icon { font-size: 2.4rem; margin-bottom: 12px; }
-        .download-card h4 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
-        .download-card span { font-size: .8rem; color: #a1a1aa; }
+        .download-card:hover { transform: translateY(-4px); border-color: rgba(26,115,232,.3); }
+        .download-card .os-icon { font-size: 2.2rem; margin-bottom: 10px; }
+        .download-card h4 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 2px; }
+        .download-card .sub { font-size: .8rem; color: var(--muted); }
+        .download-note { text-align: center; margin-top: 20px; font-size: .85rem; color: #71717a; }
+        .download-note a { color: #60a5fa; text-decoration: none; }
+        .download-note a:hover { text-decoration: underline; }
+
+        /* ── Docs ── */
+        .docs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .doc-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 28px 24px; text-decoration: none; color: inherit; transition: all .3s; display: block;
+        }
+        .doc-card:hover { transform: translateY(-4px); border-color: rgba(26,115,232,.25); }
+        .doc-card h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 6px; }
+        .doc-card p { font-size: .85rem; color: var(--muted); line-height: 1.6; }
+        .doc-card .arrow { color: var(--blue); font-size: 1.2rem; margin-top: 12px; display: inline-block; }
+
+        /* ── Stats ── */
+        .stats { padding: 60px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .stats-grid { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; text-align: center; }
+        .stat h3 { font-size: 2rem; font-weight: 800; color: #fff; background: linear-gradient(135deg, #60a5fa, #1a73e8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat p { font-size: .8rem; color: var(--muted); margin-top: 2px; }
 
         /* ── Footer ── */
-        footer {
-            border-top: 1px solid rgba(255,255,255,.06); padding: 32px 0;
-            text-align: center; font-size: .85rem; color: #71717a;
-        }
-        footer a { color: #a1a1aa; text-decoration: none; }
-        footer a:hover { color: #fff; }
-        footer .social { display: flex; gap: 16px; justify-content: center; margin-bottom: 12px; }
+        footer { padding: 48px 0 32px; border-top: 1px solid var(--border); }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+        .footer-brand img { width: 36px; height: 36px; border-radius: 8px; margin-bottom: 12px; }
+        .footer-brand p { font-size: .85rem; color: #71717a; max-width: 280px; line-height: 1.7; }
+        .footer-col h4 { font-size: .85rem; font-weight: 600; color: #fff; margin-bottom: 14px; text-transform: uppercase; letter-spacing: .05em; }
+        .footer-col a { display: block; font-size: .85rem; color: #71717a; text-decoration: none; padding: 4px 0; transition: .2s; }
+        .footer-col a:hover { color: var(--text); }
+        .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: .8rem; color: #52525b; }
+        .footer-bottom a { color: #71717a; text-decoration: none; }
+        .footer-bottom a:hover { color: var(--text); }
 
-        .badge {
-            display: inline-block; background: rgba(26,115,232,.15); color: #1a73e8;
-            padding: 4px 12px; border-radius: 20px; font-size: .8rem; font-weight: 600;
-            margin-bottom: 16px;
+        @media (max-width: 768px) {
+            .hero { padding: 110px 0 60px; }
+            section { padding: 56px 0; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            header nav a { font-size: .8rem; padding: 6px 10px; }
+            .header-cta { padding: 6px 14px !important; }
         }
-
-        @media (max-width: 640px) {
-            .hero { padding: 60px 0 40px; }
-            .features { padding: 48px 0; }
-            .download { padding: 48px 0; }
-            header nav a { padding: 6px 10px; font-size: .8rem; }
+        @media (max-width: 480px) {
+            .footer-grid { grid-template-columns: 1fr; }
+            .stats-grid { flex-direction: column; gap: 24px; }
         }
     </style>
 </head>
@@ -108,109 +183,206 @@
 
 <header>
     <div class="container">
-        <img src="assets/icon.png" alt="Graden Models" />
-        <h1>Graden Models</h1>
+        <a href="#" class="logo">
+            <img src="assets/icon.png" alt="Graden Models" />
+            <span>Graden Models</span>
+        </a>
         <nav>
             <a href="#features">Fonctionnalités</a>
-            <a href="#download">Télécharger</a>
-            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp" target="_blank">GitHub</a>
+            <a href="#docs">Documentation</a>
+            <a href="#download" class="header-cta">Télécharger</a>
         </nav>
     </div>
 </header>
 
 <section class="hero">
     <div class="container">
+        <div class="hero-badge">
+            <span>✦</span> v0.5.1 — Open Source
+        </div>
         <img src="assets/icon.png" alt="Graden Models" />
-        <span class="badge">v0.5.1 — Gratuit &amp; Open Source</span>
-        <h2>Votre assistant IA local</h2>
-        <p>Interface native puissante pour exécuter vos modèles de langage en local. Privé, rapide, sans abonnement.</p>
+        <h1>Votre <span>IA locale</span>,<br />sans compromis</h1>
+        <p>Interface native puissante pour exécuter vos modèles de langage en local. Privé, rapide, gratuit — compatible avec tous les modèles Ollama.</p>
         <div class="hero-buttons">
             <a href="#download" class="btn btn-primary">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 16V4m0 12-4-4m4 4 4-4M20 21H4"/></svg>
-                Télécharger
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 16V4m0 12-4-4m4 4 4-4M20 21H4"/></svg>
+                Télécharger maintenant
             </a>
             <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp" class="btn btn-secondary" target="_blank">
-                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                Voir sur GitHub
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                Code source
             </a>
         </div>
     </div>
 </section>
 
-<section class="features" id="features">
+<section id="features">
     <div class="container">
-        <h3>Pourquoi Graden Models&nbsp;?</h3>
+        <div class="section-label section-title-center">Fonctionnalités</div>
+        <h2 class="section-title section-title-center">Tout ce dont vous avez besoin pour l'IA locale</h2>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="icon">🔒</div>
-                <h4>Confidentialité totale</h4>
-                <p>Tout fonctionne en local. Vos données ne quittent jamais votre machine.</p>
+                <h3>Confidentialité totale</h3>
+                <p>Tout s'exécute sur votre machine. Vos données ne quittent jamais votre disque. Pas de cloud, pas de pistage.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">⚡</div>
-                <h4>Performant &amp; Léger</h4>
-                <p>Interface native JavaFX, rapide et économe en ressources.</p>
+                <h3>Performant &amp; natif</h3>
+                <p>Application JavaFX native, rapide au démarrage, fluide à l'utilisation. Consommation mémoire optimisée.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🧠</div>
-                <h4>Multi-modèles</h4>
-                <p>Compatible avec tous les modèles Ollama. Gérez, téléchargez, exécutez.</p>
+                <h3>Tous les modèles Ollama</h3>
+                <p>Llama 3, Mistral, Gemma, Phi, DeepSeek… Parcourir, télécharger et exécuter n'importe quel modèle supporté par Ollama.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">💬</div>
-                <h4>Chat intelligent</h4>
-                <p>Markdown, RAG, pièces jointes, streaming en temps réel.</p>
+                <h3>Chat enrichi</h3>
+                <p>Markdown en temps réel, streaming, RAG (RAG avec vos documents), pièces jointes (images, PDF, Word, Excel).</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🎨</div>
-                <h4>Design moderne</h4>
-                <p>Interface soignée avec thème sombre et AtlantaFX.</p>
+                <h3>Design moderne</h3>
+                <p>Interface soignée avec AtlantaFX, thème sombre, animations fluides, barre latérale intuitive.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🌍</div>
+                <h3>Multilingue</h3>
+                <p>Interface en français, anglais, espagnol. Support complet de l'internationalisation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📁</div>
+                <h3>Gestion des conversations</h3>
+                <p>Historique, dossiers, collections intelligentes, corbeille, recherche — organisez vos échanges.</p>
             </div>
             <div class="feature-card">
                 <div class="icon">🆓</div>
-                <h4>100% gratuit</h4>
-                <p>Open source (MIT). Pas de publicité, pas de licence, pas de cloud.</p>
+                <h3>100% gratuit &amp; open source</h3>
+                <p>Licence MIT. Pas de publicité, pas de version pro, pas de SaaS. Téléchargez et utilisez librement.</p>
             </div>
         </div>
     </div>
 </section>
 
-<section class="download" id="download">
-    <div class="container">
-        <h3>Prêt à l'essayer&nbsp;?</h3>
-        <p>Téléchargez Graden Models et lancez vos modèles d'IA en local.</p>
-        <div class="download-options">
-            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/releases" class="download-card" target="_blank">
-                <div class="icon">🪟</div>
+<section class="download-bg" id="download">
+    <div class="container" style="text-align:center;">
+        <div class="section-label">Téléchargement</div>
+        <h2 class="section-title section-title-center">Prêt à l'essayer ?</h2>
+        <p style="color:var(--muted); margin-bottom:36px; max-width:500px; margin-left:auto; margin-right:auto;">
+            Téléchargez Graden Models et lancez vos modèles d'IA en local en quelques clics.
+        </p>
+        <div class="download-cards">
+            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/actions" class="download-card" target="_blank">
+                <div class="os-icon">🪟</div>
                 <h4>Windows</h4>
-                <span>JAR + Launcher</span>
+                <div class="sub">Installeur .bat + JAR</div>
             </a>
-            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/releases" class="download-card" target="_blank">
-                <div class="icon">🍎</div>
+            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/actions" class="download-card" target="_blank">
+                <div class="os-icon">🍎</div>
                 <h4>macOS</h4>
-                <span>JAR + .command</span>
+                <div class="sub">Intel &amp; Apple Silicon</div>
             </a>
-            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/releases" class="download-card" target="_blank">
-                <div class="icon">🐧</div>
+            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/actions" class="download-card" target="_blank">
+                <div class="os-icon">🐧</div>
                 <h4>Linux</h4>
-                <span>JAR + .sh</span>
+                <div class="sub">Script .sh + JAR</div>
             </a>
-            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/archive/refs/heads/master.zip" class="download-card" target="_blank">
-                <div class="icon">📦</div>
-                <h4>Source</h4>
-                <span>ZIP du dépôt</span>
+        </div>
+        <p class="download-note">
+            📦 <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/archive/refs/heads/master.zip">Télécharger le code source</a>
+            &nbsp;·&nbsp; ⚠️ Nécessite <a href="https://ollama.com/download" target="_blank">Ollama</a> (gratuit)
+        </p>
+    </div>
+</section>
+
+<section id="docs">
+    <div class="container">
+        <div class="section-label section-title-center">Documentation</div>
+        <h2 class="section-title section-title-center">Guide &amp; ressources</h2>
+        <div class="docs-grid">
+            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/blob/master/README.md" class="doc-card" target="_blank">
+                <h3>📖 Guide de démarrage</h3>
+                <p>Installation, configuration, premier chat — tout pour commencer.</p>
+                <div class="arrow">→</div>
+            </a>
+            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/blob/master/ARCHITECTURE.md" class="doc-card" target="_blank">
+                <h3>🏗️ Architecture</h3>
+                <p>Comprendre la structure du projet et l'organisation du code.</p>
+                <div class="arrow">→</div>
+            </a>
+            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/blob/master/AGENTS.md" class="doc-card" target="_blank">
+                <h3>⚙️ Développement</h3>
+                <p>Commandes Gradle, conventions de code, bonnes pratiques.</p>
+                <div class="arrow">→</div>
+            </a>
+            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/tree/master/src/main/resources" class="doc-card" target="_blank">
+                <h3>🌐 Internationalisation</h3>
+                <p>Contribuer aux traductions français, anglais, espagnol.</p>
+                <div class="arrow">→</div>
+            </a>
+            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/issues" class="doc-card" target="_blank">
+                <h3>🐛 Signaler un bug</h3>
+                <p>Problème rencontré ? Ouvrez un ticket sur GitHub.</p>
+                <div class="arrow">→</div>
+            </a>
+            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/discussions" class="doc-card" target="_blank">
+                <h3>💡 Proposer une idée</h3>
+                <p>Discutez des améliorations avec la communauté.</p>
+                <div class="arrow">→</div>
             </a>
         </div>
     </div>
 </section>
 
+<div class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat">
+                <h3>100%</h3>
+                <p>Local — pas de cloud</p>
+            </div>
+            <div class="stat">
+                <h3>Open Source</h3>
+                <p>Licence MIT</p>
+            </div>
+            <div class="stat">
+                <h3>Multi-plateforme</h3>
+                <p>Windows · macOS · Linux</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer>
     <div class="container">
-        <div class="social">
-            <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp" target="_blank">GitHub</a>
-            <a href="mailto:grandelagbanou28@gmail.com">Contact</a>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <img src="assets/icon.png" alt="Graden Models" />
+                <p>Interface IA locale, ouverte et gratuite. Fait avec ❤️ par Grandel Agbanou.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Produit</h4>
+                <a href="#features">Fonctionnalités</a>
+                <a href="#download">Télécharger</a>
+                <a href="#docs">Documentation</a>
+            </div>
+            <div class="footer-col">
+                <h4>Communauté</h4>
+                <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp" target="_blank">GitHub</a>
+                <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/issues" target="_blank">Signaler un bug</a>
+                <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/discussions" target="_blank">Discussions</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <a href="mailto:grandelagbanou28@gmail.com">Email</a>
+                <a href="https://github.com/grandelagbanou28-gif" target="_blank">Profil GitHub</a>
+            </div>
         </div>
-        <p>&copy; 2026 Grandel Agbanou — Graden Models. Projet open source sous licence MIT.</p>
+        <div class="footer-bottom">
+            <span>&copy; 2026 Grandel Agbanou — Graden Models</span>
+            <span>Publié sous <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/blob/master/LICENSE" target="_blank">licence MIT</a></span>
+        </div>
     </div>
 </footer>
 
