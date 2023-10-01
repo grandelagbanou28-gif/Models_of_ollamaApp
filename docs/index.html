@@ -16,6 +16,8 @@
         :root {
             --blue: #1a73e8;
             --blue-hover: #1557b0;
+            --purple: #7c3aed;
+            --gradient: linear-gradient(135deg, #1a73e8, #7c3aed);
             --dark: #0a0a0f;
             --card: #12121a;
             --border: rgba(255,255,255,.06);
@@ -75,7 +77,7 @@
             font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 800; color: #fff;
             line-height: 1.1; margin-bottom: 16px; letter-spacing: -.02em;
         }
-        .hero h1 span { background: linear-gradient(135deg, #60a5fa, #1a73e8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero h1 span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero p {
             font-size: 1.1rem; color: var(--muted); max-width: 540px;
             margin: 0 auto 36px; line-height: 1.7;
@@ -96,7 +98,7 @@
         /* ── Section ── */
         section { padding: 90px 0; }
         .section-label {
-            display: inline-block; color: #60a5fa; font-size: .8rem; font-weight: 700;
+            display: inline-block; color: #a78bfa; font-size: .8rem; font-weight: 700;
             text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px;
         }
         .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: #fff; margin-bottom: 48px; }
@@ -197,9 +199,9 @@
 
 <section class="hero">
     <div class="container">
-        <div class="hero-badge">
-            <span>✦</span> v0.5.1 — Open Source
-        </div>
+            <div class="hero-badge">
+                <span>✦</span> v0.5.1 — Open Source · Graden Dev
+            </div>
         <img src="assets/icon.png" alt="Graden Models" />
         <h1>Votre <span>IA locale</span>,<br />sans compromis</h1>
         <p>Interface native puissante pour exécuter vos modèles de langage en local. Privé, rapide, gratuit — compatible avec tous les modèles Ollama.</p>
@@ -359,7 +361,8 @@
         <div class="footer-grid">
             <div class="footer-brand">
                 <img src="assets/icon.png" alt="Graden Models" />
-                <p>Interface IA locale, ouverte et gratuite. Fait avec ❤️ par Grandel Agbanou.</p>
+                <p>Interface IA locale, ouverte et gratuite.</p>
+                <p style="margin-top:8px; font-size:.8rem; color:#52525b;">Propulsé par <strong style="color:#a78bfa;">Graden Dev</strong></p>
             </div>
             <div class="footer-col">
                 <h4>Produit</h4>
@@ -380,8 +383,8 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <span>&copy; 2026 Grandel Agbanou — Graden Models</span>
-            <span>Publié sous <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/blob/master/LICENSE" target="_blank">licence MIT</a></span>
+            <span>&copy; 2026 Graden Dev — Graden Models</span>
+            <span>Publié sous <a href="LICENSE" target="_blank">licence Graden Models</a></span>
         </div>
     </div>
 </footer>
