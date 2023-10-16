@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Licence – Graden Models</title>
+    <meta name="description" content="Licence Graden Models – Libre, open source, propulsé par Graden Dev." />
+    <link rel="icon" href="assets/icon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap" rel="stylesheet" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+            background: #0a0a0f; color: #e4e4e7; line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,.06);
+            background: rgba(10,10,15,.85); backdrop-filter: blur(16px);
+            position: sticky; top: 0; z-index: 100;
+        }
+        header .container { display: flex; align-items: center; gap: 12px; }
+        header .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        header img { width: 32px; height: 32px; border-radius: 7px; }
+        header .logo span { font-size: 1.1rem; font-weight: 700; color: #fff; }
+        header nav { margin-left: auto; }
+        header nav a { color: #a1a1aa; text-decoration: none; font-size: .875rem; padding: 8px 14px; border-radius: 8px; transition: .2s; }
+        header nav a:hover { color: #fff; background: rgba(255,255,255,.06); }
+
+        .page {
+            padding: 60px 0 80px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(26,115,232,.08) 0%, transparent 60%);
+        }
+        .badge {
+            display: inline-block; color: #a78bfa; font-size: .8rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px;
+        }
+        h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .subtitle { color: #a1a1aa; margin-bottom: 40px; }
+
+        .license-box {
+            background: #12121a; border: 1px solid rgba(255,255,255,.06);
+            border-radius: 16px; padding: 40px; margin-bottom: 32px;
+        }
+        .license-box h2 {
+            font-size: 1.2rem; font-weight: 700; color: #fff;
+            padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.06);
+            margin-bottom: 20px;
+        }
+        .license-box h2 span { background: linear-gradient(135deg, #1a73e8, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .license-box .copyright {
+            color: #a78bfa; font-weight: 600; margin-bottom: 24px;
+            padding: 12px 16px; background: rgba(124,58,237,.08); border-radius: 8px;
+            border-left: 3px solid #7c3aed;
+        }
+        .license-box p { color: #d4d4d8; margin-bottom: 16px; font-size: .95rem; }
+        .license-box .highlight {
+            background: rgba(26,115,232,.06); border-left: 3px solid #1a73e8;
+            padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 20px 0;
+            color: #a1a1aa; font-size: .9rem;
+        }
+        .license-box strong { color: #fff; }
+
+        .footer-note {
+            text-align: center; padding: 20px;
+            background: rgba(255,255,255,.03); border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.06);
+        }
+        .footer-note p { color: #71717a; font-size: .85rem; }
+        .footer-note a { color: #a78bfa; text-decoration: none; }
+        .footer-note a:hover { text-decoration: underline; }
+
+        .btn-back {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: #a1a1aa; text-decoration: none; font-size: .9rem;
+            margin-bottom: 24px; transition: .2s;
+        }
+        .btn-back:hover { color: #fff; }
+
+        @media (max-width: 640px) {
+            .license-box { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <a href="index.html" class="logo">
+            <img src="assets/icon.png" alt="Graden Models" />
+            <span>Graden Models</span>
+        </a>
+        <nav>
+            <a href="index.html">Accueil</a>
+        </nav>
+    </div>
+</header>
+
+<section class="page">
+    <div class="container">
+        <a href="index.html" class="btn-back">← Retour à l'accueil</a>
+        <div class="badge">Licence officielle</div>
+        <h1>Graden Models License</h1>
+        <p class="subtitle">Libre, permissive, propulsée par Graden Dev — Version 1.0</p>
+
+        <div class="license-box">
+            <h2><span>✦</span> Terms of Use</h2>
+
+            <div class="copyright">
+                © 2026 Graden Dev — Tous droits réservés dans le cadre de cette licence.
+            </div>
+
+            <p>
+                <strong>Graden Models</strong> est un logiciel libre et open source. 
+                La présente licence vous autorise à utiliser, copier, modifier, fusionner, 
+                publier, distribuer, sous-licencier et vendre des copies du logiciel, 
+                conformément aux conditions ci-dessous.
+            </p>
+
+            <div class="highlight">
+                <strong>✅ Vous pouvez :</strong><br />
+                • Utiliser Graden Models pour tout usage, personnel ou commercial<br />
+                • Modifier le code source et l'adapter à vos besoins<br />
+                • Distribuer des copies, gratuites ou payantes<br />
+                • Intégrer Graden Models dans vos propres projets
+            </div>
+
+            <p>
+                <strong>Conditions :</strong> L'avis de copyright et la présente 
+                autorisation doivent être inclus dans toutes les copies ou parties 
+                substantielles du logiciel.
+            </p>
+
+            <p>
+                <strong>Attribution :</strong> Bien que non obligatoire, nous 
+                apprécierions une mention de <strong>Graden Dev</strong> dans 
+                vos projets utilisant ce logiciel.
+            </p>
+
+            <p style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.06);">
+                <strong>Clause de non-garantie :</strong> LE LOGICIEL EST FOURNI « EN L'ÉTAT », 
+                SANS GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE, Y COMPRIS MAIS SANS 
+                S'Y LIMITER LES GARANTIES DE QUALITÉ MARCHANDE, D'ADÉQUATION À UN USAGE 
+                PARTICULIER ET D'ABSENCE DE CONTREFAÇON. EN AUCUN CAS LES AUTEURS OU 
+                TITULAIRES DU COPYRIGHT NE POURRONT ÊTRE TENUS RESPONSABLES DE TOUTE 
+                RÉCLAMATION, DOMMAGE OU AUTRE RESPONSABILITÉ, QUE CE SOIT DANS LE CADRE 
+                D'UN CONTRAT, D'UN DÉLIT OU AUTRE, EN LIEN AVEC LE LOGICIEL OU SON 
+                UTILISATION, OU AUTREMENT EN RELATION AVEC LE LOGICIEL.
+            </p>
+        </div>
+
+        <div class="license-box">
+            <h2><span>✦</span> Résumé (non juridique)</h2>
+            <p>
+                <strong>Graden Models</strong> est un projet open source gratuit. 
+                Vous pouvez l'utiliser comme vous le souhaitez. Si vous le modifiez 
+                ou le redistribuez, gardez le crédit à <strong>Graden Dev</strong>. 
+                Pas de garantie — utilisez à vos propres risques.
+            </p>
+            <p style="color: #71717a; font-size: .85rem; margin-top: 12px;">
+                ⚠️ Ce résumé n'a pas valeur légale. Seul le texte complet de la licence ci-dessus fait foi.
+            </p>
+        </div>
+
+        <div class="footer-note">
+            <p>
+                Graden Models est un projet de <strong style="color:#a78bfa;">Graden Dev</strong>.
+                <br />
+                <a href="index.html">← Retour au site</a> &nbsp;·&nbsp; 
+                <a href="https://github.com/grandelagbanou28-gif/Models_of_ollamaApp">GitHub</a> &nbsp;·&nbsp; 
+                <a href="mailto:grandelagbanou28@gmail.com">Contact</a>
+            </p>
+        </div>
+    </div>
+</section>
+</body>
+</html>
