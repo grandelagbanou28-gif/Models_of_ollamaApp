@@ -100,17 +100,29 @@ public class LoginController implements Initializable {
 
     @FXML
     private void handleLogin() {
+        clearFieldErrors();
         String email = loginEmailField.getText();
         String password = loginPasswordField.getText();
+        boolean hasError = false;
+
+        if (email.isEmpty() || !email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            loginEmailField.getStyleClass().add("field-error");
+            hasError = true;
+        }
+        if (password.isEmpty()) {
+            loginPasswordField.getStyleClass().add("field-error");
+            hasError = true;
+        }
+        if (hasError) return;
 
         if (useSupabase()) {
-            showLoginError("Connecting...");
             SupabaseManager.getInstance().signIn(email, password)
                 .thenAccept(error -> Platform.runLater(() -> {
                     if (error != null) {
                         String localErr = AuthManager.getInstance().login(email, password);
-                        if (localErr != null) showLoginError(error + " | " + localErr);
-                        else if (onLoginSuccess != null) onLoginSuccess.run();
+                        if (localErr != null) {
+                            loginPasswordField.getStyleClass().add("field-error");
+                        } else if (onLoginSuccess != null) onLoginSuccess.run();
                     } else {
                         syncSupabaseUser();
                         if (onLoginSuccess != null) onLoginSuccess.run();
@@ -118,29 +130,42 @@ public class LoginController implements Initializable {
                 }));
         } else {
             String error = AuthManager.getInstance().login(email, password);
-            if (error != null) showLoginError(error);
-            else if (onLoginSuccess != null) onLoginSuccess.run();
+            if (error != null) {
+                loginPasswordField.getStyleClass().add("field-error");
+            } else if (onLoginSuccess != null) onLoginSuccess.run();
         }
     }
 
     @FXML
     private void handleSignup() {
+        clearFieldErrors();
         String email = signupEmailField.getText();
         String password = signupPasswordField.getText();
         String confirm = signupConfirmField.getText();
+        boolean hasError = false;
 
-        if (!password.equals(confirm)) {
-            showSignupError("Passwords do not match");
-            return;
+        if (email.isEmpty() || !email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            signupEmailField.getStyleClass().add("field-error");
+            hasError = true;
         }
+        if (password.isEmpty() || password.length() < 6) {
+            signupPasswordField.getStyleClass().add("field-error");
+            hasError = true;
+        }
+        if (!password.equals(confirm)) {
+            signupConfirmField.getStyleClass().add("field-error");
+            hasError = true;
+        }
+        if (hasError) return;
 
         if (useSupabase()) {
             SupabaseManager.getInstance().signUp(email, password)
                 .thenAccept(error -> Platform.runLater(() -> {
                     if (error != null) {
                         String localErr = AuthManager.getInstance().register(email, password);
-                        if (localErr != null) showSignupError(error + " | " + localErr);
-                        else {
+                        if (localErr != null) {
+                            signupEmailField.getStyleClass().add("field-error");
+                        } else {
                             AuthManager.getInstance().login(email, password);
                             if (onLoginSuccess != null) onLoginSuccess.run();
                         }
@@ -152,8 +177,9 @@ public class LoginController implements Initializable {
                 }));
         } else {
             String error = AuthManager.getInstance().register(email, password);
-            if (error != null) showSignupError(error);
-            else {
+            if (error != null) {
+                signupEmailField.getStyleClass().add("field-error");
+            } else {
                 AuthManager.getInstance().login(email, password);
                 if (onLoginSuccess != null) onLoginSuccess.run();
             }
@@ -166,6 +192,36 @@ public class LoginController implements Initializable {
             AuthManager.getInstance().registerWithGoogle(email);
             AuthManager.getInstance().loginWithGoogle(email);
         }
+    }
+
+    @FXML
+    private void handleGitHubLink() {
+        try {
+            java.awt.Desktop.getDesktop().browse(
+                new java.net.URI("https://github.com/grandelagbanou28-gif/Models_of_ollamaApp.git")
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to open GitHub link: " + e.getMessage());
+        }
+    }
+
+    private void clearFieldErrors() {
+        loginErrorLabel.setManaged(false);
+        signupErrorLabel.setManaged(false);
+        for (var fld : new javafx.scene.Node[]{loginEmailField, loginPasswordField, signupEmailField, signupPasswordField, signupConfirmField}) {
+            fld.getStyleClass().remove("field-error");
+            fld.getStyleClass().add("field-normal");
+        }
+    }
+
+    private void showLoginError(String msg) {
+        loginErrorLabel.setText(msg);
+        loginErrorLabel.setManaged(true);
+    }
+
+    private void showSignupError(String msg) {
+        signupErrorLabel.setText(msg);
+        signupErrorLabel.setManaged(true);
     }
 
     @FXML
@@ -184,45 +240,17 @@ public class LoginController implements Initializable {
             alert.showAndWait();
             return;
         }
-
-        showLoginError("Opening browser for Google authentication...");
-
         SupabaseManager.getInstance().signInWithGoogle()
             .thenRun(() -> Platform.runLater(() -> {
                 String email = SupabaseManager.getInstance().getUserEmail();
                 if (email != null) {
                     syncSupabaseUser();
                     if (onLoginSuccess != null) onLoginSuccess.run();
-                } else {
-                    showLoginError("Google auth incomplete. Check browser.");
                 }
             }))
             .exceptionally(ex -> {
-                Platform.runLater(() -> {
-                    showLoginError("Google auth failed: " + ex.getMessage());
-                });
+                Platform.runLater(() -> showLoginError("Google auth failed: " + ex.getMessage()));
                 return null;
             });
-    }
-
-    @FXML
-    private void handleGitHubLink() {
-        try {
-            java.awt.Desktop.getDesktop().browse(
-                new java.net.URI("https://github.com/grandelagbanou28-gif/Models_of_ollamaApp.git")
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to open GitHub link: " + e.getMessage());
-        }
-    }
-
-    private void showLoginError(String msg) {
-        loginErrorLabel.setText(msg);
-        loginErrorLabel.setManaged(true);
-    }
-
-    private void showSignupError(String msg) {
-        signupErrorLabel.setText(msg);
-        signupErrorLabel.setManaged(true);
     }
 }

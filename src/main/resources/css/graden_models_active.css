@@ -1631,6 +1631,16 @@
     -fx-font-family: "SF Mono", "Menlo", "Consolas", monospace;
 }
 
+/* --- Login field error (red border) --- */
+.field-error {
+    -fx-border-color: #d93025 !important;
+    -fx-border-width: 2px !important;
+}
+.field-normal {
+    -fx-border-color: #dadce0 !important;
+    -fx-border-width: 1px !important;
+}
+
 /* --- Tool Call Card --- */
 .tool-call-card {
     -fx-background-color: -color-bg-subtle;
