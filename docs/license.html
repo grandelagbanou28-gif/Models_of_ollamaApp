@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" translate="no">
 <head>
     <meta charset="UTF-8" />
 <meta name="google" content="notranslate" />
@@ -220,6 +220,7 @@
 
 <script>
 (function(){
+var en={"page.title":"License - Graden Models","nav.home":"Home","back.home":"Back to home","license.badge":"Official License","license.title":"Graden Models License","license.subtitle":"Free, permissive, powered by Graden Dev - Version 1.0","license.terms":"Terms of Use","license.copyright":"(c) 2026 Graden Dev - All rights reserved under this license.","license.p1":"<strong>Graden Models</strong> is free and open source software. This license permits you to use, copy, modify, merge, publish, distribute, sublicense, and sell copies of the software, subject to the conditions below.","license.can":"You may:","license.can1":"- Use Graden Models for any purpose, personal or commercial","license.can2":"- Modify the source code to suit your needs","license.can3":"- Distribute copies, free or for a fee","license.can4":"- Integrate Graden Models into your own projects","license.conditions":"<strong>Conditions:</strong> The copyright notice and this permission notice must be included in all copies or substantial portions of the software.","license.attribution":"<strong>Attribution:</strong> Although not required, we would appreciate credit to <strong>Graden Dev</strong> in projects using this software.","license.disclaimer":"<strong>Disclaimer of Warranty:</strong> THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.","license.summary":"Summary (non-legal)","license.summaryP":"<strong>Graden Models</strong> is a free open source project. Use it as you wish. If you modify or redistribute it, keep credit to <strong>Graden Dev</strong>. No warranty - use at your own risk.","license.disclaimerSmall":"This summary is not legally binding. Only the full license text above is authoritative.","back.site":"Back to site","contact":"Contact"};
 function saveOrig(){
 document.querySelectorAll("[data-i18n]").forEach(function(e){
 if(!e.getAttribute("data-fr"))e.setAttribute("data-fr",e.innerHTML);
@@ -235,7 +236,7 @@ try{localStorage.setItem("graden-lang",l)}catch(e){}
 document.querySelectorAll("[data-i18n]").forEach(function(e){
 var k=e.getAttribute("data-i18n");
 if(l==="fr"){var o=e.getAttribute("data-fr");if(o)e.innerHTML=o;}
-else if(window.__en&&window.__en[k]){e.innerHTML=window.__en[k];}
+else if(en[k]){e.innerHTML=en[k];}
 });
 }
 function initL(){
@@ -246,7 +247,6 @@ document.addEventListener("click",function(e){
 document.querySelectorAll(".lang-dropdown.open").forEach(function(d){if(!d.contains(e.target))d.classList.remove("open")});
 });
 window.setLang=setLang;
-window.__en={};
 initL();
 })();
 </script>
