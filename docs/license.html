@@ -110,14 +110,13 @@
         @media (max-width: 640px) {
             .license-box { padding: 24px; }
         }
-    </style>
+    
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
 .reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}
-.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}
-</head>
+.reveal-d1{transition-delay:.1s}.reveal-d2{transition-delay:.2s}.reveal-d3{transition-delay:.3s}.reveal-d4{transition-delay:.4s}
+@keyframes hGlow{0%{opacity:.3;transform:scale(1)}50%{opacity:.6;transform:scale(1.05)}100%{opacity:.3;transform:scale(1)}}
+.hero::after{content:"";position:absolute;top:-30%;left:-20%;width:140%;height:140%;background:radial-gradient(ellipse at 30% 40%,rgba(26,115,232,.08) 0%,transparent 50%);pointer-events:none;animation:hGlow 6s ease-in-out infinite}
+</style></head>
 <body>
 <header>
     <div class="container">
