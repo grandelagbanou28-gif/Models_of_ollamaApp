@@ -48,12 +48,19 @@ public class ModelsHandler implements HttpHandler {
     }
 
     private void handleDelete(HttpExchange exchange) throws IOException {
-        String name = exchange.getRequestURI().getPath().replace("/api/models/", "");
+        String fullName = exchange.getRequestURI().getPath().replace("/api/models/", "");
         com.graden.models.manager.OllamaManager om = com.graden.models.manager.OllamaManager.getInstance();
         try {
-            om.deleteModel(name);
+            String name = fullName;
+            String tag = "latest";
+            int colonIndex = fullName.lastIndexOf(':');
+            if (colonIndex > 0) {
+                name = fullName.substring(0, colonIndex);
+                tag = fullName.substring(colonIndex + 1);
+            }
+            om.deleteModel(name, tag);
             ModelManager.getInstance().refreshLocalModels();
-            JsonUtil.sendOk(exchange, "{\"deleted\":\"" + JsonUtil.escape(name) + "\"}");
+            JsonUtil.sendOk(exchange, "{\"deleted\":\"" + JsonUtil.escape(fullName) + "\"}");
         } catch (Exception e) {
             JsonUtil.sendError(exchange, 500, "Failed to delete: " + e.getMessage());
         }

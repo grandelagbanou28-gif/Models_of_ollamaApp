@@ -22,6 +22,12 @@
     <left>
 
         <VBox fx:id="sidebarVBox" prefWidth="300.0" spacing="0.0" styleClass="sidebar" BorderPane.alignment="CENTER">
+            <!-- Mobile Sidebar Toggle (Hamburger) - Hidden on desktop -->
+            <Button fx:id="sidebarToggleButton" onAction="#toggleSidebar" styleClass="mobile-sidebar-toggle" visible="false" managed="false">
+                <graphic>
+                    <FontIcon iconLiteral="fth-menu" iconSize="20" styleClass="font-icon"/>
+                </graphic>
+            </Button>
             <children>
                 <!-- SIDEBAR HEADER (Apple Notes Style) -->
                 <HBox alignment="CENTER_LEFT" spacing="5.0" styleClass="sidebar-header">

@@ -82,6 +82,7 @@ import io.github.ollama4j.models.generate.OllamaStreamHandler;
 import com.graden.models.manager.ChatCollectionManager;
 import com.graden.models.model.ChatFolder;
 import com.graden.models.model.RagDocumentItem;
+import com.graden.models.util.ResponsiveManager;
 import java.util.ArrayList;
 import org.kordamp.ikonli.javafx.FontIcon;
 import javafx.scene.control.ContextMenu;
@@ -184,6 +185,18 @@ public class ChatController {
 
     @FXML
     public void initialize() {
+        // Responsive Manager
+        responsiveManager = ResponsiveManager.getInstance();
+        if (sidebarToggleButton != null && sidebarToggleButton.getScene() != null) {
+            responsiveManager.bindToScene(sidebarToggleButton.getScene());
+        } else if (sidebarToggleButton != null) {
+            sidebarToggleButton.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    responsiveManager.bindToScene(newScene);
+                }
+            });
+        }
+
         setupInputField();
         setupListeners();
         setupMultimedia();
@@ -191,6 +204,8 @@ public class ChatController {
         ToolRegistry.getInstance().registerBuiltinsOnce();
 
         MarkdownTextSelection.registerAddToRagHandler(this::onAddSelectionToRag);
+
+        setupResponsiveRightSidebar();
 
         updateUIState(true);
     }
@@ -2034,10 +2049,54 @@ public class ChatController {
         }
     }
 
+    private void setupResponsiveRightSidebar() {
+        responsiveManager.mobileProperty().addListener((obs, wasMobile, isMobile) -> {
+            Platform.runLater(() -> {
+                if (isMobile) {
+                    // On mobile, hide right sidebar by default
+                    if (rightSidebar != null) {
+                        rightSidebar.setVisible(false);
+                        rightSidebar.setManaged(false);
+                    }
+                    // Show floating toggle button
+                    if (sidebarToggleButton != null) {
+                        sidebarToggleButton.setVisible(true);
+                        sidebarToggleButton.setManaged(true);
+                    }
+                } else {
+                    // On tablet/desktop, show right sidebar
+                    if (rightSidebar != null) {
+                        rightSidebar.setVisible(true);
+                        rightSidebar.setManaged(true);
+                    }
+                    // Hide floating toggle button
+                    if (sidebarToggleButton != null) {
+                        sidebarToggleButton.setVisible(false);
+                        sidebarToggleButton.setManaged(false);
+                    }
+                }
+            });
+        });
+
+        // Initial state
+        if (responsiveManager.isMobile()) {
+            if (rightSidebar != null) {
+                rightSidebar.setVisible(false);
+                rightSidebar.setManaged(false);
+            }
+            if (sidebarToggleButton != null) {
+                sidebarToggleButton.setVisible(true);
+                sidebarToggleButton.setManaged(true);
+            }
+        }
+    }
+
     @FXML
     private VBox rightSidebar;
     @FXML
     private Button sidebarToggleButton;
+
+    private ResponsiveManager responsiveManager;
 
     private boolean modelListLoaded = false;
     private String pendingModelSelection = null;

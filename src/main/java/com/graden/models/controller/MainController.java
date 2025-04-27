@@ -9,6 +9,7 @@ import com.graden.models.model.ChatNode;
 import com.graden.models.model.ChatFolder;
 import com.graden.models.model.SmartCollection;
 import com.graden.models.ui.ChatTreeCell;
+import com.graden.models.util.ResponsiveManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.animation.FadeTransition;
@@ -29,6 +30,7 @@ import com.graden.models.ui.FxDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.SVGPath;
@@ -60,6 +62,10 @@ public class MainController implements Initializable {
     private TreeView<ChatNode> chatTreeView;
     @FXML
     private StackPane centerContentPane;
+    @FXML
+    private VBox sidebarVBox;
+    @FXML
+    private Button sidebarToggleButton;
 
     // Bottom Tool Buttons
     @FXML
@@ -89,6 +95,8 @@ public class MainController implements Initializable {
     private Label statusLabel;
     @FXML
     private ToggleButton btnControlOllama;
+
+    private ResponsiveManager responsiveManager;
 
     private Timeline statusPollingTimeline;
     private FadeTransition pulseAnimation;
@@ -153,6 +161,18 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Responsive Manager
+        responsiveManager = ResponsiveManager.getInstance();
+        if (mainBorderPane.getScene() != null) {
+            responsiveManager.bindToScene(mainBorderPane.getScene());
+        } else {
+            mainBorderPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    responsiveManager.bindToScene(newScene);
+                }
+            });
+        }
+
         // Eager load Home View
         preloadHomeView();
 
@@ -210,6 +230,12 @@ public class MainController implements Initializable {
                 16));
         btnTrash.setGraphic(sidebarIcon(
                 "M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2", 16));
+
+        // Setup responsive sidebar behavior
+        setupResponsiveSidebar();
+
+        // Setup sidebar toggle button
+        setupSidebarToggle();
     }
 
     /**
@@ -246,6 +272,59 @@ public class MainController implements Initializable {
         });
         rootMenu.getItems().add(smartColItem);
         chatTreeView.setContextMenu(rootMenu);
+    }
+
+    private void setupResponsiveSidebar() {
+        responsiveManager.mobileProperty().addListener((obs, wasMobile, isMobile) -> {
+            Platform.runLater(() -> {
+                if (isMobile) {
+                    // On mobile, hide sidebar by default, show toggle button
+                    sidebarVBox.setVisible(false);
+                    sidebarVBox.setManaged(false);
+                    if (sidebarToggleButton != null) {
+                        sidebarToggleButton.setVisible(true);
+                        sidebarToggleButton.setManaged(true);
+                    }
+                } else {
+                    // On tablet/desktop, show sidebar, hide toggle button
+                    sidebarVBox.setVisible(true);
+                    sidebarVBox.setManaged(true);
+                    if (sidebarToggleButton != null) {
+                        sidebarToggleButton.setVisible(false);
+                        sidebarToggleButton.setManaged(false);
+                    }
+                }
+            });
+        });
+
+        // Initial state
+        if (responsiveManager.isMobile()) {
+            sidebarVBox.setVisible(false);
+            sidebarVBox.setManaged(false);
+            if (sidebarToggleButton != null) {
+                sidebarToggleButton.setVisible(true);
+                sidebarToggleButton.setManaged(true);
+            }
+        }
+    }
+
+    private void setupSidebarToggle() {
+        if (sidebarToggleButton != null) {
+            sidebarToggleButton.setOnAction(e -> {
+                boolean isVisible = sidebarVBox.isVisible();
+                sidebarVBox.setVisible(!isVisible);
+                sidebarVBox.setManaged(!isVisible);
+            });
+        }
+    }
+
+    @FXML
+    private void toggleSidebar() {
+        if (sidebarVBox != null) {
+            boolean isVisible = sidebarVBox.isVisible();
+            sidebarVBox.setVisible(!isVisible);
+            sidebarVBox.setManaged(!isVisible);
+        }
     }
 
     public void refreshChatTree() {
