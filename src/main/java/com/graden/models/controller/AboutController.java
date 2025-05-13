@@ -35,6 +35,12 @@ public class AboutController implements Initializable {
 
     @FXML
     private Button githubButton;
+    @FXML
+    private Button licenseButton;
+    @FXML
+    private Button closeButton;
+
+    private Runnable onClose;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -86,6 +92,17 @@ public class AboutController implements Initializable {
                 });
     }
 
+    public void setOnClose(Runnable onClose) {
+        this.onClose = onClose;
+    }
+
+    @FXML
+    private void closeAbout() {
+        if (onClose != null) {
+            onClose.run();
+        }
+    }
+
     @FXML
     private void openGitHub() {
         openLink("https://github.com/grandelagbanou28-gif/Models_of_ollamaApp");
@@ -94,6 +111,11 @@ public class AboutController implements Initializable {
     @FXML
     private void openGitHubContribute() {
         openLink("https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/issues");
+    }
+
+    @FXML
+    private void openLicense() {
+        openLink("https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/blob/master/LICENSE");
     }
 
     private void openLink(String url) {

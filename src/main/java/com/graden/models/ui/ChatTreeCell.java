@@ -32,6 +32,12 @@ public class ChatTreeCell extends TreeCell<ChatNode> {
     private final ChatCollectionManager collectionManager = ChatCollectionManager.getInstance();
     private final ChatManager chatManager = ChatManager.getInstance();
 
+    // Cache pour les menus pour éviter de les recréer à chaque scroll
+    private ContextMenu chatMenu;
+    private ContextMenu folderMenu;
+    private ContextMenu smartMenu;
+    private ChatNode lastProcessedItem;
+
     public ChatTreeCell() {
         setupDragAndDrop();
     }
@@ -44,28 +50,34 @@ public class ChatTreeCell extends TreeCell<ChatNode> {
             setText(null);
             setGraphic(null);
             setContextMenu(null);
-            // Clear style classes if necessary
             getStyleClass().remove("drag-over");
+            lastProcessedItem = null;
         } else {
-            // Explicitly set text and graphic to ensure visibility
-            // Relying on super.updateItem() sometimes fails if specific properties aren't
-            // bound
             setText(item.toString());
-            // TreeItem might be null during intermediate states, but usually safe here if
-            // item is not null
             if (getTreeItem() != null) {
                 setGraphic(getTreeItem().getGraphic());
             }
 
-            // Context Menus
-            if (item.getType() == ChatNode.Type.FOLDER) {
-                setContextMenu(createFolderContextMenu(item.getFolder()));
-            } else if (item.getType() == ChatNode.Type.SMART_COLLECTION) {
-                setContextMenu(createSmartCollectionContextMenu(item.getSmartCollection()));
-            } else {
-                setContextMenu(createChatContextMenu(item.getChat()));
+            // Optimisation : Ne reconstruire le menu que si l'item a changé de type
+            if (lastProcessedItem == null || lastProcessedItem.getType() != item.getType()) {
+                updateContextMenu(item);
+                lastProcessedItem = item;
             }
         }
+    }
+
+    private void updateContextMenu(ChatNode item) {
+            // Context Menus
+            if (item.getType() == ChatNode.Type.FOLDER) {
+                if (folderMenu == null) folderMenu = createFolderContextMenu(item.getFolder());
+                setContextMenu(folderMenu);
+            } else if (item.getType() == ChatNode.Type.SMART_COLLECTION) {
+                if (smartMenu == null) smartMenu = createSmartCollectionContextMenu(item.getSmartCollection());
+                setContextMenu(smartMenu);
+            } else {
+                if (chatMenu == null) chatMenu = createChatContextMenu(item.getChat());
+                setContextMenu(chatMenu);
+            }
     }
     // Remove renderFolder and renderChat methods as we rely on TreeItem graphics
     // now.

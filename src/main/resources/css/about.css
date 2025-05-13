@@ -254,3 +254,35 @@
 .github-btn .github-icon {
     -fx-icon-color: -color-fg-default;
 }
+
+.license-link-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: -color-accent-emphasis;
+    -fx-font-size: 10px;
+    -fx-underline: true;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+.license-link-btn:hover {
+    -fx-text-fill: -color-accent-emphasis;
+    -fx-opacity: 0.8;
+}
+
+.about-close-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6px;
+    -fx-cursor: hand;
+    -fx-background-radius: 4px;
+}
+.about-close-btn .ikonli-font-icon {
+    -fx-icon-color: -color-fg-muted;
+    -fx-icon-size: 16px;
+}
+.about-close-btn:hover {
+    -fx-background-color: -color-base-7;
+}
+.about-close-btn:hover .ikonli-font-icon {
+    -fx-icon-color: -color-fg-default;
+}

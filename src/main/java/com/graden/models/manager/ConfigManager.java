@@ -126,6 +126,16 @@ public class ConfigManager {
     // ─────────────────────────── RAG tuning ────────────────────────────────
     // Default minScore moved from 0.2 (too permissive — captured cross-language
     // noise) to 0.55 (balanced: precise within-language, still tolerant).
+    // ─────────────────────────── Generic helpers ──────────────────────────
+    public String getPreference(String key, String defaultValue) {
+        return prefs.get(key, defaultValue);
+    }
+
+    public void setPreference(String key, String value) {
+        prefs.put(key, value);
+        try { prefs.flush(); } catch (Exception ignored) {}
+    }
+
     private static final String KEY_RAG_MIN_SCORE = "rag_min_score";
     private static final String KEY_RAG_TOP_K = "rag_top_k";
     private static final double DEFAULT_RAG_MIN_SCORE = 0.55;

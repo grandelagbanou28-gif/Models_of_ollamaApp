@@ -59,7 +59,6 @@
             <VBox fx:id="loginForm" spacing="14" managed="true" visible="true">
                <TextField fx:id="loginEmailField" promptText="%login.email" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px; -fx-text-fill: #1f1f1f; -fx-prompt-text-fill: #5f6368;" />
                <PasswordField fx:id="loginPasswordField" promptText="%login.password" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px; -fx-text-fill: #1f1f1f; -fx-prompt-text-fill: #5f6368;" />
-               <Label fx:id="loginErrorLabel" style="-fx-text-fill: #d93025; -fx-font-size: 11px;" wrapText="true" managed="false" />
                <Button maxWidth="Infinity" onAction="#handleLogin" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" text="%login.button.signin">
                   <graphicTextGap>8</graphicTextGap>
                </Button>
@@ -69,7 +68,6 @@
                <TextField fx:id="signupEmailField" promptText="%login.email" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px; -fx-text-fill: #1f1f1f; -fx-prompt-text-fill: #5f6368;" />
                <PasswordField fx:id="signupPasswordField" promptText="%login.password" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px; -fx-text-fill: #1f1f1f; -fx-prompt-text-fill: #5f6368;" />
                <PasswordField fx:id="signupConfirmField" promptText="%login.confirm" style="-fx-background-color: #f8f9fa; -fx-border-color: #dadce0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 14; -fx-font-size: 14px; -fx-text-fill: #1f1f1f; -fx-prompt-text-fill: #5f6368;" />
-               <Label fx:id="signupErrorLabel" style="-fx-text-fill: #d93025; -fx-font-size: 11px;" wrapText="true" managed="false" />
                <Button maxWidth="Infinity" onAction="#handleSignup" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 14px; -fx-padding: 12; -fx-background-radius: 8; -fx-cursor: hand;" text="%login.button.create">
                   <graphicTextGap>8</graphicTextGap>
                </Button>

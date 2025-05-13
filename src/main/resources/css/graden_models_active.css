@@ -163,19 +163,46 @@
 .sidebar .button {
     -fx-font-weight: normal;
     -fx-font-size: 13px;
-    /* macOS Finder base size */
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 15px;
+    -fx-alignment: BASELINE_LEFT;
+    -fx-cursor: hand;
+}
+.sidebar .button .ikonli-font-icon {
+    -fx-icon-color: -color-fg-muted;
+    -fx-icon-size: 15px;
+}
+.sidebar .button:hover {
+    -fx-background-color: -color-base-8;
+}
+.sidebar .button:selected,
+.sidebar .button.selected {
+    -fx-background-color: -color-base-7;
+    -fx-text-fill: -color-fg-default;
+}
+.sidebar .button:selected .ikonli-font-icon,
+.sidebar .button.selected .ikonli-font-icon {
+    -fx-icon-color: -color-accent-emphasis;
 }
 
 .sidebar .app-title {
     -fx-font-weight: normal;
 }
 
-/* Sidebar Section Headers (CHATS) */
+/* Sidebar Section / Group Labels */
 .sidebar-section-label {
     -fx-font-size: 11px;
     -fx-font-weight: 700;
     -fx-text-fill: -color-fg-muted;
     -fx-opacity: 0.8;
+}
+.sidebar-group-label {
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -color-fg-subtle;
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 0.06em;
+    -fx-opacity: 0.7;
 }
 
 /* --- SIDEBAR TREE VIEW ---

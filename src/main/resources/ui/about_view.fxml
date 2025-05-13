@@ -36,10 +36,15 @@
                     <javafx.scene.effect.DropShadow color="#0000001f" radius="10" offsetY="4" />
                 </effect>
             </ImageView>
-            <VBox spacing="4" alignment="CENTER_LEFT">
+            <VBox spacing="4" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
                 <Label styleClass="header-app-title" text="%app.title" />
                 <Label fx:id="versionLabel" styleClass="header-version" text="%about.version.placeholder" />
             </VBox>
+            <Button fx:id="closeButton" onAction="#closeAbout" styleClass="about-close-btn" text="">
+                <graphic>
+                    <FontIcon iconLiteral="fth-x" iconSize="16" />
+                </graphic>
+            </Button>
         </HBox>
 
         <Region prefHeight="24" />
@@ -143,7 +148,11 @@
         <VBox alignment="CENTER" spacing="4" style="-fx-opacity: 0.45;">
             <Label text="%about.createdby" style="-fx-font-size: 11px; -fx-font-weight: 500;" />
             <Label text="%about.poweredby" style="-fx-font-size: 10px;" />
-            <Label text="%about.license" style="-fx-font-size: 10px;" />
+            <HBox alignment="CENTER" spacing="6">
+                <Label text="%about.license" style="-fx-font-size: 10px;" />
+                <Label text="·" style="-fx-font-size: 10px;" />
+                <Button fx:id="licenseButton" onAction="#openLicense" styleClass="license-link-btn" text="%about.license.view" />
+            </HBox>
         </VBox>
 
         <Region prefHeight="16" />

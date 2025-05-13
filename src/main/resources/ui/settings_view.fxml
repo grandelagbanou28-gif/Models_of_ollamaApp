@@ -60,6 +60,25 @@
 
             <Separator />
 
+            <!-- API Server Section -->
+            <VBox spacing="10.0">
+                <Label styleClass="title-4" text="API Server" />
+                <VBox spacing="5.0" style="-fx-background-color: -color-bg-subtle; -fx-padding: 10; -fx-background-radius: 5;">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Enable REST API" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="apiToggleButton" onAction="#toggleApi" styleClass="api-toggle-btn" />
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Port" textFill="#888888" />
+                        <TextField fx:id="apiPortField" prefWidth="80" text="9876" />
+                    </HBox>
+                    <Label fx:id="apiStatusLabel" text="Stopped" textFill="#888888" style="-fx-font-size: 11px;" />
+                </VBox>
+            </VBox>
+
+            <Separator />
+
             <VBox spacing="10.0">
                 <HBox alignment="CENTER_LEFT" spacing="10">
                     <Label styleClass="title-4" text="%settings.section.system" />

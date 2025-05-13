@@ -443,6 +443,8 @@ public class MainController implements Initializable {
 
     private void setActiveTool(Button activeButton) {
         // Clear active class from all tools
+        if (btnHome != null)
+            btnHome.getStyleClass().remove("selected");
         if (btnAvailable != null)
             btnAvailable.getStyleClass().remove("selected");
         if (btnLocal != null)
@@ -466,6 +468,8 @@ public class MainController implements Initializable {
 
     // Clear tools when chat is selected
     private void clearToolSelection() {
+        if (btnHome != null)
+            btnHome.getStyleClass().remove("selected");
         if (btnAvailable != null)
             btnAvailable.getStyleClass().remove("selected");
         if (btnLocal != null)
@@ -556,6 +560,8 @@ public class MainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/about_view.fxml"));
             loader.setResources(com.graden.models.App.getBundle());
             Parent view = loader.load();
+            AboutController controller = loader.getController();
+            controller.setOnClose(this::showHome);
             centerContentPane.getChildren().setAll(view); // Update StackPane content
         } catch (IOException e) {
             e.printStackTrace();

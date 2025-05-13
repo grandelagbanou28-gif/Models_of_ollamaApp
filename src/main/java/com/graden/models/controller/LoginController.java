@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
@@ -28,20 +27,15 @@ public class LoginController implements Initializable {
     @FXML private VBox signupForm;
     @FXML private TextField loginEmailField;
     @FXML private PasswordField loginPasswordField;
-    @FXML private Label loginErrorLabel;
     @FXML private TextField signupEmailField;
     @FXML private PasswordField signupPasswordField;
     @FXML private PasswordField signupConfirmField;
-    @FXML private Label signupErrorLabel;
     @FXML private Button googleButton;
 
     private Runnable onLoginSuccess;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loginErrorLabel.setManaged(false);
-        signupErrorLabel.setManaged(false);
-
         ToggleGroup group = new ToggleGroup();
         loginToggle.setToggleGroup(group);
         signupToggle.setToggleGroup(group);
@@ -206,22 +200,10 @@ public class LoginController implements Initializable {
     }
 
     private void clearFieldErrors() {
-        loginErrorLabel.setManaged(false);
-        signupErrorLabel.setManaged(false);
         for (var fld : new javafx.scene.Node[]{loginEmailField, loginPasswordField, signupEmailField, signupPasswordField, signupConfirmField}) {
             fld.getStyleClass().remove("field-error");
             fld.getStyleClass().add("field-normal");
         }
-    }
-
-    private void showLoginError(String msg) {
-        loginErrorLabel.setText(msg);
-        loginErrorLabel.setManaged(true);
-    }
-
-    private void showSignupError(String msg) {
-        signupErrorLabel.setText(msg);
-        signupErrorLabel.setManaged(true);
     }
 
     @FXML
@@ -249,7 +231,7 @@ public class LoginController implements Initializable {
                 }
             }))
             .exceptionally(ex -> {
-                Platform.runLater(() -> showLoginError("Google auth failed: " + ex.getMessage()));
+                Platform.runLater(() -> loginEmailField.getStyleClass().add("field-error"));
                 return null;
             });
     }

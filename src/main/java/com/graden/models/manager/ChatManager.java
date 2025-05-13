@@ -1,6 +1,7 @@
 package com.graden.models.manager;
 
 import com.graden.models.model.ChatSession;
+import com.graden.models.App;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -137,22 +138,26 @@ public class ChatManager {
     }
 
     public void loadChats() {
-        chatSessions.clear();
-        File[] files = storageDir.listFiles((dir, name) -> name.endsWith(".json"));
-        if (files != null) {
-            for (File file : files) {
-                try {
-                    ChatSession session = objectMapper.readValue(file, ChatSession.class);
-                    // Filter out any chats that have been moved to the trash
-                    if (!TrashManager.getInstance().isChatInTrash(session.getId().toString())) {
-                        setupSessionListeners(session);
-                        chatSessions.add(session);
+        // Exécuter en arrière-plan pour ne pas bloquer l'UI
+        App.getExecutorService().submit(() -> {
+            File[] files = storageDir.listFiles((dir, name) -> name.endsWith(".json"));
+            if (files != null) {
+                for (File file : files) {
+                    try {
+                        ChatSession session = objectMapper.readValue(file, ChatSession.class);
+                        if (!TrashManager.getInstance().isChatInTrash(session.getId().toString())) {
+                            javafx.application.Platform.runLater(() -> {
+                                setupSessionListeners(session);
+                                if (!chatSessions.contains(session)) {
+                                    chatSessions.add(session);
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    System.err.println("Failed to load chat: " + file.getName());
                 }
             }
-        }
+        });
     }
 }

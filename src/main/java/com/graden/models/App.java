@@ -1,6 +1,8 @@
 // src/main/java/com/org/GrandelGradenNexus/App.java
 package com.graden.models;
 
+import com.graden.models.api.ApiConfig;
+import com.graden.models.api.ApiServer;
 import com.graden.models.controller.LoginController;
 import com.graden.models.controller.MainController;
 import com.graden.models.manager.AuthManager;
@@ -124,6 +126,7 @@ public class App extends Application {
             Platform.runLater(() -> {
                 try {
                     ChatManager.getInstance().loadChats();
+                    startApiIfEnabled();
                     ModelLibraryManager.UpdateStatus cacheStatus = ModelLibraryManager.getInstance().getUpdateStatus();
                     boolean needsSplash = (cacheStatus == ModelLibraryManager.UpdateStatus.OUTDATED_HARD);
                     if (needsSplash) {
@@ -159,6 +162,12 @@ public class App extends Application {
                 }
             } catch (Exception ignored) {
             }
+        }
+    }
+
+    private static void startApiIfEnabled() {
+        if (ApiConfig.isEnabled()) {
+            ApiServer.getInstance().start();
         }
     }
 
@@ -337,6 +346,7 @@ public class App extends Application {
             }
         }
 
+        ApiServer.getInstance().stop();
         com.graden.models.manager.RagManager.getInstance().shutdown();
         OllamaServiceManager.getInstance().stopOllama();
         ChatManager.getInstance().saveChats();

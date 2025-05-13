@@ -1,6 +1,8 @@
 package com.graden.models.controller;
 
 import com.graden.models.App;
+import com.graden.models.api.ApiConfig;
+import com.graden.models.api.ApiServer;
 import com.graden.models.manager.AuthManager;
 import com.graden.models.manager.ConfigManager;
 import com.graden.models.manager.GoogleAuthService;
@@ -84,6 +86,11 @@ public class SettingsController {
     @FXML private TextField supabaseAnonKeyField;
     @FXML private Label supabaseStatusLabel;
 
+    // API Server
+    @FXML private Button apiToggleButton;
+    @FXML private TextField apiPortField;
+    @FXML private Label apiStatusLabel;
+
     // Account
     // Google OAuth
     @FXML private TextField googleClientIdField;
@@ -130,6 +137,8 @@ public class SettingsController {
         populateDiagnostics();
 
         initRagControls();
+
+        initApiControls();
 
         languageComboBox.getItems().addAll("English", "Español", "Français");
         String currentLang = configManager.getLanguage();
@@ -235,6 +244,57 @@ public class SettingsController {
                     bundle.getString("settings.library.diagnostics.failedModels"), failed.size()));
             failedModelsList.getItems().setAll(failed);
         }
+    }
+
+    private void initApiControls() {
+        apiPortField.setText(String.valueOf(ApiConfig.getPort()));
+        updateApiButton();
+        ApiServer srv = ApiServer.getInstance();
+        apiStatusLabel.setText(srv.isRunning() ? "Running on port " + ApiConfig.getPort() : "Stopped");
+        apiPortField.textProperty().addListener((obs, oldV, newV) -> {
+            try {
+                int port = Integer.parseInt(newV);
+                if (port > 0 && port < 65536) {
+                    ApiConfig.setPort(port);
+                    if (ApiServer.getInstance().isRunning()) ApiServer.getInstance().restart();
+                    updateApiStatus();
+                }
+            } catch (NumberFormatException ignored) {}
+        });
+    }
+
+    @FXML
+    private void toggleApi() {
+        ApiServer srv = ApiServer.getInstance();
+        if (srv.isRunning()) {
+            srv.stop();
+            ApiConfig.setEnabled(false);
+        } else {
+            try {
+                int port = Integer.parseInt(apiPortField.getText());
+                if (port > 0 && port < 65536) ApiConfig.setPort(port);
+            } catch (NumberFormatException ignored) {}
+            ApiConfig.setEnabled(true);
+            srv.start();
+        }
+        updateApiButton();
+        updateApiStatus();
+    }
+
+    private void updateApiButton() {
+        if (apiToggleButton == null) return;
+        boolean running = ApiServer.getInstance().isRunning();
+        apiToggleButton.setText(running ? "Stop" : "Start");
+        apiToggleButton.getStyleClass().removeAll("accent", "danger");
+        apiToggleButton.getStyleClass().add(running ? "danger" : "accent");
+    }
+
+    private void updateApiStatus() {
+        if (apiStatusLabel == null) return;
+        ApiServer srv = ApiServer.getInstance();
+        apiStatusLabel.setText(srv.isRunning()
+                ? "Running on port " + ApiConfig.getPort()
+                : "Stopped");
     }
 
     @FXML

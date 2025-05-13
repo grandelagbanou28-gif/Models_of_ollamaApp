@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.graden.models.App;
 import com.graden.models.model.ChatFolder;
 import com.graden.models.model.ChatSession;
 import com.graden.models.model.TrashItem;
@@ -49,7 +50,7 @@ public class TrashManager {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         load();
-        cleanOldItems(); // Limpiar items antiguos al inicio
+        App.getExecutorService().submit(this::cleanOldItems); // Nettoyage asynchrone
     }
 
     public static synchronized TrashManager getInstance() {
