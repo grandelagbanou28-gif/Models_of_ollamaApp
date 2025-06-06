@@ -93,6 +93,33 @@ Use our Issue Templates (Bug Report or Feature Request).
 
 Provide as much detail as possible: OS version, Java version, and steps to reproduce.
 
+## 💡 Propose an Idea (Feature Request)
+Want to suggest a new feature or improvement? We welcome your ideas!
+
+### How to propose an idea:
+1. Go to the **Discussions** tab on GitHub → [New Discussion](https://github.com/grandelagbanou28-gif/Models_of_ollamaApp/discussions/new)
+2. Select **"Ideas"** category
+3. Fill in:
+   - **Title**: Clear, concise summary of your idea
+   - **Description**: Explain the problem, proposed solution, and use cases
+   - **Labels**: Add relevant labels (e.g., `enhancement`, `ui`, `rag`, `models`)
+
+### Get Email Notifications
+To receive email notifications when your idea is discussed or acted upon:
+
+1. **Watch the repository**: Click **Watch** → **Custom** → Check **Discussions**
+2. **Or watch specific discussions**: Open any discussion → Click **Subscribe** (bell icon)
+3. **Configure GitHub notifications**: Settings → Notifications → Set "Email" for "Discussions" and "Issues"
+
+### Community Discussion
+- All ideas are public — anyone can comment, upvote, or suggest alternatives
+- Maintainers review weekly and tag with status: `under-review`, `planned`, `wontfix`
+- Highly-upvoted ideas get prioritized in the roadmap
+
+---
+
+*Thank you for helping make GrandelGradenNexus better!*
+
 ## 🛡️ Security Policy
 If you discover a security vulnerability, please do not open a public issue. Send an email to 
 your-email@example.com (or use GitHub's private vulnerability reporting). 
