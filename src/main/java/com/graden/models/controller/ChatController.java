@@ -500,6 +500,30 @@ public class ChatController {
     // Helper method for Adaptive UI
     private void updateUIState(boolean isNewChat) {
         if (isNewChat) {
+            // If models are already available, skip welcome and go straight to chat
+            boolean hasModels = modelSelector != null && modelSelector.getItems() != null
+                    && !modelSelector.getItems().isEmpty();
+            if (hasModels) {
+                String first = modelSelector.getItems().get(0);
+                modelSelector.setValue(first);
+                if (initialModelSelector != null)
+                    initialModelSelector.setValue(first);
+                if (scrollPane != null)
+                    scrollPane.setVisible(true);
+                if (welcomeContainer != null)
+                    welcomeContainer.setVisible(false);
+                if (bottomInputContainer != null && inputCapsule != null
+                        && !bottomInputContainer.getChildren().contains(inputCapsule)) {
+                    if (welcomeContainer != null)
+                        welcomeContainer.getChildren().remove(inputCapsule);
+                    bottomInputContainer.getChildren().add(inputCapsule);
+                }
+                if (inputCapsule != null) {
+                    inputCapsule.setVisible(true);
+                    inputCapsule.setManaged(true);
+                }
+                return;
+            }
             // WELCOME STATE
             if (scrollPane != null)
                 scrollPane.setVisible(false);
