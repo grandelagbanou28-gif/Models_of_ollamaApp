@@ -20,15 +20,8 @@
 
 <BorderPane fx:id="mainBorderPane" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.graden.models.controller.MainController">
     <left>
-
-        <VBox fx:id="sidebarVBox" prefWidth="300.0" spacing="0.0" styleClass="sidebar" BorderPane.alignment="CENTER">
-            <!-- Mobile Sidebar Toggle (Hamburger) - Hidden on desktop -->
-            <Button fx:id="sidebarToggleButton" onAction="#toggleSidebar" styleClass="mobile-sidebar-toggle" visible="false" managed="false">
-                <graphic>
-                    <FontIcon iconLiteral="fth-menu" iconSize="20" styleClass="font-icon"/>
-                </graphic>
-            </Button>
-            <children>
+        <StackPane>
+            <VBox fx:id="sidebarVBox" prefWidth="300.0" spacing="0.0" styleClass="sidebar" StackPane.alignment="CENTER">
                 <!-- SIDEBAR HEADER (Apple Notes Style) -->
                 <HBox alignment="CENTER_LEFT" spacing="5.0" styleClass="sidebar-header">
                     <Label text="CHATS" styleClass="sidebar-section-label" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
@@ -202,6 +195,12 @@
                 </HBox>
             </children>
         </VBox>
+            <Button fx:id="sidebarToggleButton" onAction="#toggleSidebar" styleClass="mobile-sidebar-toggle" visible="false" managed="false" StackPane.alignment="TOP_LEFT" translateX="8" translateY="8">
+                <graphic>
+                    <FontIcon iconLiteral="fth-menu" iconSize="20" styleClass="font-icon"/>
+                </graphic>
+            </Button>
+        </StackPane>
     </left>
     <center>
         <!-- Clean Center (Main Content Only) -->
