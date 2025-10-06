@@ -129,7 +129,8 @@ header .logo{
 header .logo-img{
   width:32px;height:32px;border-radius:8px;flex-shrink:0;
   transition:transform .3s ease;
-  background:rgba(255,255,255,.05);object-fit:contain;padding:4px;
+  background:rgba(255,255,255,.08);object-fit:contain;padding:4px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12);
 }
 header .logo:hover .logo-img{transform:scale(1.08)}
 header .logo span{
@@ -263,12 +264,13 @@ header nav a.active{color:var(--blue);background:rgba(59,130,246,.08)}
 @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}
 .hero-icon{
   width:80px;height:80px;border-radius:20px;margin-bottom:24px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 8px 40px rgba(59,130,246,.15);
-  transition:transform .5s ease;
+  box-shadow:0 0 0 2px rgba(255,255,255,.15),0 0 30px rgba(59,130,246,.2),0 8px 40px rgba(59,130,246,.15);
+  transition:transform .5s ease,box-shadow .3s ease;
   will-change:transform;
-  background:rgba(255,255,255,.05);
+  background:rgba(255,255,255,.08);
   object-fit:contain;padding:8px;
 }
+.hero:hover .hero-icon{box-shadow:0 0 0 2px rgba(255,255,255,.2),0 0 40px rgba(59,130,246,.3),0 12px 50px rgba(59,130,246,.2)}
 .hero:hover .hero-icon{transform:scale(1.04) rotate(-2deg)}
 .hero h1{
   font-size:clamp(2rem,4.8vw,3.8rem);font-weight:800;color:#fff;
@@ -539,7 +541,7 @@ footer{padding:64px 0 32px;border-top:1px solid var(--glass-border)}
 .footer-grid{
   display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;
 }
-.footer-brand .logo-img{width:36px;height:36px;border-radius:8px;margin-bottom:14px;background:rgba(255,255,255,.05);object-fit:contain;padding:4px}
+.footer-brand .logo-img{width:36px;height:36px;border-radius:8px;margin-bottom:14px;background:rgba(255,255,255,.08);object-fit:contain;padding:4px;box-shadow:0 0 0 1px rgba(255,255,255,.12)}
 .footer-brand p{font-size:.85rem;color:var(--text-muted);max-width:280px;line-height:1.7}
 .footer-col h4{
   font-size:.8rem;font-weight:600;color:var(--text);
@@ -674,7 +676,7 @@ footer{padding:64px 0 32px;border-top:1px solid var(--glass-border)}
 
 <header><div class="container">
   <a href="#" class="logo"><img src="assets/icon.png" alt="Graden Models" class="logo-img" /><span>Graden Models<sup>v0.5</sup></span></a>
-  <button class="hamburger" id="hamburger" aria-label="Menu">
+  <button class="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
   <nav>
@@ -904,7 +906,6 @@ window.setLang=sL;init();
 
 function toggleMobileNav(){var n=document.getElementById("mobileNav"),b=document.getElementById("hamburger");n.classList.toggle("open");b.classList.toggle("active");document.body.style.overflow=n.classList.contains("open")?"hidden":""}
 function closeMobileNav(){var n=document.getElementById("mobileNav"),b=document.getElementById("hamburger");n.classList.remove("open");b.classList.remove("active");document.body.style.overflow=""}
-document.addEventListener("DOMContentLoaded",function(){var b=document.getElementById("hamburger");if(b)b.addEventListener("click",toggleMobileNav)});
 </script>
 </body>
 </html>
