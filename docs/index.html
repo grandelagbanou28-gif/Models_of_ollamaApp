@@ -129,6 +129,7 @@ header .logo{
 header .logo-img{
   width:32px;height:32px;border-radius:8px;flex-shrink:0;
   transition:transform .3s ease;
+  background:rgba(255,255,255,.05);object-fit:contain;padding:4px;
 }
 header .logo:hover .logo-img{transform:scale(1.08)}
 header .logo span{
@@ -165,9 +166,11 @@ header nav a.active{color:var(--blue);background:rgba(59,130,246,.08)}
 /* ───── HAMBURGER ───── */
 .hamburger{
   display:none;flex-direction:column;justify-content:center;align-items:center;
-  gap:5px;width:40px;height:40px;padding:0;
-  border:none;background:transparent;cursor:pointer;
-  margin-left:auto;position:relative;z-index:1001;
+  gap:5px;width:44px;height:44px;padding:0;
+  border:none;background:rgba(8,8,14,.85);cursor:pointer;
+  position:fixed;top:6px;right:12px;z-index:1001;
+  border-radius:10px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);
   -webkit-tap-highlight-color:transparent;
 }
 .hamburger span{
@@ -181,11 +184,11 @@ header nav a.active{color:var(--blue);background:rgba(59,130,246,.08)}
 
 /* ───── MOBILE NAV ───── */
 .mobile-nav{
-  position:fixed;top:var(--header-h);left:0;right:0;bottom:0;
+  position:fixed;top:0;left:0;right:0;bottom:0;
   background:rgba(8,8,14,.97);
   backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:6px;z-index:999;
+  gap:6px;z-index:1000;
   opacity:0;visibility:hidden;
   transition:opacity .35s ease,visibility .35s ease;
 }
@@ -260,9 +263,11 @@ header nav a.active{color:var(--blue);background:rgba(59,130,246,.08)}
 @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}
 .hero-icon{
   width:80px;height:80px;border-radius:20px;margin-bottom:24px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.06),0 8px 40px rgba(59,130,246,.15);
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 8px 40px rgba(59,130,246,.15);
   transition:transform .5s ease;
   will-change:transform;
+  background:rgba(255,255,255,.05);
+  object-fit:contain;padding:8px;
 }
 .hero:hover .hero-icon{transform:scale(1.04) rotate(-2deg)}
 .hero h1{
@@ -534,7 +539,7 @@ footer{padding:64px 0 32px;border-top:1px solid var(--glass-border)}
 .footer-grid{
   display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;
 }
-.footer-brand .logo-img{width:36px;height:36px;border-radius:8px;margin-bottom:14px}
+.footer-brand .logo-img{width:36px;height:36px;border-radius:8px;margin-bottom:14px;background:rgba(255,255,255,.05);object-fit:contain;padding:4px}
 .footer-brand p{font-size:.85rem;color:var(--text-muted);max-width:280px;line-height:1.7}
 .footer-col h4{
   font-size:.8rem;font-weight:600;color:var(--text);
