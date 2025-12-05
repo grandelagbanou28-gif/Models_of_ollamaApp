@@ -641,6 +641,19 @@ public class ChatController {
 
             modelListLoaded = true;
 
+            // If this is a new chat and models just arrived after auto-start,
+            // re-evaluate UI state to auto-select model and show input
+            boolean wasEmpty = currentSelection == null || currentSelection.isEmpty();
+            if (wasEmpty && !modelNames.isEmpty() && currentSession != null
+                    && currentSession.getMessages().isEmpty()) {
+                String first = modelNames.get(0);
+                modelSelector.setValue(first);
+                if (initialModelSelector != null)
+                    initialModelSelector.setValue(first);
+                updateUIState(false); // Switch to active chat mode
+                return;
+            }
+
             // Priority: Pending Selection (from loading chat) > Current Selection
             // (preserve)
             if (pendingModelSelection != null) {
