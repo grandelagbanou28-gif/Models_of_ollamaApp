@@ -208,6 +208,15 @@ header nav a.active{color:var(--blue);background:rgba(59,130,246,.08)}
 .mobile-nav.open a:nth-child(3){transition-delay:.15s}
 .mobile-nav.open a:nth-child(4){transition-delay:.2s}
 .mobile-nav a:hover{color:#fff;background:rgba(255,255,255,.05)}
+.mobile-nav-close{
+  position:absolute;top:14px;right:14px;width:40px;height:40px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);border:1px solid var(--glass-border);
+  border-radius:10px;cursor:pointer;color:var(--text-secondary);
+  transition:var(--transition);-webkit-tap-highlight-color:transparent;
+  z-index:1;
+}
+.mobile-nav-close:hover{background:rgba(255,255,255,.08);color:#fff}
 .mobile-nav .header-cta{margin-top:8px;width:80%;text-align:center;padding:16px 32px!important;font-size:1.15rem!important}
 .mobile-lang{width:80%;text-align:center;margin-top:4px}
 .mobile-lang-btn{
@@ -717,6 +726,9 @@ footer{padding:64px 0 32px;border-top:1px solid var(--glass-border)}
 </div></header>
 
 <div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="closeMobileNav()" aria-label="Close menu">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
   <a href="#features" data-i18n="nav.features" onclick="closeMobileNav()">Fonctionnalités</a>
   <a href="#docs" data-i18n="nav.docs" onclick="closeMobileNav()">Documentation</a>
   <div class="mobile-lang">
