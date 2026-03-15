@@ -100,6 +100,7 @@ public class MainController implements Initializable {
 
     private Timeline statusPollingTimeline;
     private FadeTransition pulseAnimation;
+    private volatile boolean isCreatingChat;
 
     private ChatManager chatManager;
     private ChatCollectionManager collectionManager;
@@ -191,7 +192,7 @@ public class MainController implements Initializable {
 
         // Listen for selection changes
         chatTreeView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null && newVal.getValue().getType() == ChatNode.Type.CHAT) {
+            if (!isCreatingChat && newVal != null && newVal.getValue().getType() == ChatNode.Type.CHAT) {
                 clearToolSelection();
                 loadChatView(newVal.getValue().getChat());
             }
@@ -511,12 +512,10 @@ public class MainController implements Initializable {
     public void openChat(ChatSession session) {
         if (session != null) {
             setActiveTool(null);
-
-            // Re-select in tree (findAndSelect expanding folders if needed)
+            isCreatingChat = true;
             selectChatInTree(session);
-
-            // Load the actual chat view in the center pane
             loadChatView(session);
+            isCreatingChat = false;
         }
     }
 
@@ -720,50 +719,43 @@ public class MainController implements Initializable {
     public void createNewChat() {
         LOGGER.log(Level.INFO, "Creating new chat...");
 
-        // 1. Capture selection BEFORE creating chat (as creation triggers refresh via
-        // listener)
         ChatFolder targetFolder = null;
-        TreeItem<ChatNode> selectedItem = chatTreeView.getSelectionModel().getSelectedItem();
-        if (selectedItem != null && selectedItem.getValue() != null) {
-            ChatNode node = selectedItem.getValue();
-            if (node.getType() == ChatNode.Type.FOLDER) {
-                targetFolder = node.getFolder();
-            } else if (node.getType() == ChatNode.Type.CHAT) {
-                // If a chat is selected, check if it belongs to a folder
-                ChatSession selectedChat = node.getChat();
-                for (ChatFolder folder : collectionManager.getFolders()) {
-                    if (folder.getChatIds().contains(selectedChat.getId().toString())) {
-                        targetFolder = folder;
-                        break;
+        if (chatTreeView.getRoot() != null) {
+            TreeItem<ChatNode> selectedItem = chatTreeView.getSelectionModel().getSelectedItem();
+            if (selectedItem != null && selectedItem.getValue() != null) {
+                ChatNode node = selectedItem.getValue();
+                if (node.getType() == ChatNode.Type.FOLDER) {
+                    targetFolder = node.getFolder();
+                } else if (node.getType() == ChatNode.Type.CHAT) {
+                    ChatSession selectedChat = node.getChat();
+                    for (ChatFolder folder : collectionManager.getFolders()) {
+                        if (folder.getChatIds().contains(selectedChat.getId().toString())) {
+                            targetFolder = folder;
+                            break;
+                        }
                     }
                 }
             }
         }
 
-        // 2. Create the chat (This triggers listener -> refreshChatTree)
-        // Use a simple default name or fetch from bundle if desired.
         java.util.ResourceBundle bundle = com.graden.models.App.getBundle();
         String defaultName = "New Chat";
         if (bundle.containsKey("sidebar.newChat")) {
             defaultName = bundle.getString("sidebar.newChat").trim().replace("+", "").trim();
         }
-
         ChatSession newSession = chatManager.createChat(defaultName);
 
-        // 3. Move to folder if one was selected
         if (targetFolder != null) {
             collectionManager.moveChatToFolder(newSession, targetFolder);
-            // Moving might trigger another refresh via collection listener, ensuring UI is
-            // sync
         }
 
-        // 4. Select the new item in the tree after refresh
-        // We need to wait for the refresh to complete.
-        // Since refresh is on the JavaFX thread (from listener), we can queue selection
-        // using Platform.runLater to run AFTER the current event processing.
+        // Prevent double loadChatView from tree selection listener
+        isCreatingChat = true;
+        ChatSession finalSession = newSession;
         Platform.runLater(() -> {
-            selectChatInTree(newSession);
-            loadChatView(newSession);
+            loadChatView(finalSession);
+            selectChatInTree(finalSession);
+            isCreatingChat = false;
         });
     }
 
