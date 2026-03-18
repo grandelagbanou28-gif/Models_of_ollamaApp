@@ -3810,8 +3810,104 @@
     -fx-touch-scroll-enabled: true;
 }
 
-/* Larger touch targets for mobile */
-@media screen and (max-width: 767px) {
+/* ───── RESPONSIVE: Extra small (≤480px, Android phones in portrait) ───── */
+@media screen and (max-width: 480px) {
+    .sidebar {
+        -fx-pref-width: 260px;
+    }
+
+    .chat-sidebar-right {
+        -fx-pref-width: 220px;
+    }
+
+    .button {
+        -fx-min-height: 44px;
+        -fx-min-width: 44px;
+    }
+
+    .sidebar .button {
+        -fx-padding: 10px 16px;
+        -fx-font-size: 14px;
+    }
+
+    .attach-button-icon,
+    .send-button-icon {
+        -fx-min-width: 44px;
+        -fx-min-height: 44px;
+    }
+
+    .chat-bubble {
+        -fx-font-size: 15px;
+        -fx-padding: 10px 14px;
+        -fx-max-width: 92%;
+    }
+
+    .welcome-label {
+        -fx-font-size: 32px;
+    }
+
+    .model-card {
+        -fx-padding: 12px;
+    }
+
+    .model-grid {
+        -fx-hgap: 8px;
+        -fx-vgap: 8px;
+    }
+
+    .input-capsule {
+        -fx-padding: 8px 12px;
+    }
+
+    .transparent-area {
+        -fx-font-size: 16px;
+        -fx-padding: 6px 0;
+    }
+
+    .chat-area {
+        -fx-spacing: 10px;
+        -fx-padding: 12px 12px 0 12px;
+    }
+
+    .floating-settings-button {
+        -fx-min-width: 42px;
+        -fx-min-height: 42px;
+        -fx-max-width: 42px;
+        -fx-max-height: 42px;
+    }
+
+    .stack-pane-content {
+        -fx-padding: 0;
+    }
+
+    .chat-scroll-pane {
+        -fx-padding: 0;
+    }
+
+    .sidebar-header {
+        -fx-padding: 10px 12px;
+    }
+
+    .rag-chips-container {
+        -fx-padding: 6px 8px;
+    }
+
+    .welcome-container {
+        -fx-spacing: 24px;
+        -fx-padding: 20px;
+    }
+
+    .chat-message-toolbar {
+        -fx-spacing: 6px;
+    }
+
+    .image-preview-strip {
+        -fx-max-height: 80px;
+    }
+}
+
+/* ───── RESPONSIVE: Mobile (481px–767px) ───── */
+@media screen and (min-width: 481px) and (max-width: 767px) {
     .button {
         -fx-min-height: 44px;
         -fx-min-width: 44px;
@@ -3826,13 +3922,6 @@
     .send-button-icon {
         -fx-min-width: 44px;
         -fx-min-height: 44px;
-        -fx-max-width: 44px;
-        -fx-max-height: 44px;
-    }
-
-    .transparent-area {
-        -fx-font-size: 16px;
-        -fx-padding: 8px 0;
     }
 
     .chat-bubble {
@@ -3848,9 +3937,14 @@
     .model-card {
         -fx-padding: 16px;
     }
+
+    .floating-settings-button {
+        -fx-min-width: 48px;
+        -fx-min-height: 48px;
+    }
 }
 
-/* Tablet adjustments */
+/* ───── RESPONSIVE: Tablet (768px–1023px) ───── */
 @media screen and (min-width: 768px) and (max-width: 1023px) {
     .sidebar {
         -fx-pref-width: 260px;
@@ -3861,21 +3955,37 @@
     }
 }
 
-/* Ensure proper scaling on high-DPI screens */
+/* ───── RESPONSIVE: Landscape on small screens ───── */
+@media screen and (max-height: 480px) and (orientation: landscape) {
+    .welcome-label {
+        -fx-font-size: 28px;
+    }
+
+    .welcome-container {
+        -fx-spacing: 16px;
+        -fx-padding: 12px;
+    }
+
+    .sidebar {
+        -fx-pref-width: 220px;
+    }
+
+    .input-capsule {
+        -fx-padding: 4px 8px;
+    }
+
+    .chat-bubble {
+        -fx-font-size: 14px;
+        -fx-padding: 8px 12px;
+    }
+}
+
+/* ───── Ensure proper scaling on high-DPI screens ───── */
 .root {
     -fx-font-smoothing-type: lcd;
 }
 
-/* Animation for sidebar transitions */
-.sidebar {
-    -fx-transition: -fx-pref-width 0.3s ease;
-}
-
-.chat-sidebar-right {
-    -fx-transition: -fx-pref-width 0.3s ease;
-}
-
-/* Prevent horizontal overflow on small screens */
+/* ───── Prevent horizontal overflow ───── */
 .scroll-pane {
     -fx-fit-to-width: true;
 }
@@ -3886,4 +3996,23 @@
 
 .messagesContainer {
     -fx-min-width: 0;
+}
+
+.stack-pane-content {
+    -fx-min-width: 0;
+}
+
+.border-pane {
+    -fx-min-width: 0;
+}
+
+/* ───── Touch scroll improvements ───── */
+.chat-scroll-pane {
+    -fx-pannable: true;
+    -fx-touch-scroll-enabled: true;
+}
+
+.sidebar-scroll {
+    -fx-pannable: true;
+    -fx-touch-scroll-enabled: true;
 }

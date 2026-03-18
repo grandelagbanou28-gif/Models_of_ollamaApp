@@ -16,10 +16,12 @@ public class ResponsiveManager {
 
     private static final double MOBILE_BREAKPOINT = 768;
     private static final double TABLET_BREAKPOINT = 1024;
+    private static final double LANDSCAPE_HEIGHT = 480;
 
     private final BooleanProperty mobile = new SimpleBooleanProperty(false);
     private final BooleanProperty tablet = new SimpleBooleanProperty(false);
     private final BooleanProperty desktop = new SimpleBooleanProperty(true);
+    private final BooleanProperty landscape = new SimpleBooleanProperty(false);
 
     private Breakpoint currentBreakpoint = Breakpoint.DESKTOP;
 
@@ -37,17 +39,26 @@ public class ResponsiveManager {
     public void bindToScene(Scene scene) {
         scene.widthProperty().addListener((obs, oldVal, newVal) -> {
             updateBreakpoint(newVal.doubleValue());
+            updateLandscape(scene.getHeight());
+        });
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> {
+            updateLandscape(newVal.doubleValue());
         });
         // Initial check
         updateBreakpoint(scene.getWidth());
+        updateLandscape(scene.getHeight());
     }
 
     public void bindToWindow(Window window) {
         window.widthProperty().addListener((obs, oldVal, newVal) -> {
             updateBreakpoint(newVal.doubleValue());
         });
+        window.heightProperty().addListener((obs, oldVal, newVal) -> {
+            updateLandscape(newVal.doubleValue());
+        });
         // Initial check
         updateBreakpoint(window.getWidth());
+        updateLandscape(window.getHeight());
     }
 
     private void updateBreakpoint(double width) {
@@ -70,6 +81,12 @@ public class ResponsiveManager {
         }
     }
 
+    private void updateLandscape(double height) {
+        boolean isLandscape = height > 0 && height < LANDSCAPE_HEIGHT
+                && currentBreakpoint == Breakpoint.MOBILE;
+        Platform.runLater(() -> landscape.set(isLandscape));
+    }
+
     public BooleanProperty mobileProperty() {
         return mobile;
     }
@@ -80,6 +97,10 @@ public class ResponsiveManager {
 
     public BooleanProperty desktopProperty() {
         return desktop;
+    }
+
+    public BooleanProperty landscapeProperty() {
+        return landscape;
     }
 
     public Breakpoint getCurrentBreakpoint() {
@@ -96,6 +117,10 @@ public class ResponsiveManager {
 
     public boolean isDesktop() {
         return currentBreakpoint == Breakpoint.DESKTOP;
+    }
+
+    public boolean isLandscape() {
+        return landscape.get();
     }
 
     public static double getMobileBreakpoint() {
