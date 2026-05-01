@@ -95,11 +95,7 @@ public class App extends Application {
         modelManager = ModelManager.getInstance();
 
         // Icon
-        try {
-            stage.getIcons().add(new Image(App.class.getResourceAsStream("/icons/icon.png")));
-        } catch (Exception e) {
-            // Ignore
-        }
+        setAppIcons(stage);
 
         // Show login screen first
         loadLoginUI();
@@ -207,6 +203,20 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle(getBundle().getString("app.title"));
         primaryStage.setMaximized(true);
+
+        setAppIcons(primaryStage);
+    }
+
+    private static void setAppIcons(javafx.stage.Stage stage) {
+        try {
+            stage.getIcons().add(new Image(App.class.getResourceAsStream("/icons/icon.png")));
+            var icoStream = App.class.getResourceAsStream("/icons/icon.ico");
+            if (icoStream != null) {
+                stage.getIcons().add(new Image(icoStream));
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load app icon: " + e.getMessage());
+        }
     }
 
     public static void reloadUI() {
@@ -234,15 +244,7 @@ public class App extends Application {
             primaryStage.setScene(scene);
             primaryStage.setTitle(getBundle().getString("app.title"));
 
-            try {
-                primaryStage.getIcons()
-                        .add(new Image(App.class.getResourceAsStream("/icons/icon.png")));
-                if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-                    Taskbar.getTaskbar().setIconImage(
-                            Toolkit.getDefaultToolkit().getImage(App.class.getResource("/icons/icon.png")));
-                }
-            } catch (Exception e) {
-            }
+            setAppIcons(primaryStage);
 
             primaryStage.setMaximized(true);
 
