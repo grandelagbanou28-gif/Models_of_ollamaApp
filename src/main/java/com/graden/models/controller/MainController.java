@@ -1,6 +1,7 @@
 package com.graden.models.controller;
 
 import com.graden.models.manager.ChatManager;
+import com.graden.models.manager.ConfigManager;
 import com.graden.models.manager.ModelManager;
 import com.graden.models.manager.OllamaServiceManager;
 import com.graden.models.manager.ChatCollectionManager;
@@ -13,6 +14,7 @@ import com.graden.models.util.ResponsiveManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.fxml.FXML;
@@ -101,6 +103,7 @@ public class MainController implements Initializable {
     private Timeline statusPollingTimeline;
     private FadeTransition pulseAnimation;
     private volatile boolean isCreatingChat;
+    private volatile boolean restoreAttempted;
 
     private ChatManager chatManager;
     private ChatCollectionManager collectionManager;
@@ -202,6 +205,18 @@ public class MainController implements Initializable {
         // Weak listener or careful management needed? For now straightforward.
         chatManager.getChatSessions().addListener((ListChangeListener<ChatSession>) c -> {
             refreshChatTree();
+        });
+
+        // Session restoration: restore last active chat once sessions settle
+        chatManager.getChatSessions().addListener((ListChangeListener<ChatSession>) c -> {
+            if (!restoreAttempted && !chatManager.getChatSessions().isEmpty()) {
+                restoreAttempted = true;
+                Platform.runLater(() -> {
+                    PauseTransition settle = new PauseTransition(Duration.millis(200));
+                    settle.setOnFinished(e -> attemptRestoreLastSession());
+                    settle.play();
+                });
+            }
         });
 
         // Listen for folder changes (List add/remove)
@@ -511,11 +526,24 @@ public class MainController implements Initializable {
 
     public void openChat(ChatSession session) {
         if (session != null) {
+            ConfigManager.getInstance().setLastActiveSessionId(session.getId().toString());
             setActiveTool(null);
             isCreatingChat = true;
             selectChatInTree(session);
             loadChatView(session);
             isCreatingChat = false;
+        }
+    }
+
+    private void attemptRestoreLastSession() {
+        if (restoreAttempted) return;
+        String lastId = ConfigManager.getInstance().getLastActiveSessionId();
+        if (lastId.isEmpty()) return;
+        for (ChatSession session : chatManager.getChatSessions()) {
+            if (session.getId().toString().equals(lastId)) {
+                openChat(session);
+                return;
+            }
         }
     }
 

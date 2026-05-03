@@ -4016,3 +4016,17 @@
     -fx-pannable: true;
     -fx-touch-scroll-enabled: true;
 }
+
+/* ───── Streaming indicator ───── */
+.streaming-indicator {
+    -fx-padding: 4 20 6 20;
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-muted;
+    -fx-border-width: 0 0 1 0;
+}
+
+.streaming-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: -color-fg-muted;
+    -fx-font-style: italic;
+}

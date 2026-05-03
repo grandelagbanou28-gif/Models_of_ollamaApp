@@ -106,6 +106,18 @@ public class ConfigManager {
         prefs.put(KEY_GOOGLE_CLIENT_SECRET, secret);
     }
 
+    // ─────────────────────────── Last active session ───────────────────────
+    private static final String KEY_LAST_ACTIVE_SESSION = "last_active_session_id";
+
+    public String getLastActiveSessionId() {
+        return prefs.get(KEY_LAST_ACTIVE_SESSION, "");
+    }
+
+    public void setLastActiveSessionId(String sessionId) {
+        prefs.put(KEY_LAST_ACTIVE_SESSION, sessionId != null ? sessionId : "");
+        try { prefs.flush(); } catch (Exception ignored) {}
+    }
+
     // ─────────────────────────── First-run onboarding ──────────────────────
     private static final String KEY_FIRST_RUN_COMPLETED = "first_run_completed";
 

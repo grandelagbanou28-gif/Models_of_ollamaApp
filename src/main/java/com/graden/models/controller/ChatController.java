@@ -28,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.control.TextField;
@@ -124,6 +125,14 @@ public class ChatController {
     @FXML
     private TextArea inputField;
     @FXML
+    private HBox streamingIndicator;
+    @FXML
+    private Circle streamingDot;
+    @FXML
+    private Label streamingLabel;
+    private Timeline streamingPulse;
+
+    @FXML
     private Button sendButton;
     @FXML
     private Button cancelButton;
@@ -206,8 +215,38 @@ public class ChatController {
         MarkdownTextSelection.registerAddToRagHandler(this::onAddSelectionToRag);
 
         setupResponsiveRightSidebar();
+        setupStreamingIndicator();
 
         updateUIState(true);
+    }
+
+    private void setupStreamingIndicator() {
+        streamingPulse = new Timeline(
+                new KeyFrame(Duration.ZERO, e -> streamingDot.setOpacity(0.3)),
+                new KeyFrame(Duration.millis(600), e -> streamingDot.setOpacity(1.0)),
+                new KeyFrame(Duration.millis(1200), e -> streamingDot.setOpacity(0.3))
+        );
+        streamingPulse.setCycleCount(Timeline.INDEFINITE);
+    }
+
+    private void showStreaming(String statusKey) {
+        if (streamingLabel != null)
+            streamingLabel.setText(App.getBundle().getString(statusKey));
+        if (streamingIndicator != null) {
+            streamingIndicator.setVisible(true);
+            streamingIndicator.setManaged(true);
+        }
+        if (streamingPulse != null)
+            streamingPulse.play();
+    }
+
+    private void hideStreaming() {
+        if (streamingPulse != null)
+            streamingPulse.stop();
+        if (streamingIndicator != null) {
+            streamingIndicator.setVisible(false);
+            streamingIndicator.setManaged(false);
+        }
     }
 
     /**
@@ -299,6 +338,19 @@ public class ChatController {
                 handleClipboardPaste(event);
             }
         });
+    }
+
+    private boolean isNearBottom() {
+        if (scrollPane == null) return true;
+        double vmax = scrollPane.getVmax();
+        if (vmax <= 0) return true;
+        return scrollPane.getVvalue() >= vmax - 0.15;
+    }
+
+    private void scrollToBottom() {
+        if (scrollPane != null) {
+            scrollPane.setVvalue(1.0);
+        }
     }
 
     /** Persist selected RAG collections to the current session. */
@@ -430,7 +482,9 @@ public class ChatController {
 
     private void setupListeners() {
         messagesContainer.heightProperty().addListener((observable, oldValue, newValue) -> {
-            scrollPane.setVvalue(1.0);
+            if (isNearBottom()) {
+                scrollPane.setVvalue(1.0);
+            }
         });
 
         // Keep the context-usage ring live as the user types.
@@ -1071,8 +1125,10 @@ public class ChatController {
         if (statusLabel != null) {
             if (images != null && !images.isEmpty()) {
                 statusLabel.setText(App.getBundle().getString("chat.status.analyzingImage"));
+                showStreaming("chat.status.analyzingImage");
             } else {
                 statusLabel.setText(App.getBundle().getString("chat.status.thinking"));
+                showStreaming("chat.status.thinking");
             }
         }
     }
@@ -1087,6 +1143,7 @@ public class ChatController {
         if (statusLabel != null) {
             statusLabel.setText(App.getBundle().getString("chat.status.generating"));
         }
+        showStreaming("chat.status.generating");
         return assistantMsg;
     }
 
@@ -1332,17 +1389,43 @@ public class ChatController {
 
         LOGGER.log(Level.SEVERE, "Generation error", e);
         Platform.runLater(() -> {
-            String errorMsg = "⚡ Error: " + e.getMessage();
-            assistantMsg.setContent(errorMsg);
+            String userMsg = friendlyErrorMessage(e);
+            assistantMsg.setContent(userMsg);
             if (targetSession != null) {
                 ChatManager.getInstance().saveChats();
             }
 
             if (currentSession == targetSession) {
-                updateLastMessage(errorMsg);
+                updateLastMessage(userMsg);
             }
             setGeneratingState(false);
         });
+    }
+
+    private String friendlyErrorMessage(Exception e) {
+        String msg = e.getMessage();
+        if (msg == null) return "⚠ " + App.getBundle().getString("chat.error.unknown");
+
+        String lower = msg.toLowerCase();
+
+        if (lower.contains("connection refused") || lower.contains("connect refused")
+                || lower.contains("failed to connect") || lower.contains("unreachable")) {
+            return "⚠ " + App.getBundle().getString("chat.error.connectionRefused");
+        }
+        if (lower.contains("no route to host") || lower.contains("unknownhost")) {
+            return "⚠ " + App.getBundle().getString("chat.error.noRoute");
+        }
+        if (lower.contains("timeout") || lower.contains("timed out") || lower.contains("read timed out")) {
+            return "⚠ " + App.getBundle().getString("chat.error.timeout");
+        }
+        if (lower.contains("not found") || lower.contains("model") && lower.contains("not") && lower.contains("exist")) {
+            return "⚠ " + App.getBundle().getString("chat.error.modelNotFound");
+        }
+        if (lower.contains("socket") || lower.contains("broken pipe") || lower.contains("connection reset")) {
+            return "⚠ " + App.getBundle().getString("chat.error.socket");
+        }
+
+        return "⚠ " + java.text.MessageFormat.format(App.getBundle().getString("chat.error.generic"), msg);
     }
 
     private void updateCreativityLabel(double val) {
@@ -1543,6 +1626,7 @@ public class ChatController {
 
             if (statusLabel != null)
                 statusLabel.setText(App.getBundle().getString("chat.status.generating"));
+            showStreaming("chat.status.generating");
         } else {
             cancelButton.setVisible(false);
             cancelButton.setManaged(false);
@@ -1552,6 +1636,7 @@ public class ChatController {
 
             if (statusLabel != null)
                 statusLabel.setText(App.getBundle().getString("chat.status.ready"));
+            hideStreaming();
         }
     }
 
