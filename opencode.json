@@ -1,0 +1,41 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "product-engineer": {
+      "description": "AI Product Engineer / TPM — scope features, write backlogs, orchestrate pipeline",
+      "mode": "subagent",
+      "prompt": "{file:.ai/roles/00-product-engineer.md}",
+      "permission": {
+        "edit": "allow",
+        "bash": "deny"
+      }
+    },
+    "architect": {
+      "description": "Senior Software Architect — create technical blueprints",
+      "mode": "subagent",
+      "prompt": "{file:.ai/roles/01-architect-role.md}",
+      "permission": {
+        "edit": "allow",
+        "bash": "deny"
+      }
+    },
+    "ux-designer": {
+      "description": "Principal UX/UI Designer — create design specs with AtlantaFX",
+      "mode": "subagent",
+      "prompt": "{file:.ai/roles/02-ux-designer-role.md}",
+      "permission": {
+        "edit": "allow",
+        "bash": "deny"
+      }
+    },
+    "swe": {
+      "description": "Senior Java/JavaFX SWE — implement code, compile and verify",
+      "mode": "subagent",
+      "prompt": "{file:.ai/roles/03-swe-role.md}",
+      "permission": {
+        "edit": "allow",
+        "bash": "allow"
+      }
+    }
+  }
+}

@@ -1,0 +1,158 @@
+package com.graden.models.manager;
+
+import com.graden.models.model.ChatSession;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
+
+import java.util.Comparator;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import java.io.File;
+
+public class ChatManager {
+    private static ChatManager instance;
+    private final ObservableList<ChatSession> chatSessions;
+    private final SortedList<ChatSession> sortedSessions;
+
+    private final File storageDir;
+    private final ObjectMapper objectMapper;
+
+    private ChatManager() {
+        chatSessions = FXCollections.observableArrayList();
+
+        // Sort by Pinned (descending) then by Creation Date (descending)
+        sortedSessions = new SortedList<>(chatSessions, (c1, c2) -> {
+            if (c1.isPinned() != c2.isPinned()) {
+                return c1.isPinned() ? -1 : 1; // Pinned first
+            }
+            return c2.getCreationDate().compareTo(c1.getCreationDate()); // Newest first
+        });
+
+        // Setup storage
+        String userHome = System.getProperty("user.home");
+        storageDir = new File(userHome, ".GradenModels/chats");
+        if (!storageDir.exists()) {
+            storageDir.mkdirs();
+        }
+
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        // Tolerate unknown fields so chats saved by an older/newer schema
+        // version still load (e.g. the removed "toolResult" field on
+        // ChatMessage). Stale fields are silently dropped on next save.
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
+    public static synchronized ChatManager getInstance() {
+        if (instance == null) {
+            instance = new ChatManager();
+        }
+        return instance;
+    }
+
+    public ObservableList<ChatSession> getChatSessions() {
+        return sortedSessions;
+    }
+
+    public ChatSession createChat(String name) {
+        ChatSession session = new ChatSession(name);
+        setupSessionListeners(session);
+        chatSessions.add(session);
+        saveChat(session); // Save immediately
+        return session;
+    }
+
+    private void setupSessionListeners(ChatSession session) {
+        session.pinnedProperty().addListener((obs, oldVal, newVal) -> {
+            int index = chatSessions.indexOf(session);
+            if (index >= 0) {
+                chatSessions.set(index, session); // Force re-sort
+            }
+            saveChat(session); // Save on pin change
+        });
+        session.nameProperty().addListener((obs, oldVal, newVal) -> saveChat(session)); // Save on rename
+        session.modelNameProperty().addListener((obs, oldVal, newVal) -> saveChat(session)); // Save on model change
+    }
+
+    public void deleteChat(ChatSession session) {
+        // Delegar a TrashManager — no borrar archivo físico aquí
+        TrashManager.getInstance().trashChat(session);
+    }
+
+    /**
+     * Remueve el chat de la lista activa sin borrar el archivo (usado por
+     * TrashManager).
+     */
+    public void removeChatFromList(ChatSession session) {
+        chatSessions.remove(session);
+    }
+
+    /** Restaura un chat a la lista activa (usado por TrashManager al restaurar). */
+    public void restoreChatToList(ChatSession session) {
+        if (!chatSessions.contains(session)) {
+            setupSessionListeners(session);
+            chatSessions.add(session);
+            saveChat(session);
+        }
+    }
+
+    /**
+     * Borra el archivo físico del chat (llamado por TrashManager al eliminar
+     * permanentemente).
+     */
+    public void physicallyDeleteChat(ChatSession session) {
+        File file = new File(storageDir, session.getId().toString() + ".json");
+        if (file.exists())
+            file.delete();
+    }
+
+    public void renameChat(ChatSession session, String newName) {
+        session.setName(newName);
+        // Listener handles save
+    }
+
+    public void togglePin(ChatSession session) {
+        session.setPinned(!session.isPinned());
+        // Listener handles save
+    }
+
+    public void saveChats() {
+        for (ChatSession session : chatSessions) {
+            saveChat(session);
+        }
+    }
+
+    private void saveChat(ChatSession session) {
+        try {
+            File file = new File(storageDir, session.getId().toString() + ".json");
+            objectMapper.writeValue(file, session);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadChats() {
+        chatSessions.clear();
+        File[] files = storageDir.listFiles((dir, name) -> name.endsWith(".json"));
+        if (files != null) {
+            for (File file : files) {
+                try {
+                    ChatSession session = objectMapper.readValue(file, ChatSession.class);
+                    // Filter out any chats that have been moved to the trash
+                    if (!TrashManager.getInstance().isChatInTrash(session.getId().toString())) {
+                        setupSessionListeners(session);
+                        chatSessions.add(session);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.err.println("Failed to load chat: " + file.getName());
+                }
+            }
+        }
+    }
+}

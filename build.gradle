@@ -1,0 +1,195 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.14'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'com.graden.models'
+version = '0.5.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "io.github.ollama4j:ollama4j:1.0.100"
+    implementation 'org.fxmisc.richtext:richtextfx:0.11.0'
+    implementation 'org.jsoup:jsoup:1.17.2'
+    implementation 'io.github.mkpaz:atlantafx-base:2.0.1'
+    implementation 'com.github.oshi:oshi-core-java11:6.4.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'org.commonmark:commonmark:0.21.0'
+    implementation 'org.slf4j:slf4j-nop:2.0.12' // Suppresses SLF4J warning
+    implementation 'com.vladsch.flexmark:flexmark-all:0.64.8' // Markdown parsing for native viewer
+    
+    // Icon Pack
+    implementation 'org.kordamp.ikonli:ikonli-javafx:12.3.1'
+    implementation 'org.kordamp.ikonli:ikonli-feather-pack:12.3.1'
+    implementation 'org.kordamp.ikonli:ikonli-material2-pack:12.3.1'
+
+    implementation 'org.kordamp.ikonli:ikonli-fontawesome5-pack:12.3.1'
+
+    // LangChain4j RAG Stack
+    def langchain4jVersion = '1.9.1'
+    def langchain4jCommunityVersion = '1.9.1-beta17'
+    implementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
+    implementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
+    implementation "dev.langchain4j:langchain4j-community-lucene:${langchain4jCommunityVersion}"
+    implementation "dev.langchain4j:langchain4j-document-parser-apache-pdfbox:${langchain4jCommunityVersion}"
+    implementation "dev.langchain4j:langchain4j-document-parser-apache-poi:${langchain4jCommunityVersion}"
+
+    // Windows natives only (install on desktop)
+    runtimeOnly "org.openjfx:javafx-graphics:17.0.6:win"
+    runtimeOnly "org.openjfx:javafx-base:17.0.6:win"
+    runtimeOnly "org.openjfx:javafx-controls:17.0.6:win"
+    runtimeOnly "org.openjfx:javafx-fxml:17.0.6:win"
+    runtimeOnly "org.openjfx:javafx-web:17.0.6:win"
+    runtimeOnly "org.openjfx:javafx-media:17.0.6:win"
+    runtimeOnly "org.openjfx:javafx-graphics:17.0.6:linux"
+    runtimeOnly "org.openjfx:javafx-base:17.0.6:linux"
+    runtimeOnly "org.openjfx:javafx-controls:17.0.6:linux"
+    runtimeOnly "org.openjfx:javafx-fxml:17.0.6:linux"
+    runtimeOnly "org.openjfx:javafx-web:17.0.6:linux"
+    runtimeOnly "org.openjfx:javafx-media:17.0.6:linux"
+    runtimeOnly "org.openjfx:javafx-graphics:17.0.6:mac"
+    runtimeOnly "org.openjfx:javafx-graphics:17.0.6:mac-aarch64"
+    runtimeOnly "org.openjfx:javafx-base:17.0.6:mac"
+    runtimeOnly "org.openjfx:javafx-base:17.0.6:mac-aarch64"
+    runtimeOnly "org.openjfx:javafx-controls:17.0.6:mac"
+    runtimeOnly "org.openjfx:javafx-controls:17.0.6:mac-aarch64"
+    runtimeOnly "org.openjfx:javafx-fxml:17.0.6:mac"
+    runtimeOnly "org.openjfx:javafx-fxml:17.0.6:mac-aarch64"
+    runtimeOnly "org.openjfx:javafx-web:17.0.6:mac"
+    runtimeOnly "org.openjfx:javafx-web:17.0.6:mac-aarch64"
+    runtimeOnly "org.openjfx:javafx-media:17.0.6:mac"
+    runtimeOnly "org.openjfx:javafx-media:17.0.6:mac-aarch64"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+javafx {
+    version = "17.0.6"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web']
+}
+
+application {
+    mainClass = 'com.graden.models.Main'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:all"
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaExec) {
+    if (System.getProperty('os.name').toLowerCase().contains('mac')) {
+        jvmArgs '-Xdock:name=GradenModels'
+        jvmArgs "-Xdock:icon=${project.projectDir}/src/main/resources/icons/icon.png"
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching('**/*.properties') {
+        expand(project.properties)
+    }
+}
+
+shadowJar {
+    archiveFileName.set('GradenModels.jar')
+    mergeServiceFiles()
+    exclude 'module-info.class'
+    manifest {
+        attributes 'Main-Class': 'com.graden.models.Main'
+    }
+}
+
+task packageDistribution(type: Sync) {
+    dependsOn shadowJar
+    dependsOn startShadowScripts
+    
+    def targetDir = file("${project.rootDir}/releases/GradenModels")
+    into targetDir
+
+    // 1. Put the JAR in lib/
+    from(shadowJar.archiveFile) {
+        into "lib"
+    }
+    
+    // 2. Prepare scripts: Patch them to work from root (remove 'cd ..' logic)
+    def patchedScriptsDir = file("$buildDir/scriptsPatched")
+    
+    doFirst {
+        patchedScriptsDir.mkdirs()
+        
+        // Copy and patch the scripts
+        copy {
+            from "$buildDir/scriptsShadow"
+            into patchedScriptsDir
+            filter { line ->
+                if (line.contains('cd "`dirname \\"$PRG\\"`/.."')) {
+                    return 'cd "`dirname \\"$PRG\\"`" >/dev/null' 
+                }
+                if (line.contains('pushd %DIRNAME%..')) {
+                    return 'pushd %DIRNAME%'
+                }
+                return line
+            }
+        }
+    }
+
+    // 3. Include patched linux script as defaults
+    from(patchedScriptsDir) {
+        include "GradenModels"
+        into "."
+    }
+
+     // 4. Include patched bat script
+    from(patchedScriptsDir) {
+        include "GradenModels.bat"
+        into "."
+    }
+
+    // 5. Create specific extensions from the patched unix script
+    from(patchedScriptsDir) {
+        include "GradenModels"
+        rename { "GradenModels.sh" }
+        into "."
+    }
+
+    from(patchedScriptsDir) {
+        include "GradenModels"
+        rename { "GradenModels.command" }
+        into "."
+    }
+    
+    // 6. Inject the auto-update and rollback scripts
+    from("${project.projectDir}/src/main/resources/update_scripts") {
+        into "update"
+    }
+
+    doLast {
+        println "Release created at ${targetDir}"
+    }
+}
+
+task zipDistribution(type: Zip) {
+    dependsOn packageDistribution
+    archiveFileName = "${project.name}-${project.version}.zip"
+    destinationDirectory = file("${project.projectDir}/releases")
+    from "${project.projectDir}/releases/GradenModels"
+    doLast {
+        println "Zip release created at ${destinationDirectory.get().getAsFile().getAbsolutePath()}/${archiveFileName.get()}"
+    }
+}
+tasks.named('startScripts') {
+    dependsOn tasks.named('shadowJar')
+}
+
+tasks.named('startShadowScripts') {
+    dependsOn tasks.named('jar')
+}
