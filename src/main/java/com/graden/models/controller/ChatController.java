@@ -1158,6 +1158,7 @@ public class ChatController {
             try {
                 // RAG context retrieval (if enabled)
                 List<RagResult> ragResults = null;
+                boolean ragError = false;
                 if (ragEnabled && (images == null || images.isEmpty())) {
                     Platform.runLater(() -> {
                         if (statusLabel != null) {
@@ -1166,21 +1167,28 @@ public class ChatController {
                     });
                     RagManager ragManager = RagManager.getInstance();
                     ragManager.initialize();
-                    ragResults = ragManager.queryContext(
-                            text,
-                            com.graden.models.manager.ConfigManager.getInstance().getRagTopK(),
-                            ragCollections);
+                    if (!ragManager.isInitialized()) {
+                        ragError = true;
+                    } else {
+                        ragResults = ragManager.queryContext(
+                                text,
+                                com.graden.models.manager.ConfigManager.getInstance().getRagTopK(),
+                                ragCollections);
+                    }
                 }
 
                 final String effectiveUserText;
-                if (ragResults != null && !ragResults.isEmpty()) {
+                if (ragError) {
+                    effectiveUserText =
+                            "[Knowledge base error: the knowledge base connection failed. "
+                            + "Please check that Ollama is running and the embedding model "
+                            + "'nomic-embed-text' is installed (run: ollama pull nomic-embed-text).]\n\n"
+                            + text;
+                } else if (ragResults != null && !ragResults.isEmpty()) {
                     int numCtx = targetSession != null ? targetSession.getNumCtx() : 4096;
                     effectiveUserText = RagManager.getInstance()
                             .buildAugmentedPrompt(text, ragResults, numCtx);
                 } else if (ragEnabled) {
-                    // RAG is on but retrieval found nothing relevant for this
-                    // question. Tell the model so it answers honestly instead
-                    // of claiming it "has no access to documents".
                     effectiveUserText =
                             "[Knowledge base note: the user has a knowledge base attached, "
                             + "but no passage relevant to this question was found. If the answer "

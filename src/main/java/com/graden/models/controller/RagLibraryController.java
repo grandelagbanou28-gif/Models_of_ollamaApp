@@ -72,8 +72,12 @@ public class RagLibraryController {
         // Initialize RAG engine
         ragManager.initialize();
 
-        // Check embedding model
-        if (!ragManager.isEmbeddingModelAvailable()) {
+        // Check that Ollama is reachable and RAG initialized
+        if (!ragManager.isInitialized()) {
+            warningBanner.setVisible(true);
+            warningBanner.setManaged(true);
+            warningLabel.setText(App.getBundle().getString("rag.error.connectionRefused"));
+        } else if (!ragManager.isEmbeddingModelAvailable()) {
             warningBanner.setVisible(true);
             warningBanner.setManaged(true);
         }

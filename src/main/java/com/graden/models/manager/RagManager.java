@@ -93,6 +93,10 @@ public class RagManager {
         return instance;
     }
 
+    public boolean isInitialized() {
+        return initialized;
+    }
+
     /**
      * Initialize the RAG engine: embedding model + Lucene store.
      * Must be called before any indexing or querying.
