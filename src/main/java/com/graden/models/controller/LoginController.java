@@ -2,6 +2,7 @@ package com.graden.models.controller;
 
 import com.graden.models.App;
 import com.graden.models.manager.AuthManager;
+import com.graden.models.manager.ConfigManager;
 import com.graden.models.manager.SupabaseManager;
 
 import javafx.application.Platform;
@@ -9,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
@@ -30,6 +33,8 @@ public class LoginController implements Initializable {
     @FXML private TextField signupEmailField;
     @FXML private PasswordField signupPasswordField;
     @FXML private PasswordField signupConfirmField;
+    @FXML private CheckBox rememberCheckbox;
+    @FXML private Label loginError;
     @FXML private Button googleButton;
 
     private Runnable onLoginSuccess;
@@ -52,9 +57,43 @@ public class LoginController implements Initializable {
             signupForm.setVisible(!isLogin);
             applyToggleStyle(loginToggle, isLogin);
             applyToggleStyle(signupToggle, !isLogin);
+            clearLoginError();
         });
 
         updateGoogleButton();
+
+        // Load saved email
+        if (ConfigManager.getInstance().isRememberEmail()) {
+            rememberCheckbox.setSelected(true);
+            loginEmailField.setText(ConfigManager.getInstance().getSavedEmail());
+            loginPasswordField.requestFocus();
+        }
+    }
+
+    private void setLoginError(String message) {
+        if (loginError != null) {
+            loginError.setText(message);
+            loginError.setManaged(true);
+            loginError.setVisible(true);
+        }
+    }
+
+    private void clearLoginError() {
+        if (loginError != null) {
+            loginError.setText("");
+            loginError.setManaged(false);
+            loginError.setVisible(false);
+        }
+    }
+
+    private void saveCredentials() {
+        if (rememberCheckbox.isSelected()) {
+            ConfigManager.getInstance().setSavedEmail(loginEmailField.getText().trim());
+            ConfigManager.getInstance().setRememberEmail(true);
+        } else {
+            ConfigManager.getInstance().setSavedEmail("");
+            ConfigManager.getInstance().setRememberEmail(false);
+        }
     }
 
     private void applyToggleStyle(ToggleButton btn, boolean selected) {
@@ -95,16 +134,19 @@ public class LoginController implements Initializable {
     @FXML
     private void handleLogin() {
         clearFieldErrors();
+        clearLoginError();
         String email = loginEmailField.getText();
         String password = loginPasswordField.getText();
         boolean hasError = false;
 
         if (email.isEmpty() || !email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
             loginEmailField.getStyleClass().add("field-error");
+            setLoginError("Email invalide");
             hasError = true;
         }
         if (password.isEmpty()) {
             loginPasswordField.getStyleClass().add("field-error");
+            setLoginError("Mot de passe requis");
             hasError = true;
         }
         if (hasError) return;
@@ -116,9 +158,14 @@ public class LoginController implements Initializable {
                         String localErr = AuthManager.getInstance().login(email, password);
                         if (localErr != null) {
                             loginPasswordField.getStyleClass().add("field-error");
-                        } else if (onLoginSuccess != null) onLoginSuccess.run();
+                            setLoginError(localErr);
+                        } else {
+                            saveCredentials();
+                            if (onLoginSuccess != null) onLoginSuccess.run();
+                        }
                     } else {
                         syncSupabaseUser();
+                        saveCredentials();
                         if (onLoginSuccess != null) onLoginSuccess.run();
                     }
                 }));
@@ -126,7 +173,11 @@ public class LoginController implements Initializable {
             String error = AuthManager.getInstance().login(email, password);
             if (error != null) {
                 loginPasswordField.getStyleClass().add("field-error");
-            } else if (onLoginSuccess != null) onLoginSuccess.run();
+                setLoginError(error);
+            } else {
+                saveCredentials();
+                if (onLoginSuccess != null) onLoginSuccess.run();
+            }
         }
     }
 

@@ -118,6 +118,28 @@ public class ConfigManager {
         try { prefs.flush(); } catch (Exception ignored) {}
     }
 
+    // ─────────────────────────── Saved credentials ─────────────────────────
+    private static final String KEY_SAVED_EMAIL = "saved_email";
+    private static final String KEY_REMEMBER_EMAIL = "remember_email";
+
+    public String getSavedEmail() {
+        return prefs.get(KEY_SAVED_EMAIL, "");
+    }
+
+    public void setSavedEmail(String email) {
+        prefs.put(KEY_SAVED_EMAIL, email != null ? email : "");
+        try { prefs.flush(); } catch (Exception ignored) {}
+    }
+
+    public boolean isRememberEmail() {
+        return prefs.getBoolean(KEY_REMEMBER_EMAIL, false);
+    }
+
+    public void setRememberEmail(boolean remember) {
+        prefs.putBoolean(KEY_REMEMBER_EMAIL, remember);
+        try { prefs.flush(); } catch (Exception ignored) {}
+    }
+
     // ─────────────────────────── First-run onboarding ──────────────────────
     private static final String KEY_FIRST_RUN_COMPLETED = "first_run_completed";
 
